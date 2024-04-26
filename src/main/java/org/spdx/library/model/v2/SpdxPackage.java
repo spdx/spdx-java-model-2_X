@@ -26,21 +26,18 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxInvalidTypeException;
-import org.spdx.library.SpdxVerificationHelper;
-import org.spdx.library.Version;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
-import org.spdx.library.model.compat.v2.enumerations.Purpose;
-import org.spdx.library.model.compat.v2.enumerations.RelationshipType;
-import org.spdx.library.model.compat.v2.license.AnyLicenseInfo;
-import org.spdx.library.model.compat.v2.license.OrLaterOperator;
-import org.spdx.library.model.compat.v2.license.SimpleLicensingInfo;
-import org.spdx.library.model.compat.v2.license.SpdxNoAssertionLicense;
-import org.spdx.library.model.compat.v2.license.SpdxNoneLicense;
-import org.spdx.library.model.compat.v2.license.WithExceptionOperator;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.SpdxInvalidTypeException;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.v2.enumerations.Purpose;
+import org.spdx.library.model.v2.enumerations.RelationshipType;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.OrLaterOperator;
+import org.spdx.library.model.v2.license.SimpleLicensingInfo;
+import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
+import org.spdx.library.model.v2.license.SpdxNoneLicense;
+import org.spdx.library.model.v2.license.WithExceptionOperator;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.PropertyDescriptor;
@@ -59,7 +56,8 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 	 */
 	public SpdxPackage() throws InvalidSPDXAnalysisException {
 		super();
-		files = new RelatedElementCollection(this, RelationshipType.CONTAINS, SpdxConstantsCompatV2.CLASS_SPDX_FILE);
+		files = new RelatedElementCollection(this, RelationshipType.CONTAINS, SpdxConstantsCompatV2.CLASS_SPDX_FILE,
+				externalMap, specVersion);
 	}
 
 	/**
@@ -71,10 +69,11 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxPackage(IModelStore modelStore, String documentUri, String id, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
-		files = new RelatedElementCollection(this, RelationshipType.CONTAINS, SpdxConstantsCompatV2.CLASS_SPDX_FILE);
+		files = new RelatedElementCollection(this, RelationshipType.CONTAINS, SpdxConstantsCompatV2.CLASS_SPDX_FILE,
+				externalMap, specVersion);
 	}
 
 	/**
@@ -83,7 +82,8 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 	 */
 	public SpdxPackage(String id) throws InvalidSPDXAnalysisException {
 		super(id);
-		files = new RelatedElementCollection(this, RelationshipType.CONTAINS, SpdxConstantsCompatV2.CLASS_SPDX_FILE);
+		files = new RelatedElementCollection(this, RelationshipType.CONTAINS, SpdxConstantsCompatV2.CLASS_SPDX_FILE,
+				externalMap, specVersion);
 	}
 
 	protected SpdxPackage(SpdxPackageBuilder spdxPackageBuilder) throws InvalidSPDXAnalysisException {
@@ -825,7 +825,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 		IModelStore modelStore;
 		String documentUri;
 		String id;
-		ModelCopyManager copyManager;
+		IModelCopyManager copyManager;
 		
 		// required fields - SpdxElement
 		String name;
@@ -882,7 +882,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 		 * @param licenseDeclared  Declared license for the package
 		 */
 		public SpdxPackageBuilder(IModelStore modelStore, String documentUri, String id, 
-				@Nullable ModelCopyManager copyManager, String name,AnyLicenseInfo concludedLicense, 
+				@Nullable IModelCopyManager copyManager, String name,AnyLicenseInfo concludedLicense, 
 				String copyrightText, AnyLicenseInfo licenseDeclared) {
 			Objects.requireNonNull(modelStore, "Model store can not be null");
 			Objects.requireNonNull(documentUri, "Document URI can not be null");

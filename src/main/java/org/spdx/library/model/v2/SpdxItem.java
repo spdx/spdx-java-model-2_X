@@ -24,12 +24,10 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.Version;
-import org.spdx.library.model.compat.v2.license.AnyLicenseInfo;
-import org.spdx.library.model.compat.v2.license.SpdxNoAssertionLicense;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.PropertyDescriptor;
 
@@ -63,7 +61,7 @@ public abstract class SpdxItem extends SpdxElement {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxItem(IModelStore modelStore, String documentUri, String id, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 	}

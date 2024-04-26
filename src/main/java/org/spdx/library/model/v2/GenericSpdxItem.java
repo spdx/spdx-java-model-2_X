@@ -17,8 +17,8 @@
  */
 package org.spdx.library.model.v2;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.storage.IModelStore;
 
 /**
@@ -52,7 +52,7 @@ public class GenericSpdxItem extends SpdxItem {
 	 * @param create
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public GenericSpdxItem(IModelStore modelStore, String documentUri, String id, ModelCopyManager copyManager,
+	public GenericSpdxItem(IModelStore modelStore, String documentUri, String id, IModelCopyManager copyManager,
 			boolean create) throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 	}

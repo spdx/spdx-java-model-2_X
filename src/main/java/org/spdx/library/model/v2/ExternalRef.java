@@ -25,12 +25,11 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SimpleUriValue;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxVerificationHelper;
-import org.spdx.library.model.compat.v2.enumerations.ReferenceCategory;
+import org.spdx.core.CoreModelObject;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.SimpleUriValue;
+import org.spdx.library.model.v2.enumerations.ReferenceCategory;
 import org.spdx.storage.IModelStore;
 
 /**
@@ -66,7 +65,7 @@ public class ExternalRef extends ModelObject implements Comparable<ExternalRef> 
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalRef(IModelStore modelStore, String documentUri, String id, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 	}
@@ -320,7 +319,7 @@ public class ExternalRef extends ModelObject implements Comparable<ExternalRef> 
 		return this;
 	}
 	
-	@Override public boolean equivalent(ModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
+	@Override public boolean equivalent(CoreModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
 		if (!(compare instanceof ExternalRef)) {
 			return false;
 		}

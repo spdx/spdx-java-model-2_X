@@ -27,14 +27,12 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxVerificationHelper;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
-import org.spdx.library.model.compat.v2.enumerations.FileType;
-import org.spdx.library.model.compat.v2.license.AnyLicenseInfo;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.v2.enumerations.FileType;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.IModelStore.IdType;
@@ -76,7 +74,7 @@ public class SpdxFile extends SpdxItem implements Comparable<SpdxFile> {
 	 */
 	@SuppressWarnings("unchecked")
 	public SpdxFile(IModelStore modelStore, String documentUri, String id, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 		fileTypes = (Collection<FileType>)(Collection<?>)this.getObjectPropertyValueSet(SpdxConstantsCompatV2.PROP_FILE_TYPE, FileType.class);
@@ -324,7 +322,7 @@ public class SpdxFile extends SpdxItem implements Comparable<SpdxFile> {
 		IModelStore modelStore;
 		String documentUri;
 		String id;
-		ModelCopyManager copyManager;
+		IModelCopyManager copyManager;
 		
 		// required fields - SpdxElement
 		String name;
@@ -365,7 +363,7 @@ public class SpdxFile extends SpdxItem implements Comparable<SpdxFile> {
 		 * @param sha1 - Sha1 checksum value
 		 */
 		public SpdxFileBuilder(IModelStore modelStore, String documentUri, String id, 
-				@Nullable ModelCopyManager copyManager, String name,
+				@Nullable IModelCopyManager copyManager, String name,
 				AnyLicenseInfo concludedLicense, 
 				@Nullable Collection<AnyLicenseInfo> licenseInfosFromFile,
 				String copyrightText, Checksum sha1) {

@@ -19,6 +19,10 @@ package org.spdx.library.model.v2;
 
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.SpdxCoreConstants.SpdxMajorVersion;
+import org.spdx.core.SpdxIdNotFoundException;
+import org.spdx.core.TypedValue;
+import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
 
@@ -193,7 +197,7 @@ public class SpdxModelFactory {
 			throw new InvalidSPDXAnalysisException("Can not instantiate an abstract class for the SPDX version 2 type: "+type);
 		}
 		try {
-			Constructor<?> con = clazz.getDeclaredConstructor(IModelStore.class, String.class, String.class, ModelCopyManager.class, boolean.class);
+			Constructor<?> con = clazz.getDeclaredConstructor(IModelStore.class, String.class, String.class, IModelCopyManager.class, boolean.class);
 			return (org.spdx.library.model.v2.ModelObject)con.newInstance(modelStore, documentUri, id, copyManager, create);
 		} catch (NoSuchMethodException e) {
 			throw new InvalidSPDXAnalysisException("Could not create the model object SPDX version 2 type: "+type);
@@ -250,7 +254,7 @@ public class SpdxModelFactory {
 	 * @return stream of elements of the compatible version 2 types
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static Stream<?> getElementsV2(IModelStore store, String documentUri, @Nullable ModelCopyManager copyManager, 
+	public static Stream<?> getElementsV2(IModelStore store, String documentUri, @Nullable IModelCopyManager copyManager, 
 			String type) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(store, "Store must not be null");
 		Objects.requireNonNull(type, "type must not be null");
@@ -281,7 +285,7 @@ public class SpdxModelFactory {
 	 * @return SPDX spec version 3 elements matching the namespace and class
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static Stream<?> getElementsV3(IModelStore store, @Nullable String nameSpace, @Nullable ModelCopyManager copyManager, 
+	public static Stream<?> getElementsV3(IModelStore store, @Nullable String nameSpace, @Nullable IModelCopyManager copyManager, 
 			String type) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(store, "Store must not be null");
 		Objects.requireNonNull(type, "type must not be null");
@@ -309,7 +313,7 @@ public class SpdxModelFactory {
 	 * @return a stream of elements matching the namespace and class
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static Stream<?> getElements(IModelStore store, @Nullable String nameSpace, @Nullable ModelCopyManager copyManager, 
+	public static Stream<?> getElements(IModelStore store, @Nullable String nameSpace, @Nullable IModelCopyManager copyManager, 
 			Class<?> spdxClass) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(store, "Store must not be null");
 		Objects.requireNonNull(spdxClass, "spdxClass must not be null");
@@ -365,7 +369,7 @@ public class SpdxModelFactory {
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public static Optional<org.spdx.library.model.v2.ModelObject> getModelObjectV2(IModelStore modelStore, String documentUri,
-			String id, @Nullable ModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
+			String id, @Nullable IModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(modelStore, "Model store can not be null");
 		Objects.requireNonNull(documentUri, "A document URI or namespace must be supplied for all SPDX version 2 model objects");
 		Objects.requireNonNull(id, "ID must not be null");
@@ -399,7 +403,7 @@ public class SpdxModelFactory {
 	}
 
 	public static ModelObject createModelObject(IModelStore stModelStore,
-			String objectUri, String type, ModelCopyManager copyManager) {
+			String objectUri, String type, IModelCopyManager copyManager) {
 		// TODO Auto-generated method stub
 		return null;
 	}

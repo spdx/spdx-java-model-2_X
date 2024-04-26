@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -31,8 +32,12 @@ import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spdx.core.IExternalElementInfo;
 import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelCollection;
+import org.spdx.core.SpdxIdInUseException;
 import org.spdx.library.model.v2.enumerations.RelationshipType;
+import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 
@@ -50,7 +55,7 @@ public class RelatedElementCollection implements Collection<SpdxElement> {
 	
 	static final Logger logger = LoggerFactory.getLogger(RelatedElementCollection.class);
 	
-	ModelCollectionV2<Relationship> relationshipCollection;
+	ModelCollection<Relationship> relationshipCollection;
 	private RelationshipType relationshipTypeFilter;
 	private String relatedElementTypeFilter;
 	/**
@@ -64,11 +69,15 @@ public class RelatedElementCollection implements Collection<SpdxElement> {
 	 * @param owningElement
 	 * @param relationshipTypeFilter relationship type to filter the results
 	 *                               collection on - if null, do not filter
+	 * @param externalMap map of URI's to ExternalMaps for any external elements
+	 * @param specVersion - version of the SPDX spec the object complies with
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public RelatedElementCollection(SpdxElement owningElement,
-			@Nullable RelationshipType relationshipTypeFilter) throws InvalidSPDXAnalysisException {
-		this(owningElement, relationshipTypeFilter, null);
+			@Nullable RelationshipType relationshipTypeFilter,
+			Map<String, IExternalElementInfo> externalMap,
+			String specVersion) throws InvalidSPDXAnalysisException {
+		this(owningElement, relationshipTypeFilter, null, externalMap, specVersion);
 	}
 
 	/**
@@ -76,16 +85,20 @@ public class RelatedElementCollection implements Collection<SpdxElement> {
 	 * @param relationshipTypeFilter relationship type to filter the results
 	 *                               collection on - if null, do not filter
 	 * @param relatedElementTypeFilter filter for only related element types - if null, do not filter
+	 * @param externalMap map of URI's to ExternalMaps for any external elements
+	 * @param specVersion - version of the SPDX spec the object complies with
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public RelatedElementCollection(SpdxElement owningElement,
 			@Nullable RelationshipType relationshipTypeFilter,
-			@Nullable String relatedElementTypeFilter) throws InvalidSPDXAnalysisException {
+			@Nullable String relatedElementTypeFilter, Map<String, IExternalElementInfo> externalMap,
+			String specVersion) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(owningElement, "Owning element can not be null");
 		this.owningElement = owningElement;
-		this.relationshipCollection = new ModelCollectionV2<Relationship>(owningElement.getModelStore(),
-				owningElement.getDocumentUri(), owningElement.getId(), SpdxConstantsCompatV2.PROP_RELATIONSHIP, 
-				owningElement.getCopyManager(), Relationship.class);
+		this.relationshipCollection = new ModelCollection<Relationship>(owningElement.getModelStore(),
+				CompatibleModelStoreWrapper.documentUriIdToUri(owningElement.getDocumentUri(), owningElement.getId(), owningElement.getModelStore()),
+				SpdxConstantsCompatV2.PROP_RELATIONSHIP, 
+				owningElement.getCopyManager(), Relationship.class, externalMap, specVersion);
 		this.relationshipTypeFilter = relationshipTypeFilter;
 		this.relatedElementTypeFilter = relatedElementTypeFilter;
 	}
@@ -370,7 +383,7 @@ public class RelatedElementCollection implements Collection<SpdxElement> {
 	/**
 	 * @return the relationshipCollection
 	 */
-	public ModelCollectionV2<Relationship> getRelationshipCollection() {
+	public ModelCollection<Relationship> getRelationshipCollection() {
 		return relationshipCollection;
 	}
 

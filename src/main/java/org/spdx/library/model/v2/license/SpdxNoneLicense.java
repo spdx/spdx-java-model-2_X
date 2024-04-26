@@ -22,6 +22,8 @@ import java.util.Set;
 
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.SimpleUriValue;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
 /**

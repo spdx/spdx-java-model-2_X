@@ -25,10 +25,10 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.spdx.core.CoreModelObject;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.library.model.v2.ModelObject;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxVerificationHelper;
 import org.spdx.storage.IModelStore;
@@ -147,7 +147,7 @@ public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
 	//TODO: See if we can get this function moved into the compatibility library
 	
 	@Override
-	public boolean equivalent(ModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
+	public boolean equivalent(CoreModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
 		return equivalent(compare);
 	}
 }

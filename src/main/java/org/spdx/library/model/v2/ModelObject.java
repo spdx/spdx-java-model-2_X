@@ -19,7 +19,6 @@ package org.spdx.library.model.v2;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,24 +34,29 @@ import org.spdx.core.DefaultStoreNotInitialized;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.core.ModelCollection;
+import org.spdx.core.ModelObjectHelper;
 import org.spdx.core.SpdxCoreConstants.SpdxMajorVersion;
 import org.spdx.core.SpdxInvalidTypeException;
 import org.spdx.core.TypedValue;
 import org.spdx.library.model.v2.enumerations.AnnotationType;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.v2.enumerations.ReferenceCategory;
 import org.spdx.library.model.v2.enumerations.RelationshipType;
-import org.spdx.library.model.v2.enumerations.SpdxEnumFactoryCompatV2;
 import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.ConjunctiveLicenseSet;
+import org.spdx.library.model.v2.license.CrossRef.CrossRefBuilder;
+import org.spdx.library.model.v2.license.DisjunctiveLicenseSet;
 import org.spdx.library.model.v2.license.ListedLicenses;
 import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
 import org.spdx.library.model.v2.license.SpdxNoneLicense;
-import org.spdx.library.model.v3.SpdxConstants;
-import org.spdx.core.CoreModelObject.ModelObjectBuilder;
+import org.spdx.library.model.v2.pointer.ByteOffsetPointer;
+import org.spdx.library.model.v2.pointer.LineCharPointer;
+import org.spdx.library.model.v2.pointer.SinglePointer;
+import org.spdx.library.model.v2.pointer.StartEndPointer;
 import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.IModelStore.IdType;
-import org.spdx.storage.IModelStore.ModelUpdate;
 import org.spdx.storage.PropertyDescriptor;
 
 /**
@@ -448,8 +452,8 @@ public abstract class ModelObject extends CoreModelObject {
 				retval.setChecksum(checksum);
 				retval.setSpdxDocumentNamespace(externalDocumentUri);
 				// Need to add this to the list of document URI's
-				ModelObject.addValueToCollection(getModelStore(), getDocumentUri(), 
-						SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, 
+				ModelObjectHelper.addValueToCollection(getModelStore(), 
+						CompatibleModelStoreWrapper.documentUriIdToUri(getDocumentUri(), SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
 						SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF,
 						retval, copyManager);
 				return retval;

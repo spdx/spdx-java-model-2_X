@@ -1,6 +1,6 @@
 package org.spdx.library.model.v2.license;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.InvalidSPDXAnalysisException;
 
 public class LicenseParserException extends InvalidSPDXAnalysisException {
 	

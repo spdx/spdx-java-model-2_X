@@ -16,11 +16,10 @@
 */
 package org.spdx.library.model.v2.license;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxInvalidTypeException;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
 
@@ -72,7 +71,7 @@ public abstract class LicenseSet extends AnyLicenseInfo {
 	 */
 	@SuppressWarnings("unchecked")
 	LicenseSet(IModelStore modelStore, String documentUri, String id, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 		members = (Collection<AnyLicenseInfo>)(Collection<?>)getObjectPropertyValueSet(SpdxConstantsCompatV2.PROP_LICENSE_SET_MEMEBER, AnyLicenseInfo.class);

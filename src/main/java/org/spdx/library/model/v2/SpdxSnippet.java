@@ -26,16 +26,17 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxInvalidTypeException;
-import org.spdx.library.model.compat.v2.license.AnyLicenseInfo;
-import org.spdx.library.model.compat.v2.pointer.ByteOffsetPointer;
-import org.spdx.library.model.compat.v2.pointer.LineCharPointer;
-import org.spdx.library.model.compat.v2.pointer.SinglePointer;
-import org.spdx.library.model.compat.v2.pointer.StartEndPointer;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelCollection;
+import org.spdx.core.SpdxInvalidTypeException;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.pointer.ByteOffsetPointer;
+import org.spdx.library.model.v2.pointer.LineCharPointer;
+import org.spdx.library.model.v2.pointer.SinglePointer;
+import org.spdx.library.model.v2.pointer.StartEndPointer;
+import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.IModelStore.IdType;
@@ -79,10 +80,13 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public SpdxSnippet(IModelStore modelStore, String documentUri, String id, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
-		allRanges = new ModelCollectionV2(modelStore, documentUri, id, SpdxConstantsCompatV2.PROP_SNIPPET_RANGE, copyManager, StartEndPointer.class);
+		allRanges = new ModelCollection(modelStore, 
+				CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, id, modelStore),
+				SpdxConstantsCompatV2.PROP_SNIPPET_RANGE, copyManager, StartEndPointer.class,
+				externalMap, specVersion);
 	}
 	
 	/**
@@ -452,7 +456,7 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 		IModelStore modelStore;
 		String documentUri;
 		String id;
-		ModelCopyManager copyManager;
+		IModelCopyManager copyManager;
 		
 		// required fields - SpdxElement
 		String name;
@@ -495,7 +499,7 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 		 * @param endByte end byte of the snippet in the file
 		 */
 		public SpdxSnippetBuilder(IModelStore modelStore, String documentUri, String id, 
-				@Nullable ModelCopyManager copyManager, String name,
+				@Nullable IModelCopyManager copyManager, String name,
 				AnyLicenseInfo concludedLicense, Collection<AnyLicenseInfo> licenseInfosFromFile,
 				String copyrightText, SpdxFile snippetFromFile, int startByte, int endByte) {
 			Objects.requireNonNull(modelStore, "Model store can not be null");

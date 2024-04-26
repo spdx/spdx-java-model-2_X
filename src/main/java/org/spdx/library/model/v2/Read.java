@@ -27,14 +27,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxModelFactory;
-import org.spdx.library.TypedValue;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.TypedValue;
+import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.ISerializableModelStore;
-import org.spdx.storage.compat.v2.CompatibleModelStoreWrapper;
 
 /**
  * Supports reading SPDX documents from an existing ModelStore

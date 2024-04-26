@@ -26,6 +26,7 @@ import org.spdx.core.IModelCopyManager;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.SimpleUriValue;
+import org.spdx.core.SpdxInvalidTypeException;
 import org.spdx.core.SpdxObjectNotInStoreException;
 import org.spdx.core.TypedValue;
 import org.spdx.storage.CompatibleModelStoreWrapper;

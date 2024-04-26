@@ -26,11 +26,9 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxVerificationHelper;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
 import org.spdx.storage.IModelStore;
 
 /**
@@ -63,7 +61,7 @@ public class SpdxPackageVerificationCode extends ModelObject {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxPackageVerificationCode(IModelStore modelStore, String documentUri, String id, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 	}

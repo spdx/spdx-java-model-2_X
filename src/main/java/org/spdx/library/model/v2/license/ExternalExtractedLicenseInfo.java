@@ -20,6 +20,7 @@ package org.spdx.library.model.v2.license;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -27,15 +28,16 @@ import java.util.regex.Matcher;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.IndividualUriValue;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SimpleUriValue;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.model.compat.v2.ExternalDocumentRef;
-import org.spdx.library.model.compat.v2.ExternalSpdxElement;
-import org.spdx.library.model.compat.v2.ModelObject;
+import org.spdx.core.CoreModelObject;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IExternalElementInfo;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.IndividualUriValue;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.SimpleUriValue;
+import org.spdx.library.model.v2.ExternalDocumentRef;
+import org.spdx.library.model.v2.ExternalSpdxElement;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
 /**
@@ -72,7 +74,7 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalExtractedLicenseInfo(IModelStore modelStore, String documentUri, String id, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 		if (!SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_PATTERN.matcher(id).matches()) {
@@ -151,7 +153,7 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public static String externalExtractedLicenseIdToURI(String externalExtractedLicenseId,
-			IModelStore stModelStore, String stDocumentUri, ModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
+			IModelStore stModelStore, String stDocumentUri, IModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
 		Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_PATTERN.matcher(externalExtractedLicenseId);
 		if (!matcher.matches()) {
 			logger.error("Invalid objectUri format for an external document reference.  Must be of the form ExternalSPDXRef:LicenseRef-XXX");
@@ -175,12 +177,16 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	 *         externaldocumentnamespace#LicenseRef-XXXXX
 	 * @param copyManager if non-null, create the external doc ref if it is not
 	 *                    already in the ModelStore
+	 * @param externalMap Map of URI's of elements referenced but not present in the store
+	 * @param specVersion - version of the SPDX spec the object complies with
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public static ExternalExtractedLicenseInfo uriToExternalExtractedLicense(String externalLicenseUri, IModelStore stModelStore,
-			String stDocumentUri, ModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
+			String stDocumentUri, IModelCopyManager copyManager, Map<String, IExternalElementInfo> externalMap,
+			String specVersion) throws InvalidSPDXAnalysisException {
 		return new ExternalExtractedLicenseInfo(stModelStore, stDocumentUri, uriToExternalExtractedLicenseId(
-				externalLicenseUri, stModelStore, stDocumentUri, copyManager), copyManager, true);
+				externalLicenseUri, stModelStore, stDocumentUri, copyManager, externalMap,
+				specVersion), copyManager, true);
 	}
 	
 	/**
@@ -190,17 +196,20 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	 * @param stDocumentUri
 	 * @param copyManager if non-null, create the external doc ref if it is not already in the ModelStore
 	 * @return external SPDX element ID in the form DocumentRef-XX:LicenseRef-XXXX
+	 * @param externalMap Map of URI's of elements referenced but not present in the store
+	 * @param specVersion - version of the SPDX spec the object complies with
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public static String uriToExternalExtractedLicenseId(String uri,
-			IModelStore stModelStore, String stDocumentUri, ModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
+			IModelStore stModelStore, String stDocumentUri, IModelCopyManager copyManager, 
+			Map<String, IExternalElementInfo> externalMap, String specVersion) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(uri, "URI can not be null");
 		Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN.matcher(uri);
 		if (!matcher.matches()) {
 			throw new InvalidSPDXAnalysisException("Invalid URI format: "+uri+".  Expects namespace#LicenseRef-XXXX");
 		}
 		Optional<ExternalDocumentRef> externalDocRef = ExternalDocumentRef.getExternalDocRefByDocNamespace(stModelStore, stDocumentUri, 
-				matcher.group(1), copyManager);
+				matcher.group(1), copyManager, externalMap, specVersion);
 		if (!externalDocRef.isPresent()) {
 			logger.error("Could not find or create the external document reference for document namespace "+ matcher.group(1));
 			throw new InvalidSPDXAnalysisException("Could not find or create the external document reference for document namespace "+ matcher.group(1));
@@ -212,18 +221,18 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	 * @see org.spdx.library.model.compat.v2.compat.v2.ModelObject#equivalent(org.spdx.library.model.compat.v2.compat.v2.ModelObject)
 	 */
 	@Override
-	public boolean equivalent(ModelObject compare) {
+	public boolean equivalent(CoreModelObject compare) {
 		if (!(compare instanceof ExternalExtractedLicenseInfo)) {
 			return false;
 		}
-		return getId().equals(compare.getId());
+		return getId().equals(((ExternalExtractedLicenseInfo)compare).getId());
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.spdx.library.model.compat.v2.compat.v2.ModelObject#equivalent(org.spdx.library.model.compat.v2.compat.v2.ModelObject, boolean)
 	 */
 	@Override
-	public boolean equivalent(ModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
+	public boolean equivalent(CoreModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
 		return equivalent(compare);
 	}
 

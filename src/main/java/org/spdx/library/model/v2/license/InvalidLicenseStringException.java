@@ -1,6 +1,6 @@
 package org.spdx.library.model.v2.license;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.InvalidSPDXAnalysisException;
 
 public class InvalidLicenseStringException extends InvalidSPDXAnalysisException {
 	private static final long serialVersionUID = -1688466911486933160L;

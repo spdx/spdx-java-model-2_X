@@ -20,27 +20,27 @@ package org.spdx.library.model.v2;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.IndividualUriValue;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SimpleUriValue;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxInvalidTypeException;
-import org.spdx.library.SpdxModelFactory;
-import org.spdx.library.SpdxVerificationHelper;
-import org.spdx.library.Version;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IExternalElementInfo;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.IndividualUriValue;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelCollection;
+import org.spdx.core.ModelObjectHelper;
+import org.spdx.core.SimpleUriValue;
+import org.spdx.core.SpdxInvalidTypeException;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.IModelStore.IdType;
-import org.spdx.storage.compat.v2.CompatibleModelStoreWrapper;
 
 /**
  * Information about an external SPDX document reference including the checksum.  
@@ -48,7 +48,7 @@ import org.spdx.storage.compat.v2.CompatibleModelStoreWrapper;
  * 
  * @author Gary O'Neall
  */
-public class ExternalDocumentRef extends ModelObject implements Comparable<ExternalDocumentRef> {
+public class ExternalDocumentRef extends ModelObject implements Comparable<ExternalDocumentRef>, IExternalElementInfo {
 	
 	/**
 	 * Obtain an ExternalDocumentRef which maps to the document URI for the external SPDX document.
@@ -56,17 +56,22 @@ public class ExternalDocumentRef extends ModelObject implements Comparable<Exter
 	 * @param stDocumentUri Document URI for the document referring to the external SPDX document
 	 * @param externalDocUri Document URI for the external document (a.k.a. eternalDocumentNamespace)
 	 * @param copyManager if non-null, create the external Doc ref if it is not a property of the SPDX Document
+	 * @param externalMap Map of URI's of elements referenced but not present in the store
+	 * @param specVersion - version of the SPDX spec the object complies with
 	 * @return
 	 */
 	public static Optional<ExternalDocumentRef> getExternalDocRefByDocNamespace(IModelStore stModelStore,
-			String stDocumentUri, String externalDocUri, @Nullable ModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
+			String stDocumentUri, String externalDocUri, @Nullable IModelCopyManager copyManager, 
+			Map<String, IExternalElementInfo> externalMap, String specVersion) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(stModelStore, "Model store can not be null");
 		Objects.requireNonNull(stDocumentUri, "Document URI can not be null");
 		Objects.requireNonNull(externalDocUri, "External document URI can not be null");
 		IModelStoreLock lock = stModelStore.enterCriticalSection(false);
 		try {
-			ModelCollectionV2<ExternalDocumentRef> existingExternalRefs = new ModelCollectionV2<ExternalDocumentRef>(stModelStore,stDocumentUri,
-					SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF, copyManager, ExternalDocumentRef.class);
+			ModelCollection<ExternalDocumentRef> existingExternalRefs = new ModelCollection<ExternalDocumentRef>(stModelStore,
+					CompatibleModelStoreWrapper.documentUriIdToUri(stDocumentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
+					SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF, copyManager, ExternalDocumentRef.class, 
+					externalMap, specVersion);
 			for (Object externalRef:existingExternalRefs) {
 				if (!(externalRef instanceof ExternalDocumentRef)) {
 					logger.warn("Incorrect type for an external document ref: "+externalRef.getClass().toString());
@@ -85,7 +90,8 @@ public class ExternalDocumentRef extends ModelObject implements Comparable<Exter
 				ExternalDocumentRef retval = new ExternalDocumentRef(stModelStore, stDocumentUri,
 						stModelStore.getNextId(IdType.DocumentRef, stDocumentUri + "#"), copyManager, true);
 				retval.setSpdxDocumentNamespace(externalDocUri);
-				ModelObject.addValueToCollection(stModelStore, stDocumentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, 
+				ModelObjectHelper.addValueToCollection(stModelStore, 
+						CompatibleModelStoreWrapper.documentUriIdToUri(stDocumentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
 						SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF, retval, copyManager);
 				return Optional.of(retval);
 			} else {
@@ -125,7 +131,7 @@ public class ExternalDocumentRef extends ModelObject implements Comparable<Exter
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalDocumentRef(IModelStore modelStore, String documentUri, String objectUri, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, objectUri, copyManager, create);
 		if (!SpdxVerificationHelper.isValidExternalDocRef(objectUri)) {
@@ -175,7 +181,7 @@ public class ExternalDocumentRef extends ModelObject implements Comparable<Exter
 			if (Objects.isNull(checksum)) {
 				throw new InvalidSPDXAnalysisException("Null value for a required checksum");
 			}
-			List<String> verify = checksum.verify(new HashSet<String>(), Version.CURRENT_SPDX_VERSION);
+			List<String> verify = checksum.verify(new HashSet<String>(), specVersion);
 			if (verify.size() > 0) {
 				throw new InvalidSPDXAnalysisException("Invalid checksum: "+verify.get(0));
 			}
@@ -309,7 +315,7 @@ public class ExternalDocumentRef extends ModelObject implements Comparable<Exter
 			if (!checksum.isPresent()) {
 				retval.add("Missing checksum for external document "+getId());
 			} else {
-				retval.addAll(checksum.get().verify(verifiedIds, Version.CURRENT_SPDX_VERSION));
+				retval.addAll(checksum.get().verify(verifiedIds, specVersion));
 				if (checksum.get().getAlgorithm() != ChecksumAlgorithm.SHA1) {
 					retval.add("Checksum algorithm is not SHA1 for external reference "+getId());
 				}

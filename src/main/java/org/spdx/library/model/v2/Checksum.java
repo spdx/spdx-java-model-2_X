@@ -25,13 +25,10 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxInvalidTypeException;
-import org.spdx.library.SpdxVerificationHelper;
-import org.spdx.library.Version;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.SpdxInvalidTypeException;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
 
@@ -69,7 +66,7 @@ public class Checksum extends ModelObject implements Comparable<Checksum>  {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public Checksum(IModelStore modelStore, String documentUri, String id, 
-			@Nullable ModelCopyManager copyManager, boolean create)
+			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 	}
@@ -200,7 +197,7 @@ public class Checksum extends ModelObject implements Comparable<Checksum>  {
 			}
 			ChecksumAlgorithm algorithm = getAlgorithm();
 			if (!ChecksumAlgorithm.MISSING.equals(algorithm)) {
-				String verify = SpdxVerificationHelper.verifyChecksumString(value, algorithm, Version.CURRENT_SPDX_VERSION);
+				String verify = SpdxVerificationHelper.verifyChecksumString(value, algorithm, specVersion);
 				if (verify != null && !verify.isEmpty()) {
 					throw new InvalidSPDXAnalysisException(verify);
 				}

@@ -20,9 +20,9 @@ package org.spdx.library.model.v2.license;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.spdx.core.CoreModelObject;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.library.model.v2.ModelObject;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.licenseTemplate.LicenseTemplateRuleException;
 import org.spdx.licenseTemplate.SpdxLicenseTemplateHelper;
@@ -127,7 +127,7 @@ public class ListedLicenseException extends LicenseException {
 	}
 	
 	   @Override
-	    public boolean equivalent(ModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
+	    public boolean equivalent(CoreModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
 	        if (compare instanceof ListedLicenseException) {
 	            return this.getId().equals(((ListedLicenseException)compare).getId()); // for listed license, the license ID is the only thing that matters
 	        } else {

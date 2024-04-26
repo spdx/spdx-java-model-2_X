@@ -22,9 +22,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
 /**
@@ -57,7 +57,7 @@ public class ByteOffsetPointer extends SinglePointer {
 	 * @param create
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public ByteOffsetPointer(IModelStore modelStore, String documentUri, String id, ModelCopyManager copyManager,
+	public ByteOffsetPointer(IModelStore modelStore, String documentUri, String id, IModelCopyManager copyManager,
 			boolean create) throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 	}

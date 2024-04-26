@@ -26,10 +26,10 @@ import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxInvalidTypeException;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.SpdxInvalidTypeException;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
 /**
@@ -64,7 +64,7 @@ public class StartEndPointer extends CompoundPointer implements Comparable<Start
 	 * @param create
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public StartEndPointer(IModelStore modelStore, String documentUri, String id, ModelCopyManager copyManager,
+	public StartEndPointer(IModelStore modelStore, String documentUri, String id, IModelCopyManager copyManager,
 			boolean create) throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 	}

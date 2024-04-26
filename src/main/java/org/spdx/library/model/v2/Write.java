@@ -24,7 +24,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
+import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.ISerializableModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
