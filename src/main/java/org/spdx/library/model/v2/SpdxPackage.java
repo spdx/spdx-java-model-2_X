@@ -57,7 +57,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 	public SpdxPackage() throws InvalidSPDXAnalysisException {
 		super();
 		files = new RelatedElementCollection(this, RelationshipType.CONTAINS, SpdxConstantsCompatV2.CLASS_SPDX_FILE,
-				externalMap, specVersion);
+				specVersion);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
 		files = new RelatedElementCollection(this, RelationshipType.CONTAINS, SpdxConstantsCompatV2.CLASS_SPDX_FILE,
-				externalMap, specVersion);
+				specVersion);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 	public SpdxPackage(String id) throws InvalidSPDXAnalysisException {
 		super(id);
 		files = new RelatedElementCollection(this, RelationshipType.CONTAINS, SpdxConstantsCompatV2.CLASS_SPDX_FILE,
-				externalMap, specVersion);
+				specVersion);
 	}
 
 	protected SpdxPackage(SpdxPackageBuilder spdxPackageBuilder) throws InvalidSPDXAnalysisException {

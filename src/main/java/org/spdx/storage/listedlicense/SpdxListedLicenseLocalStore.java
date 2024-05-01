@@ -73,9 +73,4 @@ public class SpdxListedLicenseLocalStore extends SpdxListedLicenseModelStore {
 	InputStream getExceptionInputStream(String exceptionId) throws IOException {
 		return getLicenseInputStream(exceptionId);
 	}
-	
-	@Override
-	public void close() throws Exception {
-		// Nothing to do for the either the in-memory or the web store
-	}
 }

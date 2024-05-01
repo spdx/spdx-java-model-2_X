@@ -35,7 +35,6 @@ import org.spdx.core.IModelCopyManager;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.ModelObjectHelper;
-import org.spdx.core.SpdxCoreConstants.SpdxMajorVersion;
 import org.spdx.core.SpdxInvalidTypeException;
 import org.spdx.core.TypedValue;
 import org.spdx.library.model.v2.enumerations.AnnotationType;
@@ -46,7 +45,6 @@ import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.library.model.v2.license.ConjunctiveLicenseSet;
 import org.spdx.library.model.v2.license.CrossRef.CrossRefBuilder;
 import org.spdx.library.model.v2.license.DisjunctiveLicenseSet;
-import org.spdx.library.model.v2.license.ListedLicenses;
 import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
 import org.spdx.library.model.v2.license.SpdxNoneLicense;
 import org.spdx.library.model.v2.pointer.ByteOffsetPointer;
@@ -98,7 +96,7 @@ public abstract class ModelObject extends CoreModelObject {
 	
 	static final Logger logger = LoggerFactory.getLogger(ModelObject.class);
 	
-	static final String LATEST_SPDX_2_VERSION = "SPDX-2.3";
+	public static final String LATEST_SPDX_2_VERSION = "SPDX-2.3";
 	
 	private String documentUri;
 	private String id;
@@ -117,7 +115,7 @@ public abstract class ModelObject extends CoreModelObject {
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public ModelObject(String id) throws InvalidSPDXAnalysisException {
-		super(DefaultModelStore.getDefaultModelStore() + "#" + id, LATEST_SPDX_2_VERSION);
+		super(CompatibleModelStoreWrapper.documentUriIdToUri(DefaultModelStore.getDefaultDocumentUri(), id, DefaultModelStore.getDefaultModelStore()), LATEST_SPDX_2_VERSION);
 		this.documentUri = DefaultModelStore.getDefaultDocumentUri();
 		this.id = id;
 	}
@@ -126,20 +124,16 @@ public abstract class ModelObject extends CoreModelObject {
 	 * @param modelStore Storage for the model objects
 	 * @param documentUri SPDX Document URI for a document associated with this model
 	 * @param identifier ID for this object - must be unique within the SPDX document
-	 * @param copyManager - if supplied, model objects will be implictly copied into this model store and document URI when referenced by setting methods
+	 * @param copyManager - if supplied, model objects will be implicitly copied into this model store and document URI when referenced by setting methods
 	 * @param create - if true, the object will be created in the store if it is not already present
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ModelObject(IModelStore modelStore, String documentUri, String identifier, @Nullable IModelCopyManager copyManager, 
 			boolean create) throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri + "#" + identifier, copyManager, create, LATEST_SPDX_2_VERSION);
+		super(modelStore, CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, identifier, DefaultModelStore.getDefaultModelStore()), copyManager, create, LATEST_SPDX_2_VERSION);
 		Objects.requireNonNull(modelStore, "Model Store can not be null");
 		Objects.requireNonNull(documentUri, "Document URI can not be null");
 		Objects.requireNonNull(identifier, "ID can not be null");
-		if (!SpdxMajorVersion.VERSION_2.equals(modelStore.getSpdxVersion())) {
-			logger.error("Trying to create an SPDX version 2 model object in an SPDX version 3 model store");
-			throw new InvalidSPDXAnalysisException("Trying to create an SPDX version 2 model object in an SPDX version 3 model store");
-		}
 		if (identifier.startsWith(documentUri)) {
 			logger.warn("document URI was passed in as an ID: "+identifier);
 			this.id = identifier.substring(documentUri.length());
@@ -163,7 +157,7 @@ public abstract class ModelObject extends CoreModelObject {
 	 * @param builder
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public ModelObject(ModelObjectBuilder builder)
+	public ModelObject(CoreModelObjectBuilder builder)
 			throws InvalidSPDXAnalysisException {
 		super(builder, LATEST_SPDX_2_VERSION);
 		updateIdAndDocumentUri();
@@ -317,26 +311,6 @@ public abstract class ModelObject extends CoreModelObject {
 			return Objects.equals(id, comp.getId()) && Objects.equals(documentUri, comp.getDocumentUri());
 		}
 	}
-		
-	/**
-	 * @param id String for the object
-	 * @return type of the ID
-	 */
-	protected IdType idToIdType(String id) {
-		if (id.startsWith(SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM)) {
-			return IdType.LicenseRef;
-		} else if (id.startsWith(SpdxConstantsCompatV2.SPDX_ELEMENT_REF_PRENUM)) {
-			return IdType.SpdxId;
-		} else if (id.startsWith(SpdxConstantsCompatV2.EXTERNAL_DOC_REF_PRENUM)) {
-			return IdType.DocumentRef;
-		} else if (ListedLicenses.getListedLicenses().isSpdxListedLicenseId(id)) {
-			return IdType.ListedLicense;
-		} else if ("none".equalsIgnoreCase(id) || "noassertion".equalsIgnoreCase(id)) {
-			return IdType.Literal;
-		} else {
-			return IdType.Anonymous;
-		}
-	}
 	
 	@Override
 	protected TypedValue toTypedValue() throws InvalidSPDXAnalysisException {
@@ -360,7 +334,7 @@ public abstract class ModelObject extends CoreModelObject {
 		Objects.requireNonNull(date, "Date can not be null");
 		Objects.requireNonNull(comment, "Comment can not be null");
 		Annotation retval = new Annotation(this.modelStore, this.documentUri, 
-				this.modelStore.getNextId(IdType.Anonymous, this.documentUri), copyManager, true);
+				this.modelStore.getNextId(IdType.Anonymous, null), copyManager, true);
 		retval.setAnnotationDate(date);
 		retval.setAnnotationType(annotationType);
 		retval.setAnnotator(annotator);
@@ -381,7 +355,7 @@ public abstract class ModelObject extends CoreModelObject {
 		Objects.requireNonNull(relatedElement, "Related Element can not be null");
 		Objects.requireNonNull(relationshipType, "Relationship type can not be null");
 		Relationship retval = new Relationship(this.modelStore, this.documentUri, 
-				this.modelStore.getNextId(IdType.Anonymous, this.documentUri), this.copyManager, true);
+				this.modelStore.getNextId(IdType.Anonymous, null), this.copyManager, true);
 		retval.setRelatedSpdxElement(relatedElement);
 		retval.setRelationshipType(relationshipType);
 		if (Objects.nonNull(comment)) {
@@ -400,7 +374,7 @@ public abstract class ModelObject extends CoreModelObject {
 		Objects.requireNonNull(algorithm, "Algorithm can not be null");
 		Objects.requireNonNull(value, "Value can not be null");
 		Checksum retval = new Checksum(this.modelStore, this.documentUri, 
-				this.modelStore.getNextId(IdType.Anonymous, this.documentUri), this.copyManager, true);
+				this.modelStore.getNextId(IdType.Anonymous, null), this.copyManager, true);
 		retval.setAlgorithm(algorithm);
 		retval.setValue(value);
 		return retval;
@@ -416,7 +390,7 @@ public abstract class ModelObject extends CoreModelObject {
 		Objects.requireNonNull(value, "Value can not be null");
 		Objects.requireNonNull(excludedFileNames, "Excluded Files can not be null");
 		SpdxPackageVerificationCode retval = new SpdxPackageVerificationCode(this.modelStore, this.documentUri, 
-				this.modelStore.getNextId(IdType.Anonymous, this.documentUri), this.copyManager, true);
+				this.modelStore.getNextId(IdType.Anonymous, null), this.copyManager, true);
 		retval.setValue(value);
 		retval.getExcludedFileNames().addAll(excludedFileNames);
 		return retval;
@@ -473,7 +447,7 @@ public abstract class ModelObject extends CoreModelObject {
 		Objects.requireNonNull(creators, "Creators can not be null");
 		Objects.requireNonNull(date, "Date can not be null");
 		SpdxCreatorInformation retval = new SpdxCreatorInformation(modelStore, documentUri, 
-				modelStore.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+				modelStore.getNextId(IdType.Anonymous, null), copyManager, true);
 		retval.getCreators().addAll(creators);
 		retval.setCreated(date);
 		return retval;
@@ -493,7 +467,7 @@ public abstract class ModelObject extends CoreModelObject {
 		Objects.requireNonNull(referenceType, "Reference type can not be null");
 		Objects.requireNonNull(locator, "Locator can not be null");
 		ExternalRef retval = new ExternalRef(modelStore, documentUri, 
-				modelStore.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+				modelStore.getNextId(IdType.Anonymous, null), copyManager, true);
 		retval.setReferenceCategory(category);
 		retval.setReferenceType(referenceType);
 		retval.setReferenceLocator(locator);
@@ -548,7 +522,7 @@ public abstract class ModelObject extends CoreModelObject {
 	public ByteOffsetPointer createByteOffsetPointer(SpdxElement referencedElement, int offset) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(referencedElement, "Referenced element can not be null");
 		ByteOffsetPointer retval = new ByteOffsetPointer(modelStore, documentUri, 
-				modelStore.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+				modelStore.getNextId(IdType.Anonymous, null), copyManager, true);
 		retval.setReference(referencedElement);
 		retval.setOffset(offset);
 		return retval;
@@ -563,7 +537,7 @@ public abstract class ModelObject extends CoreModelObject {
 	public LineCharPointer createLineCharPointer(SpdxElement referencedElement, int lineNumber) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(referencedElement, "Referenced element can not be null");
 		LineCharPointer retval = new LineCharPointer(modelStore, documentUri, 
-				modelStore.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+				modelStore.getNextId(IdType.Anonymous, null), copyManager, true);
 		retval.setReference(referencedElement);
 		retval.setLineNumber(lineNumber);
 		return retval;
@@ -579,7 +553,7 @@ public abstract class ModelObject extends CoreModelObject {
 		Objects.requireNonNull(startPointer, "Start pointer can not be null");
 		Objects.requireNonNull(endPointer, "End pointer can not be null");
 		StartEndPointer retval = new StartEndPointer(modelStore, documentUri, 
-				modelStore.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+				modelStore.getNextId(IdType.Anonymous, null), copyManager, true);
 		retval.setStartPointer(startPointer);
 		retval.setEndPointer(endPointer);
 		return retval;
@@ -614,7 +588,7 @@ public abstract class ModelObject extends CoreModelObject {
 	 */
 	public ConjunctiveLicenseSet createConjunctiveLicenseSet(Collection<AnyLicenseInfo> members) throws InvalidSPDXAnalysisException {
 		ConjunctiveLicenseSet retval = new ConjunctiveLicenseSet(modelStore, documentUri, 
-				modelStore.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+				modelStore.getNextId(IdType.Anonymous, null), copyManager, true);
 		retval.setMembers(members);
 		return retval;
 	}
@@ -626,7 +600,7 @@ public abstract class ModelObject extends CoreModelObject {
 	 */
 	public DisjunctiveLicenseSet createDisjunctiveLicenseSet(Collection<AnyLicenseInfo> members) throws InvalidSPDXAnalysisException {
 		DisjunctiveLicenseSet retval = new DisjunctiveLicenseSet(modelStore, documentUri, 
-				modelStore.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+				modelStore.getNextId(IdType.Anonymous, null), copyManager, true);
 		retval.setMembers(members);
 		return retval;
 	}
@@ -640,7 +614,7 @@ public abstract class ModelObject extends CoreModelObject {
 	public CrossRefBuilder createCrossRef(String url) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(url, "URL can not be null");
 		return new CrossRefBuilder(this.modelStore, this.documentUri, 
-				this.modelStore.getNextId(IdType.Anonymous,  this.documentUri), this.copyManager, url);
+				this.modelStore.getNextId(IdType.Anonymous,  null), this.copyManager, url);
 	}
 	
 	@Override

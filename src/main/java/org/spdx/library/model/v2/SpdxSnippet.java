@@ -85,8 +85,7 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 		super(modelStore, documentUri, id, copyManager, create);
 		allRanges = new ModelCollection(modelStore, 
 				CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, id, modelStore),
-				SpdxConstantsCompatV2.PROP_SNIPPET_RANGE, copyManager, StartEndPointer.class,
-				externalMap, specVersion);
+				SpdxConstantsCompatV2.PROP_SNIPPET_RANGE, copyManager, StartEndPointer.class, specVersion);
 	}
 	
 	/**

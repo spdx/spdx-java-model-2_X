@@ -20,7 +20,6 @@ package org.spdx.library.model.v2;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -56,13 +55,12 @@ public class ExternalDocumentRef extends ModelObject implements Comparable<Exter
 	 * @param stDocumentUri Document URI for the document referring to the external SPDX document
 	 * @param externalDocUri Document URI for the external document (a.k.a. eternalDocumentNamespace)
 	 * @param copyManager if non-null, create the external Doc ref if it is not a property of the SPDX Document
-	 * @param externalMap Map of URI's of elements referenced but not present in the store
 	 * @param specVersion - version of the SPDX spec the object complies with
 	 * @return
 	 */
 	public static Optional<ExternalDocumentRef> getExternalDocRefByDocNamespace(IModelStore stModelStore,
 			String stDocumentUri, String externalDocUri, @Nullable IModelCopyManager copyManager, 
-			Map<String, IExternalElementInfo> externalMap, String specVersion) throws InvalidSPDXAnalysisException {
+			String specVersion) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(stModelStore, "Model store can not be null");
 		Objects.requireNonNull(stDocumentUri, "Document URI can not be null");
 		Objects.requireNonNull(externalDocUri, "External document URI can not be null");
@@ -71,7 +69,7 @@ public class ExternalDocumentRef extends ModelObject implements Comparable<Exter
 			ModelCollection<ExternalDocumentRef> existingExternalRefs = new ModelCollection<ExternalDocumentRef>(stModelStore,
 					CompatibleModelStoreWrapper.documentUriIdToUri(stDocumentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
 					SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF, copyManager, ExternalDocumentRef.class, 
-					externalMap, specVersion);
+					specVersion);
 			for (Object externalRef:existingExternalRefs) {
 				if (!(externalRef instanceof ExternalDocumentRef)) {
 					logger.warn("Incorrect type for an external document ref: "+externalRef.getClass().toString());

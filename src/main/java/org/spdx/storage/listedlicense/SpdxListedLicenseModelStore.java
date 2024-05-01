@@ -39,10 +39,11 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spdx.core.DuplicateSpdxIdException;
+import org.spdx.core.IExternalElementInfo;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.core.SpdxCoreConstants.SpdxMajorVersion;
 import org.spdx.core.SpdxIdNotFoundException;
 import org.spdx.core.TypedValue;
+import org.spdx.library.model.v2.ModelObject;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.license.LicenseInfoFactory;
 import org.spdx.library.model.v2.license.SpdxListedLicenseException;
@@ -133,6 +134,11 @@ public abstract class SpdxListedLicenseModelStore implements IListedLicenseStore
 	 * @throws IOException
 	 */
 	abstract InputStream getExceptionInputStream(String exceptionId) throws IOException;
+	
+	/**
+	 * Map of an objectUri to a map of documentUri's to external element information
+	 */
+	protected Map<String, Map<String, IExternalElementInfo>> objectUriExternalMap = new HashMap<>();
 
 	/**
 	 * Loads all license and exception ID's from the appropriate JSON files
@@ -231,22 +237,22 @@ public abstract class SpdxListedLicenseModelStore implements IListedLicenseStore
 	 * @see org.spdx.storage.IModelStore#create(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void create(String objectUri, String type) throws InvalidSPDXAnalysisException {
-		String id = objectUriToId(objectUri);
+	public void create(TypedValue typedValue) throws InvalidSPDXAnalysisException {
+		String id = objectUriToId(typedValue.getObjectUri());
 		listedLicenseModificationLock.writeLock().lock();
 		try {
-			if (SpdxConstantsCompatV2.CLASS_CROSS_REF.equals(type)) {
+			if (SpdxConstantsCompatV2.CLASS_CROSS_REF.equals(typedValue.getType())) {
 				CrossRefJson crossRef = new CrossRefJson();
 				crossRef.setId(id);
 				this.crossRefs.put(id, crossRef);
-			} else if (SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE.equals(type)) {
+			} else if (SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE.equals(typedValue.getType())) {
 				if (this.licenseIds.containsKey(id.toLowerCase()) || this.exceptionIds.containsKey(id.toLowerCase())) {
 					logger.error("Duplicate SPDX ID on create: "+id);;
 					throw new DuplicateSpdxIdException("ID "+id+" already exists.");
 				}
 				this.licenseIds.put(id.toLowerCase(), id);
 				this.listedLicenseCache.put(id, new LicenseJson(id));
-			} else if (SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE_EXCEPTION.equals(type)) {
+			} else if (SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE_EXCEPTION.equals(typedValue.getType())) {
 				if (this.licenseIds.containsKey(id.toLowerCase()) || this.exceptionIds.containsKey(id.toLowerCase())) {
 					logger.error("Duplicate SPDX ID on create: "+id);;
 					throw new DuplicateSpdxIdException("ID "+id+" already exists.");
@@ -678,7 +684,7 @@ public abstract class SpdxListedLicenseModelStore implements IListedLicenseStore
 							listedLicenseModificationLock.writeLock().unlock();
 						}
 						try {
-							return new TypedValue(crossRefId, SpdxConstantsCompatV2.CLASS_CROSS_REF);
+							return new TypedValue(crossRefId, SpdxConstantsCompatV2.CLASS_CROSS_REF, ModelObject.LATEST_SPDX_2_VERSION);
 						} catch (InvalidSPDXAnalysisException e) {
 							logger.error("Error creating TypedValue for CrossRef",e);
 							throw new RuntimeException(e);
@@ -824,11 +830,11 @@ public abstract class SpdxListedLicenseModelStore implements IListedLicenseStore
 		listedLicenseModificationLock.readLock().lock();
 		try {
 			if (licenseIds.containsKey(id.toLowerCase())) {
-				return Optional.of(new TypedValue(id, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE));
+				return Optional.of(new TypedValue(id, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, ModelObject.LATEST_SPDX_2_VERSION));
 			} else if (exceptionIds.containsKey(id.toLowerCase())) {
-				return Optional.of(new TypedValue(id, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE_EXCEPTION));
+				return Optional.of(new TypedValue(id, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE_EXCEPTION, ModelObject.LATEST_SPDX_2_VERSION));
 			} else if (crossRefs.containsKey(id)) {
-				return Optional.of(new TypedValue(id, SpdxConstantsCompatV2.CLASS_CROSS_REF));
+				return Optional.of(new TypedValue(id, SpdxConstantsCompatV2.CLASS_CROSS_REF, ModelObject.LATEST_SPDX_2_VERSION));
 			} else {
 				return Optional.empty();
 			}
@@ -878,17 +884,17 @@ public abstract class SpdxListedLicenseModelStore implements IListedLicenseStore
 			List<TypedValue> allItems = new ArrayList<TypedValue>();
 			if (Objects.isNull(typeFilter) || SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE.equals(typeFilter)) {
 				for (String licenseId:this.licenseIds.values()) {
-					allItems.add(new TypedValue(licenseId, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE));
+					allItems.add(new TypedValue(licenseId, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, ModelObject.LATEST_SPDX_2_VERSION));
 				}
 			}
 			if (Objects.isNull(typeFilter) || SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE_EXCEPTION.equals(typeFilter)) {
 				for (String exceptionId:this.exceptionIds.values()) {
-					allItems.add(new TypedValue(exceptionId, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE_EXCEPTION));
+					allItems.add(new TypedValue(exceptionId, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE_EXCEPTION, ModelObject.LATEST_SPDX_2_VERSION));
 				}
 			}
 			if (Objects.isNull(typeFilter) || SpdxConstantsCompatV2.CLASS_CROSS_REF.equals(typeFilter)) {
 				for (String crossRefId:crossRefs.keySet()) {
-					allItems.add(new TypedValue(crossRefId, SpdxConstantsCompatV2.CLASS_CROSS_REF));
+					allItems.add(new TypedValue(crossRefId, SpdxConstantsCompatV2.CLASS_CROSS_REF, ModelObject.LATEST_SPDX_2_VERSION));
 				}
 			}
 			return Collections.unmodifiableList(allItems).stream();
@@ -1010,7 +1016,8 @@ public abstract class SpdxListedLicenseModelStore implements IListedLicenseStore
 	}
 
 	@Override
-	public boolean isPropertyValueAssignableTo(String objectUri, PropertyDescriptor propertyDescriptor, Class<?> clazz)
+	public boolean isPropertyValueAssignableTo(String objectUri, PropertyDescriptor propertyDescriptor, 
+			Class<?> clazz, String specVersion)
 			throws InvalidSPDXAnalysisException {
 		String id = objectUriToId(objectUri);
 		boolean isLicenseId = false;
@@ -1157,7 +1164,47 @@ public abstract class SpdxListedLicenseModelStore implements IListedLicenseStore
 	}
 	
 	@Override
-	public SpdxMajorVersion getSpdxVersion() {
-		return SpdxMajorVersion.VERSION_2;
+	public void close() throws Exception {
+		// Nothing to do for the either the in-memory or the web store
+	}
+	
+	/**
+	 * Adds an external reference for a given collection
+	 * @param externalObjectUri URI of the external SPDX Element or License
+	 * @param collectionUri URI of the SPDX document or collection
+	 * @param externalElementInfo info about the external element
+	 * @return the previous external mapping for the collection, null if no previous value is present
+	 */
+	@Override
+	public synchronized @Nullable IExternalElementInfo addExternalReference(String externalObjectUri, String collectionUri, IExternalElementInfo externalElementInfo) {
+		Map<String, IExternalElementInfo> externalObjectToCollectionMap = objectUriExternalMap.get(externalObjectUri);
+		if (Objects.isNull(externalObjectToCollectionMap)) {
+			externalObjectToCollectionMap = new HashMap<>();
+		}
+		return externalObjectToCollectionMap.put(collectionUri, externalElementInfo);
+	}
+	
+	/**
+	 * @param externalObjectUri object URI for an element external to a collection
+	 * @return a map of collection (or document) URI's mapped to their external element info for the given object URI
+	 */
+	@Override
+	public synchronized @Nullable Map<String, IExternalElementInfo> getExternalReferenceMap(String externalObjectUri) {
+		return objectUriExternalMap.get(externalObjectUri);
+	}
+	
+	/**
+	 * @param externalObjectUri URI of the external SPDX Element or License
+	 * @param collectionUri URI of the SPDX document or collection
+	 * @return the externalElementInfo associated with the collection for a given external element
+	 */
+	@Override
+	public synchronized @Nullable IExternalElementInfo getExternalElementInfo(String externalObjectUri, String collectionUri) {
+		Map<String, IExternalElementInfo> externalObjectToCollectionMap = objectUriExternalMap.get(externalObjectUri);
+		if (Objects.isNull(externalObjectToCollectionMap)) {
+			return null;
+		} else {
+			return externalObjectToCollectionMap.get(collectionUri);
+		}
 	}
 }

@@ -27,13 +27,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Stack;
 
-import javax.annotation.Nullable;
-
-import org.spdx.core.IExternalElementInfo;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.core.TypedValue;
-import org.spdx.library.model.v2.ModelStorageClassConverter;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxModelFactory;
 import org.spdx.storage.IModelStore;
@@ -74,12 +69,11 @@ public class LicenseExpressionParser {
 	 * @param documentUri Document URI for the document containing any extractedLicenseInfos - if any extractedLicenseInfos by ID already exist, they will be used.  If
 	 * none exist for an ID, they will be added.  If null, the default model document URI will be used.
 	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
-	 * @param externalMap map of URI's to ExternalMaps for any external elements
 	 * @return the parsed license expression
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	static AnyLicenseInfo parseLicenseExpression(String expression, IModelStore store, 
-			String documentUri, IModelCopyManager copyManager, @Nullable Map<String, IExternalElementInfo> externalMap) throws InvalidSPDXAnalysisException {
+			String documentUri, IModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
 		if (expression == null || expression.trim().isEmpty()) {
 			throw new LicenseParserException("Empty license expression");
 		}
@@ -92,7 +86,7 @@ public class LicenseExpressionParser {
 			return new SpdxNoneLicense();
 		} else {
 			try {
-				return parseLicenseExpression(tokens, store, documentUri, copyManager, externalMap);
+				return parseLicenseExpression(tokens, store, documentUri, copyManager);
 			} catch (LicenseParserException ex) {
 				// Add the expression to the error message to provide additional information to the user
 				throw new LicenseParserException(ex.getMessage()+" License expression: '"+expression+"'", ex);
@@ -144,12 +138,11 @@ public class LicenseExpressionParser {
 	 * @param store
 	 * @param documentUri
 	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
-	 * @param externalMap map of URI's to ExternalMaps for any external elements
 	 * @return
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	private static AnyLicenseInfo parseLicenseExpression(String[] tokens, IModelStore store, 
-			String documentUri, IModelCopyManager copyManager, @Nullable Map<String, IExternalElementInfo> externalMap) throws InvalidSPDXAnalysisException {
+			String documentUri, IModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
 		if (tokens == null || tokens.length == 0) {
 			throw new LicenseParserException("Expected license expression");
 		}
@@ -166,10 +159,10 @@ public class LicenseExpressionParser {
 					throw new LicenseParserException("Missing right parenthesis");
 				}
 				String[] nestedTokens = Arrays.copyOfRange(tokens, tokenIndex, rightParenIndex);
-				operandStack.push(parseLicenseExpression(nestedTokens, store, documentUri, copyManager, externalMap));
+				operandStack.push(parseLicenseExpression(nestedTokens, store, documentUri, copyManager));
 				tokenIndex = rightParenIndex + 1;		
 			} else if (OPERATOR_MAP.get(token) == null) {	// assumed to be a simple licensing type
-				operandStack.push(parseSimpleLicenseToken(token, store, documentUri, copyManager, externalMap));
+				operandStack.push(parseSimpleLicenseToken(token, store, documentUri, copyManager));
 			} else {
 				Operator operator = OPERATOR_MAP.get(token);
 				if (operator == Operator.WITH) {
@@ -260,12 +253,11 @@ public class LicenseExpressionParser {
 	 * @param baseStore
 	 * @param documentUri 
 	 * @param copyManager
-	 * @param externalMap map of URI's to ExternalMaps for any external elements
 	 * @return
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	private static AnyLicenseInfo parseSimpleLicenseToken(String token, IModelStore store, String documentUri,
-			IModelCopyManager copyManager, Map<String, IExternalElementInfo> externalMap) throws InvalidSPDXAnalysisException {
+			IModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(token, "Token can not be null");
 		Objects.requireNonNull(store, "Model store can not be null");
 		Objects.requireNonNull(documentUri, "Document URI can not be null");
@@ -285,15 +277,12 @@ public class LicenseExpressionParser {
 					// copy to the local store
 					copyManager.copy(store, listedLicense.getObjectUri(), listedLicense.getModelStore(), 
 							listedLicense.getObjectUri(), SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, 
-							externalMap,
 							listedLicense.getDocumentUri(), listedLicense.getDocumentUri(), 
 							listedLicense.getDocumentUri(), listedLicense.getDocumentUri());
 				}
 			}
-			return (AnyLicenseInfo) ModelStorageClassConverter.storedObjectToModelObject(
-					new TypedValue(SpdxConstantsCompatV2.LISTED_LICENSE_URL + licenseId.get(), 
-							SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE), 
-					documentUri, store, copyManager);
+			return (AnyLicenseInfo) SpdxModelFactory.getModelObjectV2(store, SpdxConstantsCompatV2.LISTED_LICENSE_URL, 
+					licenseId.get(), SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, copyManager, true);
 		} else {
 			// LicenseRef
 			Optional<String> caseSensitiveId = store.getCaseSensisitiveId(documentUri, token);

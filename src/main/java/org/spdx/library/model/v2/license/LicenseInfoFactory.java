@@ -18,7 +18,6 @@
 package org.spdx.library.model.v2.license;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -28,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.DefaultStoreNotInitialized;
-import org.spdx.core.IExternalElementInfo;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.storage.IModelStore;
@@ -71,14 +69,12 @@ public class LicenseInfoFactory {
 	 * @param documentUri Document URI for the document containing any extractedLicenseInfos - if any extractedLicenseInfos by ID already exist, they will be used.  If
 	 * none exist for an ID, they will be added.  If null, the default model document URI will be used.
 	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
-	 * @param externalMap Map of URI's of elements referenced but not present in the store
 	 * @return an SPDXLicenseInfo created from the string
 	 * @throws InvalidLicenseStringException 
 	 * @throws DefaultStoreNotInitialized 
 	 */
 	public static AnyLicenseInfo parseSPDXLicenseString(String licenseString, @Nullable IModelStore store, 
-			@Nullable String documentUri, @Nullable IModelCopyManager copyManager,
-			Map<String, IExternalElementInfo> externalMap) throws InvalidLicenseStringException, DefaultStoreNotInitialized {
+			@Nullable String documentUri, @Nullable IModelCopyManager copyManager) throws InvalidLicenseStringException, DefaultStoreNotInitialized {
 		if (Objects.isNull(store)) {
 			store = DefaultModelStore.getDefaultModelStore();
 		}
@@ -90,7 +86,7 @@ public class LicenseInfoFactory {
 		}
 		try {
 			return LicenseExpressionParser.parseLicenseExpression(licenseString, store, documentUri, 
-					copyManager, externalMap);
+					copyManager);
 		} catch (LicenseParserException e) {
 			throw new InvalidLicenseStringException(e.getMessage(),e);
 		} catch (InvalidSPDXAnalysisException e) {
@@ -116,7 +112,7 @@ public class LicenseInfoFactory {
 	 * @throws DefaultStoreNotInitialized 
 	 */
 	public static AnyLicenseInfo parseSPDXLicenseString(String licenseString) throws InvalidLicenseStringException, DefaultStoreNotInitialized {
-		return parseSPDXLicenseString(licenseString, null, null, null, null);
+		return parseSPDXLicenseString(licenseString, null, null, null);
 	}
 
 

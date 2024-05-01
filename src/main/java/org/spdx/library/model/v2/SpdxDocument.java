@@ -85,10 +85,10 @@ public class SpdxDocument extends SpdxElement {
 							if (modelStore.isCollectionProperty(tv.getObjectUri(), prop)) {
 								modelStore.listValues(tv.getObjectUri(), prop).forEachRemaining(value -> {
 									if (value instanceof TypedValue) {
-										String objectUri = ((TypedValue)value).getObjectUri();
+										String targetObjectUri = ((TypedValue)value).getObjectUri();
 										documentUrisToExternalDocRef.entrySet().forEach(entry -> {
-											if (objectUri.startsWith(entry.getKey())) {
-												this.externalMap.put(objectUri, entry.getValue());
+											if (targetObjectUri.startsWith(entry.getKey())) {
+												modelStore.addExternalReference(targetObjectUri, this.getObjectUri(), entry.getValue());
 											}
 										});
 									}
@@ -96,10 +96,10 @@ public class SpdxDocument extends SpdxElement {
 							} else {
 								Object value = modelStore.getValue(tv.getObjectUri(), prop);
 								if (value instanceof TypedValue) {
-									String objectUri = ((TypedValue)value).getObjectUri();
+									String targetObjectUri = ((TypedValue)value).getObjectUri();
 									documentUrisToExternalDocRef.entrySet().forEach(entry -> {
-										if (objectUri.startsWith(entry.getKey())) {
-											this.externalMap.put(objectUri, entry.getValue());
+										if (targetObjectUri.startsWith(entry.getKey())) {
+											modelStore.addExternalReference(targetObjectUri, this.getObjectUri(), entry.getValue());
 										}
 									});
 								}
@@ -117,7 +117,7 @@ public class SpdxDocument extends SpdxElement {
 			leaveCriticalSection(lock);
 		}
 		
-		documentDescribes = new RelatedElementCollection(this, RelationshipType.DESCRIBES, null, externalMap, specVersion);
+		documentDescribes = new RelatedElementCollection(this, RelationshipType.DESCRIBES, null, specVersion);
 		extractedLicenseInfos = (Collection<ExtractedLicenseInfo>)(Collection<?>)this.getObjectPropertyValueSet(SpdxConstantsCompatV2.PROP_SPDX_EXTRACTED_LICENSES, ExtractedLicenseInfo.class);
 	}
 	
