@@ -29,6 +29,7 @@ import java.util.Stack;
 
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.library.model.v2.ModelObject;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxModelFactory;
 import org.spdx.storage.IModelStore;
@@ -277,8 +278,7 @@ public class LicenseExpressionParser {
 					// copy to the local store
 					copyManager.copy(store, listedLicense.getObjectUri(), listedLicense.getModelStore(), 
 							listedLicense.getObjectUri(), SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, 
-							listedLicense.getDocumentUri(), listedLicense.getDocumentUri(), 
-							listedLicense.getDocumentUri(), listedLicense.getDocumentUri());
+							ModelObject.LATEST_SPDX_2_VERSION, listedLicense.getDocumentUri());
 				}
 			}
 			return (AnyLicenseInfo) SpdxModelFactory.getModelObjectV2(store, SpdxConstantsCompatV2.LISTED_LICENSE_URL, 

@@ -261,18 +261,6 @@ public class SpdxDocument extends SpdxElement {
 		this.extractedLicenseInfos.addAll(extractedLicenseInfos);
 		return this;
 	}
-
-	/**
-	 * @return the specVersion
-	 */
-	public String getSpecVersion() throws InvalidSPDXAnalysisException {
-		Optional<String> retval = getStringPropertyValue(SpdxConstantsCompatV2.PROP_SPDX_SPEC_VERSION);
-		if (retval.isPresent()) {
-			return retval.get();
-		} else {
-			return "";
-		}
-	}
 	
 	/**
 	 * @param specVersion the specVersion to set
@@ -299,21 +287,16 @@ public class SpdxDocument extends SpdxElement {
 	protected List<String> _verify(Set<String> verifiedIds, String verifySpecVersion) {
 		List<String> retval = new ArrayList<>();
 		String specVersion;
-		try {
-			specVersion = getSpecVersion();
-			if (specVersion.isEmpty()) {
-				retval.add("Missing required SPDX version");
-				specVersion = verifySpecVersion;
-			} else {
-				String verify = SpdxVerificationHelper.verifySpdxVersion(specVersion);
-				if (verify != null) {
-					retval.add(verify);
-					specVersion = verifySpecVersion;
-				}			
-			}
-		} catch (InvalidSPDXAnalysisException e2) {
-			retval.add("Error getting spec version");
+		specVersion = getSpecVersion();
+		if (specVersion.isEmpty()) {
+			retval.add("Missing required SPDX version");
 			specVersion = verifySpecVersion;
+		} else {
+			String verify = SpdxVerificationHelper.verifySpdxVersion(specVersion);
+			if (verify != null) {
+				retval.add(verify);
+				specVersion = verifySpecVersion;
+			}			
 		}
 		retval.addAll(super._verify(verifiedIds, specVersion));
 

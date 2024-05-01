@@ -211,7 +211,7 @@ public class Annotation extends ModelObject implements Comparable<Annotation> {
 	 * @see org.spdx.library.model.compat.v2.compat.v2.ModelObject#_verify(java.util.List)
 	 */
 	@Override
-	public List<String> _verify(Set<String> verifiedIds, String specVersion) {
+	protected List<String> _verify(Set<String> verifiedIds, String specVersion) {
 		List<String> retval = new ArrayList<String>();
 		try {
 			if (AnnotationType.MISSING.equals(getAnnotationType())) {

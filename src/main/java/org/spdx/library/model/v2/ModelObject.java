@@ -130,7 +130,7 @@ public abstract class ModelObject extends CoreModelObject {
 	 */
 	public ModelObject(IModelStore modelStore, String documentUri, String identifier, @Nullable IModelCopyManager copyManager, 
 			boolean create) throws InvalidSPDXAnalysisException {
-		super(modelStore, CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, identifier, DefaultModelStore.getDefaultModelStore()), copyManager, create, LATEST_SPDX_2_VERSION);
+		super(modelStore, CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, identifier, modelStore), copyManager, create, LATEST_SPDX_2_VERSION);
 		Objects.requireNonNull(modelStore, "Model Store can not be null");
 		Objects.requireNonNull(documentUri, "Document URI can not be null");
 		Objects.requireNonNull(identifier, "ID can not be null");
@@ -143,6 +143,7 @@ public abstract class ModelObject extends CoreModelObject {
 		} else {
 			this.id = identifier;
 		}
+		this.documentUri = documentUri;
 //		if ((LicenseInfoFactory.isSpdxListedLicenseId(id) || LicenseInfoFactory.isSpdxListedExceptionId(id)) &&
 //				!SpdxConstantsCompatV2.LISTED_LICENSE_URL.equals(documentUri)) {
 //			logger.warn("Listed license document URI changed to listed license URL for documentUri "+documentUri);
@@ -220,7 +221,7 @@ public abstract class ModelObject extends CoreModelObject {
 	 * @param propertyDescriptor property descriptor for the object in question
 	 * @return true if the object is "to" part of a relationship
 	 */
-	protected boolean isRelatedElement(PropertyDescriptor propertyDescriptor) {
+	public boolean isRelatedElement(PropertyDescriptor propertyDescriptor) {
 		return SpdxConstantsCompatV2.PROP_RELATED_SPDX_ELEMENT.equals(propertyDescriptor);
 	}
 	
@@ -313,7 +314,7 @@ public abstract class ModelObject extends CoreModelObject {
 	}
 	
 	@Override
-	protected TypedValue toTypedValue() throws InvalidSPDXAnalysisException {
+	public TypedValue toTypedValue() throws InvalidSPDXAnalysisException {
 		return CompatibleModelStoreWrapper.typedValueFromDocUri(this.documentUri, this.id, modelStore.getIdType(id).equals(IdType.Anonymous), this.getType());
 	}
 	
