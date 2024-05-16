@@ -34,7 +34,7 @@ import org.spdx.storage.IModelStore;
  * @author Gary O'Neall
  *
  */
-public class GenericModelObject extends ModelObject {
+public class GenericModelObject extends ModelObjectV2 {
 
 	public static final String GENERIC_MODEL_OBJECT_TYPE = "GenericModelObject";
 

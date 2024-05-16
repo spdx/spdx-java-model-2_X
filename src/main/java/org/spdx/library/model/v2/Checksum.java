@@ -40,7 +40,7 @@ import org.spdx.storage.IModelStore.IdType;
  * 
  * @author Gary O'Neall
  */
-public class Checksum extends ModelObject implements Comparable<Checksum>  {
+public class Checksum extends ModelObjectV2 implements Comparable<Checksum>  {
 
 	/**
 	 * @throws InvalidSPDXAnalysisException
@@ -87,7 +87,7 @@ public class Checksum extends ModelObject implements Comparable<Checksum>  {
 		Objects.requireNonNull(algorithm, "Missing required algorithm");
 		Objects.requireNonNull(value, "Missing required value");
 		Checksum retval = new Checksum(modelStore, documentUri, 
-				modelStore.getNextId(IdType.Anonymous, documentUri), null, true);
+				modelStore.getNextId(IdType.Anonymous), null, true);
 		retval.setAlgorithm(algorithm);
 		retval.setValue(value);
 		return retval;

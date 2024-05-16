@@ -137,7 +137,7 @@ public class Read {
 	 * @return Stream of all items store within the document
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static Stream<? extends ModelObject> getAllItems(IModelStore modelStore, String documentUri, 
+	public static Stream<? extends ModelObjectV2> getAllItems(IModelStore modelStore, String documentUri, 
 			String typeFilter) throws InvalidSPDXAnalysisException { 
 		return modelStore.getAllItems(documentUri, typeFilter).map((TypedValue tv) -> {
 			try {

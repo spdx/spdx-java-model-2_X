@@ -309,7 +309,7 @@ public abstract class License extends SimpleLicensingInfo {
 	
 	/**
 	 * @param deprecated
-	 * @return a ModelUpdate that can be applied through the ModelObject
+	 * @return a ModelUpdate that can be applied through the ModelObjectV2
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ModelUpdate updateSetDeprecated(Boolean deprecated) throws InvalidSPDXAnalysisException {

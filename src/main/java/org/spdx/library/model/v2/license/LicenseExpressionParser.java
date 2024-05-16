@@ -29,7 +29,7 @@ import java.util.Stack;
 
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.library.model.v2.ModelObject;
+import org.spdx.library.model.v2.ModelObjectV2;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxModelFactory;
 import org.spdx.storage.IModelStore;
@@ -196,7 +196,7 @@ public class LicenseExpressionParser {
 					if (!((operand instanceof SimpleLicensingInfo) || (operand instanceof OrLaterOperator))) {
 						throw new LicenseParserException("License with exception is not of type SimpleLicensingInfo or OrLaterOperator");
 					}
-					WithExceptionOperator weo = new WithExceptionOperator(store, documentUri, store.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+					WithExceptionOperator weo = new WithExceptionOperator(store, documentUri, store.getNextId(IdType.Anonymous), copyManager, true);
 					weo.setLicense(operand);
 					weo.setException(licenseException);
 					operandStack.push(weo);			
@@ -272,16 +272,16 @@ public class LicenseExpressionParser {
 			licenseId = LicenseInfoFactory.listedLicenseIdCaseSensitive(token);
 		}
 		if (licenseId.isPresent()) {
-			if (!store.exists(SpdxConstantsCompatV2.LISTED_LICENSE_URL + licenseId.get())) {
+			if (!store.exists(SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX + licenseId.get())) {
 				SpdxListedLicense listedLicense = LicenseInfoFactory.getListedLicenseById(licenseId.get());
 				if (Objects.nonNull(copyManager)) {
 					// copy to the local store
 					copyManager.copy(store, listedLicense.getObjectUri(), listedLicense.getModelStore(), 
 							listedLicense.getObjectUri(), SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, 
-							ModelObject.LATEST_SPDX_2_VERSION, listedLicense.getDocumentUri());
+							ModelObjectV2.LATEST_SPDX_2_VERSION, listedLicense.getDocumentUri());
 				}
 			}
-			return (AnyLicenseInfo) SpdxModelFactory.getModelObjectV2(store, SpdxConstantsCompatV2.LISTED_LICENSE_URL, 
+			return (AnyLicenseInfo) SpdxModelFactory.getModelObjectV2(store, SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, 
 					licenseId.get(), SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, copyManager, true);
 		} else {
 			// LicenseRef
@@ -315,7 +315,7 @@ public class LicenseExpressionParser {
 			if (!(license instanceof SimpleLicensingInfo)) {
 				throw new LicenseParserException("Missing license for the '+' or later operator");
 			}
-			OrLaterOperator olo = new OrLaterOperator(store, documentUri, store.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+			OrLaterOperator olo = new OrLaterOperator(store, documentUri, store.getNextId(IdType.Anonymous), copyManager, true);
 			olo.setLicense((SimpleLicensingInfo)license);
 			operandStack.push(olo);
 		} else {
@@ -348,7 +348,7 @@ public class LicenseExpressionParser {
 				return operand1;
 			} else {
 				ConjunctiveLicenseSet retval = new ConjunctiveLicenseSet(store, documentUri, 
-						store.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+						store.getNextId(IdType.Anonymous), copyManager, true);
 				retval.addMember(operand1);
 				retval.addMember(operand2);
 				return retval;
@@ -360,7 +360,7 @@ public class LicenseExpressionParser {
 				return operand1;
 			} else {
 				DisjunctiveLicenseSet retval = new DisjunctiveLicenseSet(store, documentUri, 
-						store.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+						store.getNextId(IdType.Anonymous), copyManager, true);
 				retval.addMember(operand1);
 				retval.addMember(operand2);
 				return retval;

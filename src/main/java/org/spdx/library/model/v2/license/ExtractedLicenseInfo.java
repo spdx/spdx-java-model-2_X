@@ -44,7 +44,7 @@ import org.spdx.storage.IModelStore.IdType;
 public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
 	
 	public ExtractedLicenseInfo() throws InvalidSPDXAnalysisException {
-		super(DefaultModelStore.getDefaultModelStore().getNextId(IdType.LicenseRef, DefaultModelStore.getDefaultDocumentUri()));
+		super(DefaultModelStore.getDefaultDocumentUri() + "#" + DefaultModelStore.getDefaultModelStore().getNextId(IdType.LicenseRef));
 	}
 	
 	public ExtractedLicenseInfo(String id) throws InvalidSPDXAnalysisException {
@@ -136,7 +136,7 @@ public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
 	}
 	
 //	@Override
-//	public boolean equivalent(ModelObject compare) throws InvalidSPDXAnalysisException {
+//	public boolean equivalent(ModelObjectV2 compare) throws InvalidSPDXAnalysisException {
 //		if (compare instanceof ExtractedLicenseInfo) {
 //			// Only test for the text - other fields do not need to equal to be considered equivalent
 //			return LicenseCompareHelper.isLicenseTextEquivalent(this.getExtractedText(), ((ExtractedLicenseInfo)compare).getExtractedText());
@@ -145,9 +145,4 @@ public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
 //		}
 //	}
 	//TODO: See if we can get this function moved into the compatibility library
-	
-	@Override
-	public boolean equivalent(CoreModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
-		return equivalent(compare);
-	}
 }

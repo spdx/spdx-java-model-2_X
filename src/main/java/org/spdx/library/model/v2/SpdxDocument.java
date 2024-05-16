@@ -31,6 +31,7 @@ import javax.annotation.Nullable;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
 import org.spdx.core.SpdxInvalidTypeException;
 import org.spdx.core.TypedValue;
 import org.spdx.library.model.v2.enumerations.RelationshipType;
@@ -65,9 +66,9 @@ public class SpdxDocument extends SpdxElement {
 	@SuppressWarnings("unchecked")
 	public SpdxDocument(IModelStore modelStore, String documentUri, IModelCopyManager copyManager, boolean create) throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, copyManager, create);
-		String docSpecVersion = getSpecVersion();
-		if (Objects.nonNull(docSpecVersion)) {
-			this.specVersion = docSpecVersion;
+		Optional<String> docSpecVersion = this.getStringPropertyValue(SpdxConstantsCompatV2.PROP_SPDX_SPEC_VERSION);
+		if (docSpecVersion.isPresent()) {
+			this.specVersion = docSpecVersion.get();
 		}
 		externalDocumentRefs = (Collection<ExternalDocumentRef>)(Collection<?>)this.getObjectPropertyValueSet(SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF, ExternalDocumentRef.class);
 		// Initialize the external map from the external document refs
@@ -266,16 +267,19 @@ public class SpdxDocument extends SpdxElement {
 	 * @param specVersion the specVersion to set
 	 */
 	public void setSpecVersion(String specVersion) throws InvalidSPDXAnalysisException {
-		if (strict) {
-			if (Objects.isNull(specVersion)) {
-				throw new InvalidSPDXAnalysisException("Can not set required spec version to null");
-			}
-			String verify = SpdxVerificationHelper.verifySpdxVersion(specVersion);
-			if (Objects.nonNull(verify) && !verify.isEmpty()) {
-				throw new InvalidSPDXAnalysisException(verify);
-			}
+		if (Objects.isNull(specVersion)) {
+			throw new InvalidSPDXAnalysisException("Can not set required spec version to null");
+		}
+		// Spec version is always strict
+		String verify = SpdxVerificationHelper.verifySpdxVersion(specVersion);
+		if (Objects.nonNull(verify) && !verify.isEmpty()) {
+			throw new InvalidSPDXAnalysisException(verify);
+		}
+		if (!ModelRegistry.getModelRegistry().containsSpecVersion(specVersion)) {
+			throw new InvalidSPDXAnalysisException("Spec version "+specVersion+" is not implemented");
 		}
 		setPropertyValue(SpdxConstantsCompatV2.PROP_SPDX_SPEC_VERSION, specVersion);
+		this.specVersion = specVersion;
 	}
 	
 
@@ -287,17 +291,23 @@ public class SpdxDocument extends SpdxElement {
 	protected List<String> _verify(Set<String> verifiedIds, String verifySpecVersion) {
 		List<String> retval = new ArrayList<>();
 		String specVersion;
-		specVersion = getSpecVersion();
-		if (specVersion.isEmpty()) {
-			retval.add("Missing required SPDX version");
-			specVersion = verifySpecVersion;
-		} else {
-			String verify = SpdxVerificationHelper.verifySpdxVersion(specVersion);
-			if (verify != null) {
-				retval.add(verify);
+		try {
+			specVersion = getSpecVersion();
+			if (specVersion.isEmpty()) {
+				retval.add("Missing required SPDX version");
 				specVersion = verifySpecVersion;
-			}			
+			} else {
+				String verify = SpdxVerificationHelper.verifySpdxVersion(specVersion);
+				if (verify != null) {
+					retval.add(verify);
+					specVersion = verifySpecVersion;
+				}			
+			}
+		} catch (InvalidSPDXAnalysisException e2) {
+			retval.add("Exception getting specVersion: "+e2.getMessage());
+			specVersion = LATEST_SPDX_2_VERSION;
 		}
+		
 		retval.addAll(super._verify(verifiedIds, specVersion));
 
 		// name

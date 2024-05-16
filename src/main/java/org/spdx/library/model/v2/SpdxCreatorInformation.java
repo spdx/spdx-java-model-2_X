@@ -34,7 +34,7 @@ import org.spdx.storage.IModelStore;
  * @author gary
  *
  */
-public class SpdxCreatorInformation extends ModelObject {
+public class SpdxCreatorInformation extends ModelObjectV2 {
 
 	/**
 	 * @throws InvalidSPDXAnalysisException

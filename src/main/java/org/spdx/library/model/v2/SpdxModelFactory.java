@@ -135,7 +135,7 @@ public class SpdxModelFactory {
 		org.spdx.library.model.v2.SpdxDocument retval = new org.spdx.library.model.v2.SpdxDocument(modelStore, documentUri, copyManager, true);
 		String date = new SimpleDateFormat(SpdxConstantsCompatV2.SPDX_DATE_FORMAT).format(new Date());
 		org.spdx.library.model.v2.SpdxCreatorInformation creationInfo = new org.spdx.library.model.v2.SpdxCreatorInformation(
-				modelStore, documentUri, modelStore.getNextId(IdType.Anonymous, documentUri), copyManager, true);
+				modelStore, documentUri, modelStore.getNextId(IdType.Anonymous), copyManager, true);
 		creationInfo.getCreators().add("Tool: SPDX Tools");
 		creationInfo.setCreated(date);
 		creationInfo.setLicenseListVersion(org.spdx.library.model.v2.license.ListedLicenses.getListedLicenses().getLicenseListVersion());
@@ -152,10 +152,10 @@ public class SpdxModelFactory {
 	 * @param id for the item
 	 * @param type SPDX class or type
 	 *  @param copyManager if non-null, allows for copying of properties from other model stores or document URI's when referenced
-	 * @return a ModelObject of type type
+	 * @return a ModelObjectV2 of type type
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static org.spdx.library.model.v2.ModelObject createModelObjectV2(IModelStore modelStore, String documentUri, String id,
+	public static org.spdx.library.model.v2.ModelObjectV2 createModelObjectV2(IModelStore modelStore, String documentUri, String id,
 			String type, IModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(modelStore, "Model store can not be null");
 		Objects.requireNonNull(documentUri, "A document URI or namespace must be supplied for all SPDX version 2 model objects");
@@ -171,10 +171,10 @@ public class SpdxModelFactory {
 	 * @param type SPDX class or type
 	 * @param copyManager if non-null, allows for copying of properties from other model stores or document URI's when referenced
 	 * @param create if true, create the model object if it does not already exist
-	 * @return a ModelObject of type type
+	 * @return a ModelObjectV2 of type type
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static org.spdx.library.model.v2.ModelObject getModelObjectV2(IModelStore modelStore, String documentUri, String id,
+	public static org.spdx.library.model.v2.ModelObjectV2 getModelObjectV2(IModelStore modelStore, String documentUri, String id,
 			String type, IModelCopyManager copyManager, boolean create) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(modelStore, "Model store can not be null");
 		Objects.requireNonNull(documentUri, "A document URI or namespace must be supplied for all SPDX version 2 model objects");
@@ -198,7 +198,7 @@ public class SpdxModelFactory {
 		}
 		try {
 			Constructor<?> con = clazz.getDeclaredConstructor(IModelStore.class, String.class, String.class, IModelCopyManager.class, boolean.class);
-			return (org.spdx.library.model.v2.ModelObject)con.newInstance(modelStore, documentUri, id, copyManager, create);
+			return (org.spdx.library.model.v2.ModelObjectV2)con.newInstance(modelStore, documentUri, id, copyManager, create);
 		} catch (NoSuchMethodException e) {
 			throw new InvalidSPDXAnalysisException("Could not create the model object SPDX version 2 type: "+type);
 		} catch (SecurityException e) {
@@ -365,10 +365,10 @@ public class SpdxModelFactory {
 	 * @param documentUri Document URI for for the ID
 	 * @param copyManager Optional copy manager for copying any properties from other model
 	 * @param objectUri ID for the model object
-	 * @return SPDX Version 2 compatible ModelObject with the ID in the model store
+	 * @return SPDX Version 2 compatible ModelObjectV2 with the ID in the model store
 	 * @throws InvalidSPDXAnalysisException 
 	 */
-	public static Optional<org.spdx.library.model.v2.ModelObject> getModelObjectV2(IModelStore modelStore, String documentUri,
+	public static Optional<org.spdx.library.model.v2.ModelObjectV2> getModelObjectV2(IModelStore modelStore, String documentUri,
 			String id, @Nullable IModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(modelStore, "Model store can not be null");
 		Objects.requireNonNull(documentUri, "A document URI or namespace must be supplied for all SPDX version 2 model objects");
@@ -402,7 +402,7 @@ public class SpdxModelFactory {
 		}
 	}
 
-	public static ModelObject createModelObject(IModelStore stModelStore,
+	public static ModelObjectV2 createModelObject(IModelStore stModelStore,
 			String objectUri, String type, IModelCopyManager copyManager) {
 		// TODO Auto-generated method stub
 		return null;

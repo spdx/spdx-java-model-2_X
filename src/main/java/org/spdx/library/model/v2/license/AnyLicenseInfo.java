@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.library.model.v2.ModelObject;
+import org.spdx.library.model.v2.ModelObjectV2;
 import org.spdx.storage.IModelStore;
 
 /**
@@ -34,7 +34,7 @@ import org.spdx.storage.IModelStore;
  * @author Gary O'Neall
  *
  */
-public abstract class AnyLicenseInfo extends ModelObject {
+public abstract class AnyLicenseInfo extends ModelObjectV2 {
 	
 	static final Logger logger = LoggerFactory.getLogger(AnyLicenseInfo.class.getName());
 	

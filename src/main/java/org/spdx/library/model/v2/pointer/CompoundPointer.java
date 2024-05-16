@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.SpdxInvalidTypeException;
-import org.spdx.library.model.v2.ModelObject;
+import org.spdx.library.model.v2.ModelObjectV2;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
@@ -38,7 +38,7 @@ import org.spdx.storage.IModelStore;
  * This is an abstract class of pointers which must be subclassed
  * @author Gary O'Neall
  */
-public abstract class CompoundPointer extends ModelObject {
+public abstract class CompoundPointer extends ModelObjectV2 {
 
 	/**
 	 * @throws InvalidSPDXAnalysisException

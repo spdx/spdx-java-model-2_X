@@ -53,7 +53,7 @@ public class SpdxFile extends SpdxItem implements Comparable<SpdxFile> {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxFile() throws InvalidSPDXAnalysisException {
-		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous, DefaultModelStore.getDefaultDocumentUri()));
+		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
 	}
 
 	/**

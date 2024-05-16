@@ -19,9 +19,11 @@ package org.spdx.library.model.v2;
 
 import javax.annotation.Nullable;
 
+import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.storage.IModelStore;
+import org.spdx.storage.IModelStore.IdType;
 
 /**
  * Generic SPDX element - primarily used for testing
@@ -37,7 +39,7 @@ public class GenericSpdxElement extends SpdxElement {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public GenericSpdxElement() throws InvalidSPDXAnalysisException {
-		super();
+		super(DefaultModelStore.getDefaultModelStore().getNextId(IdType.SpdxId));
 	}
 
 	/**

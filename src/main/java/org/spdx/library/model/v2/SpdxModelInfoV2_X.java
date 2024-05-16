@@ -104,7 +104,7 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 						SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX + ".");
 			}
 			String id = objectUri.substring(SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX.length());
-			return SpdxModelFactory.getModelObjectV2(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_URL, 
+			return SpdxModelFactory.getModelObjectV2(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, 
 					id, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, copyManager, true);
 		} else if (SpdxListedLicenseException.class.isAssignableFrom(typeClass)) {
 			// check that the URI is a listed license URI
@@ -115,7 +115,7 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 						SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX + ".");
 			}
 			String id = objectUri.substring(SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX.length());
-			return SpdxModelFactory.getModelObjectV2(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_URL, 
+			return SpdxModelFactory.getModelObjectV2(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, 
 					id, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE_EXCEPTION, copyManager, true);
 		} else if (SpdxElement.class.isAssignableFrom(typeClass)) {
 			//TODO: Do we want to check for external references if (modelStore.getExternalReferenceMap(objectUri) != null && ??)

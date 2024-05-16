@@ -39,7 +39,7 @@ import org.spdx.storage.IModelStore;
  * 
  * @author Gary O'Neall
  */
-public class ExternalRef extends ModelObject implements Comparable<ExternalRef> {
+public class ExternalRef extends ModelObjectV2 implements Comparable<ExternalRef> {
 
 	/**
 	 * @throws InvalidSPDXAnalysisException

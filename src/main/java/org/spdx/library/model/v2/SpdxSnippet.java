@@ -58,7 +58,7 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxSnippet() throws InvalidSPDXAnalysisException {
-		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous, DefaultModelStore.getDefaultDocumentUri()));
+		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
 	}
 
 	/**

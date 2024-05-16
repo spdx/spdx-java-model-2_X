@@ -29,7 +29,7 @@ import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.library.model.v2.ModelObject;
+import org.spdx.library.model.v2.ModelObjectV2;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
@@ -41,7 +41,7 @@ import org.spdx.storage.IModelStore;
  * @author Gary O'Neall
  * 
  */
-public class LicenseException extends ModelObject {
+public class LicenseException extends ModelObjectV2 {
 	
 	/**
 	 * Create a new LicenseException object
@@ -55,7 +55,7 @@ public class LicenseException extends ModelObject {
 	public LicenseException(IModelStore modelStore, String documentUri, String id, 
 			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_URL, id, copyManager, create);
+		super(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, id, copyManager, create);
 		if (!(this instanceof IndividualUriValue)) {
 		    setPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_EXCEPTION_ID, id);    // Set a property with the exception ID per the spec
 		}
@@ -75,7 +75,7 @@ public class LicenseException extends ModelObject {
 	}
 
 	public LicenseException(String id, String name, String text) throws InvalidSPDXAnalysisException {
-		super(DefaultModelStore.getDefaultModelStore(), SpdxConstantsCompatV2.LISTED_LICENSE_URL, id, 
+		super(DefaultModelStore.getDefaultModelStore(), SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, id, 
 				DefaultModelStore.getDefaultCopyManager(), true);
 		setName(name);
 		setLicenseExceptionText(text);

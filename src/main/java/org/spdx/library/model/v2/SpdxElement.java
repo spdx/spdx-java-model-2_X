@@ -41,7 +41,7 @@ import org.spdx.storage.PropertyDescriptor;
  * 
  * @author Gary O'Neall
  */
-public abstract class SpdxElement extends ModelObject {
+public abstract class SpdxElement extends ModelObjectV2 {
 
 	static final Logger logger = LoggerFactory.getLogger(SpdxElement.class);
 	
@@ -51,7 +51,7 @@ public abstract class SpdxElement extends ModelObject {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxElement() throws InvalidSPDXAnalysisException {
-		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous, DefaultModelStore.getDefaultDocumentUri()));
+		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
 		
 	}
 

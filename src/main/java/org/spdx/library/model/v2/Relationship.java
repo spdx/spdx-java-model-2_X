@@ -34,7 +34,7 @@ import org.spdx.storage.IModelStore;
  * @author Gary O'Neall
  *
  */
-public class Relationship extends ModelObject implements Comparable<Relationship> {
+public class Relationship extends ModelObjectV2 implements Comparable<Relationship> {
 	
 	/**
 	 * @throws InvalidSPDXAnalysisException

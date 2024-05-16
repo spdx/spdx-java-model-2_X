@@ -35,7 +35,7 @@ import org.spdx.storage.IModelStore;
  * @author Gary O'Neall
  *
  */
-public class Annotation extends ModelObject implements Comparable<Annotation> {
+public class Annotation extends ModelObjectV2 implements Comparable<Annotation> {
 
 	/**
 	 * @throws InvalidSPDXAnalysisException

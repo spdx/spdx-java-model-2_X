@@ -47,7 +47,7 @@ import org.spdx.storage.IModelStore.IdType;
  * 
  * @author Gary O'Neall
  */
-public class ExternalDocumentRef extends ModelObject implements Comparable<ExternalDocumentRef>, IExternalElementInfo {
+public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<ExternalDocumentRef>, IExternalElementInfo {
 	
 	/**
 	 * Obtain an ExternalDocumentRef which maps to the document URI for the external SPDX document.
@@ -86,7 +86,7 @@ public class ExternalDocumentRef extends ModelObject implements Comparable<Exter
 			// if we got here, we didn't find an existing one, need to create one
 			if (Objects.nonNull(copyManager)) {
 				ExternalDocumentRef retval = new ExternalDocumentRef(stModelStore, stDocumentUri,
-						stModelStore.getNextId(IdType.DocumentRef, stDocumentUri + "#"), copyManager, true);
+						stDocumentUri + "#" + stModelStore.getNextId(IdType.DocumentRef), copyManager, true);
 				retval.setSpdxDocumentNamespace(externalDocUri);
 				ModelObjectHelper.addValueToCollection(stModelStore, 
 						CompatibleModelStoreWrapper.documentUriIdToUri(stDocumentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
@@ -105,7 +105,7 @@ public class ExternalDocumentRef extends ModelObject implements Comparable<Exter
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalDocumentRef() throws InvalidSPDXAnalysisException {
-		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.DocumentRef, DefaultModelStore.getDefaultDocumentUri()));
+		this(DefaultModelStore.getDefaultDocumentUri() + "#" + DefaultModelStore.getDefaultModelStore().getNextId(IdType.DocumentRef));
 	}
 	
 	/**

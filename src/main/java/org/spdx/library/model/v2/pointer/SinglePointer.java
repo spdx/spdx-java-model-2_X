@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.SpdxInvalidTypeException;
-import org.spdx.library.model.v2.ModelObject;
+import org.spdx.library.model.v2.ModelObjectV2;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxElement;
 import org.spdx.storage.IModelStore;
@@ -42,7 +42,7 @@ import org.spdx.storage.IModelStore;
  * 
  * @author Gary O'Neall
  */
-public abstract class SinglePointer extends ModelObject implements Comparable<SinglePointer> {
+public abstract class SinglePointer extends ModelObjectV2 implements Comparable<SinglePointer> {
 	
 	static final Logger logger = LoggerFactory.getLogger(SinglePointer.class);
 

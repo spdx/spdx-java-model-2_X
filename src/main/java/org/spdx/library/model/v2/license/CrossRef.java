@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.library.model.v2.ModelObject;
+import org.spdx.library.model.v2.ModelObjectV2;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
@@ -38,7 +38,7 @@ import org.spdx.storage.IModelStore.IModelStoreLock;
  * @author Gary O'Neall
  *
  */
-public class CrossRef extends ModelObject {
+public class CrossRef extends ModelObjectV2 {
 	
 	/**
 	 * @throws InvalidSPDXAnalysisException

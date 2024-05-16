@@ -35,7 +35,7 @@ import org.spdx.storage.IModelStore;
  * @author gary
  *
  */
-public class SpdxPackageVerificationCode extends ModelObject {
+public class SpdxPackageVerificationCode extends ModelObjectV2 {
 
 	/**
 	 * @throws InvalidSPDXAnalysisException

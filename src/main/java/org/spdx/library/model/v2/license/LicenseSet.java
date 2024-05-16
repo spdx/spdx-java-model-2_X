@@ -49,7 +49,7 @@ public abstract class LicenseSet extends AnyLicenseInfo {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public LicenseSet() throws InvalidSPDXAnalysisException {
-		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous, DefaultModelStore.getDefaultDocumentUri()));
+		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
 	}
 
 	/**

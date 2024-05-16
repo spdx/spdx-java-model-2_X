@@ -50,7 +50,7 @@ public class SpdxListedLicense extends License {
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public SpdxListedLicense(String id) throws InvalidSPDXAnalysisException {
-		this(DefaultModelStore.getDefaultModelStore(), SpdxConstantsCompatV2.LISTED_LICENSE_URL, id, 
+		this(DefaultModelStore.getDefaultModelStore(), SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, id, 
 				DefaultModelStore.getDefaultCopyManager(), true);
 	}
 
@@ -67,7 +67,7 @@ public class SpdxListedLicense extends License {
 	public SpdxListedLicense(IModelStore modelStore, String documentUri, String id, 
 			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_URL, id, copyManager, create);
+		super(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, id, copyManager, create);
 		crossRef = (Collection<CrossRef>)(Collection<?>)this.getObjectPropertyValueSet(SpdxConstantsCompatV2.PROP_CROSS_REF, CrossRef.class);
 	}
 	
