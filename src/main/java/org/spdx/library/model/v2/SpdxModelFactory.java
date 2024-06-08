@@ -19,9 +19,10 @@ package org.spdx.library.model.v2;
 
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.core.SpdxCoreConstants.SpdxMajorVersion;
 import org.spdx.core.SpdxIdNotFoundException;
 import org.spdx.core.TypedValue;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.SpdxListedLicense;
 import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
@@ -37,7 +38,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -56,7 +56,6 @@ public class SpdxModelFactory {
 	static final Logger logger = LoggerFactory.getLogger(SpdxModelFactory.class);
 	
 	public static Map<String, Class<?>> SPDX_TYPE_TO_CLASS_V2;
-	public static Map<String, Class<?>> SPDX_TYPE_TO_CLASS_V3;
 	public static Map<Class<?>, String> SPDX_CLASS_TO_TYPE;
 	static {
 		Map<String, Class<?>> typeToClassV2 = new HashMap<>();
@@ -107,17 +106,10 @@ public class SpdxModelFactory {
 		typeToClassV2.put(SpdxConstantsCompatV2.CLASS_EXTERNAL_EXTRACTED_LICENSE, org.spdx.library.model.v2.license.ExternalExtractedLicenseInfo.class);	
 		typeToClassV2.put(SpdxConstantsCompatV2.ENUM_PURPOSE, org.spdx.library.model.v2.enumerations.Purpose.class);
 		SPDX_TYPE_TO_CLASS_V2 = Collections.unmodifiableMap(typeToClassV2);
-		Map<String, Class<?>> typeToClassV3 = new HashMap<>();
-		//TODO Add V3 class strings
-		SPDX_TYPE_TO_CLASS_V3 = Collections.unmodifiableMap(typeToClassV3);
 		Map<Class<?>, String> classToType = new HashMap<>();
 		for (Entry<String, Class<?>> entry:typeToClassV2.entrySet()) {
 			classToType.put(entry.getValue(), entry.getKey());
 		}
-		for (Entry<String, Class<?>> entry:typeToClassV3.entrySet()) {
-			classToType.put(entry.getValue(), entry.getKey());
-		}
-		
 		SPDX_CLASS_TO_TYPE = Collections.unmodifiableMap(classToType);
 	}
 
@@ -138,13 +130,30 @@ public class SpdxModelFactory {
 				modelStore, documentUri, modelStore.getNextId(IdType.Anonymous), copyManager, true);
 		creationInfo.getCreators().add("Tool: SPDX Tools");
 		creationInfo.setCreated(date);
-		creationInfo.setLicenseListVersion(org.spdx.library.model.v2.license.ListedLicenses.getListedLicenses().getLicenseListVersion());
 		retval.setCreationInfo(creationInfo);
-		retval.setDataLicense(org.spdx.library.model.v2.license.ListedLicenses.getListedLicenses().getListedLicenseById(SpdxConstantsCompatV2.SPDX_DATA_LICENSE_ID));
+		retval.setDataLicense(createSpdxDocumentDataLicense(modelStore, documentUri, copyManager));
 		retval.setSpecVersion(Version.CURRENT_SPDX_VERSION);
 		return retval;
 	}
 	
+	/**
+	 * @param modelStore
+	 * @param documentUri
+	 * @param copyManager
+	 * @return
+	 * @throws InvalidSPDXAnalysisException 
+	 */
+	private static AnyLicenseInfo createSpdxDocumentDataLicense(
+			IModelStore modelStore, String documentUri,
+			IModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
+		SpdxListedLicense retval = new SpdxListedLicense(modelStore, documentUri, SpdxConstantsCompatV2.SPDX_DATA_LICENSE_ID, copyManager, true);
+		retval.setFsfLibre(true);
+		retval.setLicenseText(SpdxConstantsCompatV2.CC0_LICENSE_TEXT);
+		retval.setName("Creative Commons Zero v1.0 Universal");
+		retval.getSeeAlso().add("https://creativecommons.org/publicdomain/zero/1.0/legalcode");
+		return retval;
+	}
+
 	/**
 	 * Create an SPDX version 2 model object in a model store given the document URI, ID and type
 	 * @param modelStore model store where the object is to be created
@@ -216,148 +225,6 @@ public class SpdxModelFactory {
 				throw new InvalidSPDXAnalysisException("Unexpected invocation target exception for SPDX version 2 type: "+type, e);
 			}
 		}
-	}
-
-	/**
-	 * @param type SPDX Type
-	 * @param specVersion Version of the SPDX Spec
-	 * @return class associated with the type
-	 * @throws InvalidSPDXAnalysisException 
-	 */
-	public static Class<? extends Object> typeToClass(String type, SpdxMajorVersion specVersion) throws InvalidSPDXAnalysisException {
-		Class<?> retval;
-		if (specVersion.compareTo(SpdxMajorVersion.VERSION_3) < 0) {
-			retval = SPDX_TYPE_TO_CLASS_V2.get(type);
-		} else {
-			retval = SPDX_TYPE_TO_CLASS_V3.get(type);
-		}
-		if (Objects.isNull(retval)) {
-			throw new InvalidSPDXAnalysisException("Unknown SPDX type: "+type);
-		}
-		return retval;
-	}
-	
-	/**
-	 * @param type SPDX Type
-	 * @return class associated with the type for the latest spec version
-	 * @throws InvalidSPDXAnalysisException 
-	 */
-	public static Class<? extends Object> typeToClass(String type) throws InvalidSPDXAnalysisException {
-		return typeToClass(type, SpdxMajorVersion.latestVersion());
-	}
-	
-	/**
-	 * @param store model store
-	 * @param documentUri Document URI for the elements to fetch
-	 * @param copyManager optional copy manager
-	 * @param type SPDX V2 type to filter on
-	 * @return stream of elements of the compatible version 2 types
-	 * @throws InvalidSPDXAnalysisException
-	 */
-	public static Stream<?> getElementsV2(IModelStore store, String documentUri, @Nullable IModelCopyManager copyManager, 
-			String type) throws InvalidSPDXAnalysisException {
-		Objects.requireNonNull(store, "Store must not be null");
-		Objects.requireNonNull(type, "type must not be null");
-		Objects.requireNonNull(documentUri, "Document URI can not be null for SPDX V2 elements");
-		if (!SPDX_TYPE_TO_CLASS_V2.containsKey(type)) {
-			logger.error("Can not get elements for a non-SPDX version 2 type: "+type);
-			throw new InvalidSPDXAnalysisException("Can not get elements for a non-SPDX version 2 type: "+type);
-		}
-		return store.getAllItems(CompatibleModelStoreWrapper.documentUriToNamespace(documentUri, false), type).map(tv -> {
-			//TODO: Change this a null namespace and filtering on anonomous or startswith document URI - this will catch the anon. types
-			try {
-				boolean anon = store.getIdType(tv.getObjectUri()) == IdType.Anonymous;
-				return createModelObjectV2(store, documentUri,
-						CompatibleModelStoreWrapper.objectUriToId(anon, tv.getObjectUri(), documentUri),
-						tv.getType(), copyManager);
-			} catch (InvalidSPDXAnalysisException e) {
-				logger.error("Error creating model object",e);
-				throw new RuntimeException(e);
-			}
-		});
-	}
-	
-	/**
-	 * @param store model store
-	 * @param nameSpace optional namespace to filter elements on
-	 * @param copyManager optional copy manager
-	 * @param type SPDX V2 type to filter on
-	 * @return SPDX spec version 3 elements matching the namespace and class
-	 * @throws InvalidSPDXAnalysisException
-	 */
-	public static Stream<?> getElementsV3(IModelStore store, @Nullable String nameSpace, @Nullable IModelCopyManager copyManager, 
-			String type) throws InvalidSPDXAnalysisException {
-		Objects.requireNonNull(store, "Store must not be null");
-		Objects.requireNonNull(type, "type must not be null");
-		if (!SPDX_TYPE_TO_CLASS_V3.containsKey(type)) {
-			logger.error("Can not get elements for a non-SPDX version 3 type: "+type);
-			throw new InvalidSPDXAnalysisException("Can not get elements for a non-SPDX version 3 type: "+type);
-		}
-		return store.getAllItems(nameSpace, type).map(tv -> {
-			try {
-				return createModelObjectV2(store, nameSpace,
-						CompatibleModelStoreWrapper.objectUriToId(store.getIdType(tv.getObjectUri()) == IdType.Anonymous, tv.getObjectUri(), nameSpace),
-						tv.getType(), copyManager);
-			} catch (InvalidSPDXAnalysisException e) {
-				logger.error("Error creating model object",e);
-				throw new RuntimeException(e);
-			}
-		});
-	}
-	
-	/**
-	 * @param store model store
-	 * @param nameSpace optional namespace to filter elements on
-	 * @param copyManager optional copy manager
-	 * @param spdxClass class to filter elements on
-	 * @return a stream of elements matching the namespace and class
-	 * @throws InvalidSPDXAnalysisException
-	 */
-	public static Stream<?> getElements(IModelStore store, @Nullable String nameSpace, @Nullable IModelCopyManager copyManager, 
-			Class<?> spdxClass) throws InvalidSPDXAnalysisException {
-		Objects.requireNonNull(store, "Store must not be null");
-		Objects.requireNonNull(spdxClass, "spdxClass must not be null");
-		String type = SPDX_CLASS_TO_TYPE.get(spdxClass);
-		if (Objects.isNull(type)) {
-			logger.error("Unknow SPDX class: "+spdxClass.toString());
-			throw new InvalidSPDXAnalysisException("Unknow SPDX class: "+spdxClass.toString());
-		}
-		if (SPDX_TYPE_TO_CLASS_V3.containsKey(type)) {
-			return getElementsV3(store, nameSpace, copyManager, type);
-		} else if (SPDX_TYPE_TO_CLASS_V2.containsKey(type)) {
-			return getElementsV2(store, nameSpace.endsWith("#") ? nameSpace.substring(0, nameSpace.length()-1) : nameSpace,
-					copyManager, type);
-		} else {
-			logger.error("Unknow SPDX class: "+spdxClass.toString());
-			throw new InvalidSPDXAnalysisException("Unknow SPDX class: "+spdxClass.toString());
-		}
-	}
-	
-	
-
-	/**
-	 * @param classUri URI for the class type
-	 * @param specVersion Version of the SPDX Spec
-	 * @return class represented by the URI
-	 * @throws InvalidSPDXAnalysisException
-	 */
-	public static Class<?> classUriToClass(String classUri, SpdxMajorVersion specVersion) throws InvalidSPDXAnalysisException {
-		Objects.requireNonNull(classUri, "Missing required class URI");
-		int indexOfPound = classUri.lastIndexOf('#');
-		if (indexOfPound < 1) {
-			throw new InvalidSPDXAnalysisException("Invalid class URI: "+classUri);
-		}
-		String type = classUri.substring(indexOfPound+1);
-		return typeToClass(type, specVersion);
-	}
-	
-	/**
-	 * @param classUri URI for the class type
-	 * @return class represented by the URI for the more recent spec version
-	 * @throws InvalidSPDXAnalysisException
-	 */
-	public static Class<?> classUriToClass(String classUri) throws InvalidSPDXAnalysisException {
-		return classUriToClass(classUri, SpdxMajorVersion.latestVersion());
 	}
 
 	/**

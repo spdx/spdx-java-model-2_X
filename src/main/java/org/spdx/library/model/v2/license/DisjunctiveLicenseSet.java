@@ -80,7 +80,6 @@ public class DisjunctiveLicenseSet extends LicenseSet {
 		} catch (InvalidSPDXAnalysisException e) {
 			return "ERROR RETRIEVING LICENSE SET MEMBERS";
 		}
-
 	}
 	
 	@Override

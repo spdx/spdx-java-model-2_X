@@ -31,6 +31,7 @@ import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxVerificationHelper;
+import org.spdx.licenseTemplate.LicenseTextHelper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
 
@@ -42,6 +43,8 @@ import org.spdx.storage.IModelStore.IdType;
  *
  */
 public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
+	
+	public static final String UNINITIALIZED_LICENSE_TEXT = "[Initialized with license Parser.  The actual license text is not available]";
 	
 	public ExtractedLicenseInfo() throws InvalidSPDXAnalysisException {
 		super(DefaultModelStore.getDefaultDocumentUri() + "#" + DefaultModelStore.getDefaultModelStore().getNextId(IdType.LicenseRef));
@@ -126,7 +129,7 @@ public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
 			if (licenseText == null || licenseText.isEmpty()) {
 				retval.add("Missing required license text for " + id);
 			}
-			if (LicenseExpressionParser.UNINITIALIZED_LICENSE_TEXT.equals(licenseText)) {
+			if (UNINITIALIZED_LICENSE_TEXT.equals(licenseText)) {
 				retval.add("License not found for " + id);
 			}
 		} catch (InvalidSPDXAnalysisException ex) {
@@ -135,14 +138,18 @@ public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
 		return retval;
 	}
 	
-//	@Override
-//	public boolean equivalent(ModelObjectV2 compare) throws InvalidSPDXAnalysisException {
-//		if (compare instanceof ExtractedLicenseInfo) {
-//			// Only test for the text - other fields do not need to equal to be considered equivalent
-//			return LicenseCompareHelper.isLicenseTextEquivalent(this.getExtractedText(), ((ExtractedLicenseInfo)compare).getExtractedText());
-//		} else {
-//			return false;
-//		}
-//	}
-	//TODO: See if we can get this function moved into the compatibility library
+	@Override
+	public boolean equivalent(CoreModelObject compare) throws InvalidSPDXAnalysisException {
+		return equivalent(compare, false);
+	}
+	
+	@Override
+	public boolean equivalent(CoreModelObject compare, boolean ignoreRelatedItems) throws InvalidSPDXAnalysisException {
+		if (compare instanceof ExtractedLicenseInfo) {
+			// Only test for the text - other fields do not need to equal to be considered equivalent
+			return LicenseTextHelper.isLicenseTextEquivalent(this.getExtractedText(), ((ExtractedLicenseInfo)compare).getExtractedText());
+		} else {
+			return false;
+		}
+	}
 }

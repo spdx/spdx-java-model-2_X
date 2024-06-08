@@ -149,7 +149,6 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 				int index = objectUri.lastIndexOf('#');
 				documentUri = objectUri.substring(0, index);
 				id = objectUri.substring(index + 1);
-				// TODO: Test to make sure I'm not off by one
 			} else {
 				documentUri = DefaultModelStore.getDefaultDocumentUri();
 				id = objectUri;

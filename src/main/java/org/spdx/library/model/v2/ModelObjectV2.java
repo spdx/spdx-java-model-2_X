@@ -324,6 +324,11 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 		return CompatibleModelStoreWrapper.typedValueFromDocUri(this.documentUri, this.id, modelStore.getIdType(id).equals(IdType.Anonymous), this.getType());
 	}
 	
+	@Override
+	public boolean isNoAssertion(Object value) {
+		return ("NOASSERTION".equals(value) || value instanceof SpdxNoAssertionLicense || value instanceof SpdxNoAssertionElement);
+	}
+	
 	// The following methods are helper methods to create Model Object subclasses using the same model store and document as this Model Object
 
 	/**
