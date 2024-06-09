@@ -82,8 +82,17 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 	}
 
 	@Override
-	public Map<String, Object> getUriToIndividualMap() {
-		return URI_TO_INDIVIDUAL;
+	public @Nullable Object uriToIndividual(String uri) {
+		if (SpdxConstantsCompatV2.REFERENCE_TYPE_URI_PATTERN.matcher(uri).matches()) {
+			try {
+				return new ReferenceType(uri);
+			} catch (InvalidSPDXAnalysisException e) {
+				logger.error("Error converting URI to reference type", e);
+				return null;
+			}
+		} else {
+			return URI_TO_INDIVIDUAL.get(uri);
+		}
 	}
 
 	@Override

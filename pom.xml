@@ -14,7 +14,7 @@
   	<dependency>
   		<groupId>org.spdx</groupId>
   		<artifactId>spdx-java-core</artifactId>
-  		<version>0.0.1_SNAPSHOT</version>
+  		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
     <dependency>
     	<groupId>com.google.code.gson</groupId>

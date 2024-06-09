@@ -130,7 +130,10 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 	 */
 	public ModelObjectV2(IModelStore modelStore, String documentUri, String identifier, @Nullable IModelCopyManager copyManager, 
 			boolean create) throws InvalidSPDXAnalysisException {
-		super(modelStore, CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, identifier, modelStore), copyManager, create, LATEST_SPDX_2_VERSION);
+		super(modelStore, CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, identifier, modelStore), 
+				copyManager, create, LATEST_SPDX_2_VERSION, 
+				CompatibleModelStoreWrapper.documentUriToNamespace(documentUri, 
+						IdType.Anonymous.equals(modelStore.getIdType(CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, identifier, modelStore)))));
 		Objects.requireNonNull(modelStore, "Model Store can not be null");
 		Objects.requireNonNull(documentUri, "Document URI can not be null");
 		Objects.requireNonNull(identifier, "ID can not be null");
@@ -176,7 +179,7 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 			id = objectUri.substring(index + 1);
 			// TODO: Test to make sure I'm not off by one
 		} else {
-			documentUri = DefaultModelStore.getDefaultDocumentUri();
+			documentUri = Objects.isNull(getIdPrefix()) ? getIdPrefix() : DefaultModelStore.getDefaultDocumentUri();
 			id = objectUri;
 		}
 	}
