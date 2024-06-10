@@ -86,7 +86,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 			// if we got here, we didn't find an existing one, need to create one
 			if (Objects.nonNull(copyManager)) {
 				ExternalDocumentRef retval = new ExternalDocumentRef(stModelStore, stDocumentUri,
-						stDocumentUri + "#" + stModelStore.getNextId(IdType.DocumentRef), copyManager, true);
+						stModelStore.getNextId(IdType.DocumentRef), copyManager, true);
 				retval.setSpdxDocumentNamespace(externalDocUri);
 				ModelObjectHelper.addValueToCollection(stModelStore, 
 						CompatibleModelStoreWrapper.documentUriIdToUri(stDocumentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
@@ -105,7 +105,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalDocumentRef() throws InvalidSPDXAnalysisException {
-		this(DefaultModelStore.getDefaultDocumentUri() + "#" + DefaultModelStore.getDefaultModelStore().getNextId(IdType.DocumentRef));
+		this(DefaultModelStore.getDefaultModelStore().getNextId(IdType.DocumentRef));
 	}
 	
 	/**
@@ -113,27 +113,24 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalDocumentRef(String id) throws InvalidSPDXAnalysisException {
-		super(id);
-		if (!SpdxVerificationHelper.isValidExternalDocRef(id)) {
-			logger.warn("Invalid external document reference ID "+id+
-					".  Must be of the format "+SpdxConstantsCompatV2.EXTERNAL_DOC_REF_PATTERN.pattern());
-		}
+		this(DefaultModelStore.getDefaultModelStore(), DefaultModelStore.getDefaultDocumentUri(), id, 
+				DefaultModelStore.getDefaultCopyManager(), true);
 	}
 
 	/**
 	 * @param modelStore Storage for the model objects
 	 * @param documentUri SPDX Document URI for a document associated with this model
-	 * @param objectUri URI for the object - must be unique within the SPDX store
+	 * @param id for the object - must be unique within the SPDX store and must match the pattern for the external document reference
 	 * @param copyManager - if supplied, model objects will be implicitly copied into this model store and document URI when referenced by setting methods
 	 * @param create - if true, the object will be created in the store if it is not already present
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public ExternalDocumentRef(IModelStore modelStore, String documentUri, String objectUri, 
+	public ExternalDocumentRef(IModelStore modelStore, String documentUri, String id, 
 			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri, objectUri, copyManager, create);
-		if (!SpdxVerificationHelper.isValidExternalDocRef(objectUri)) {
-			logger.warn("Invalid external document reference ID "+objectUri+
+		super(modelStore, documentUri, id, copyManager, create);
+		if (!SpdxVerificationHelper.isValidExternalDocRef(id)) {
+			logger.warn("Invalid external document reference ID "+id+
 					".  Must be of the format "+SpdxConstantsCompatV2.EXTERNAL_DOC_REF_PATTERN.pattern());
 		}
 	}

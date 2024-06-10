@@ -243,7 +243,7 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	@SuppressWarnings("unchecked")
-	protected Optional<AnyLicenseInfo> getAnyLicenseInfoPropertyValue(PropertyDescriptor propertyDescriptor) throws InvalidSPDXAnalysisException {
+	public Optional<AnyLicenseInfo> getAnyLicenseInfoPropertyValue(PropertyDescriptor propertyDescriptor) throws InvalidSPDXAnalysisException {
 		Optional<Object> result = getObjectPropertyValue(propertyDescriptor);
 		if (!result.isPresent()) {
 			return Optional.empty();

@@ -6,6 +6,7 @@ package org.spdx.library.model.compat.v2;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -85,10 +86,15 @@ public class MockModelStore implements IModelStore {
 
 	@Override
 	public String getNextId(IdType idType) throws InvalidSPDXAnalysisException {
-		if (IdType.Anonymous.equals(idType)) {
-			return "__anon__" + Integer.toString(nextIdNum++);
-		} else {
-			return SpdxConstantsCompatV2.SPDX_ELEMENT_REF_PRENUM + Integer.toString(nextIdNum++);
+		
+		switch (idType) {
+			//TODO: Move the compat constants into it's own constants file
+			case Anonymous: return ANON_PREFIX+String.valueOf(nextIdNum++);
+			case LicenseRef: return SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+String.valueOf(nextIdNum++);
+			case DocumentRef: return SpdxConstantsCompatV2.EXTERNAL_DOC_REF_PRENUM+String.valueOf(nextIdNum++);
+			case SpdxId: return SpdxConstantsCompatV2.SPDX_ELEMENT_REF_PRENUM+String.valueOf(nextIdNum++);
+			case ListedLicense: throw new InvalidSPDXAnalysisException("Can not generate a license ID for a Listed License");
+			default: throw new InvalidSPDXAnalysisException("Unknown ID type for next ID: "+idType.toString());
 		}
 	}
 
@@ -102,7 +108,16 @@ public class MockModelStore implements IModelStore {
 	@Override
 	public Stream<TypedValue> getAllItems(String nameSpace, String typeFilter)
 			throws InvalidSPDXAnalysisException {
-		return null;
+		Iterator<TypedValue> valueIter = objectUriToTypedValue.values().iterator();
+		List<TypedValue> allItems = new ArrayList<>();
+		while (valueIter.hasNext()) {
+			TypedValue item = valueIter.next();
+			if ((Objects.isNull(typeFilter) || typeFilter.equals(item.getType())) && 
+					(Objects.isNull(nameSpace) || item.getObjectUri().startsWith(nameSpace))) {
+				allItems.add(item);
+			}
+		}
+		return Collections.unmodifiableList(allItems).stream();
 	}
 
 	@Override
@@ -173,7 +188,7 @@ public class MockModelStore implements IModelStore {
 			throws InvalidSPDXAnalysisException {
 		@SuppressWarnings("unchecked")
 		Collection<Object> collection = (Collection<Object>)(valueMap.get(objectUri).get(propertyDescriptor));
-		return collection.iterator();
+		return Objects.isNull(collection) ? new ArrayList<Object>().iterator() : collection.iterator();
 	}
 
 	@Override

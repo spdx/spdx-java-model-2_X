@@ -1,17 +1,16 @@
 package org.spdx.library.model.compat.v2.license;
 
-import java.util.List;
-
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxModelFactory;
-import org.spdx.library.TypedValue;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.storage.IModelStore;
-import org.spdx.storage.compat.v2.CompatibleModelStoreWrapper;
-import org.spdx.storage.simple.InMemSpdxStore;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.compat.v2.MockCopyManager;
+import org.spdx.library.model.compat.v2.MockModelStore;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
+import org.spdx.library.model.v2.license.LicenseException;
+import org.spdx.library.model.v2.license.ListedLicenseException;
+import org.spdx.library.model.v2.license.SimpleLicensingInfo;
+import org.spdx.library.model.v2.license.WithExceptionOperator;
 
 import junit.framework.TestCase;
 
@@ -35,23 +34,23 @@ public class WithExceptionOperatorTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		license1 = new ExtractedLicenseInfo(LICENSE_ID1, LICENSE_TEXT1);
 		license2 = new ExtractedLicenseInfo(LICENSE_ID2, LICENSE_TEXT2);
-		exception1 = new LicenseException(EXCEPTION_ID1, EXCEPTION_NAME1,
+		exception1 = new ListedLicenseException(EXCEPTION_ID1, EXCEPTION_NAME1,
 				EXCEPTION_TEXT1);
-		exception2 = new LicenseException(EXCEPTION_ID2, EXCEPTION_NAME2,
+		exception2 = new ListedLicenseException(EXCEPTION_ID2, EXCEPTION_NAME2,
 				EXCEPTION_TEXT2);
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_3);
 	}
 
 	public void testHashCode() throws InvalidSPDXAnalysisException {
 		SimpleLicensingInfo sameLicId = new ExtractedLicenseInfo(LICENSE_ID1, "different text");
-		LicenseException sameExceptionId = new LicenseException(EXCEPTION_ID1, "different Name",
+		LicenseException sameExceptionId = new ListedLicenseException(EXCEPTION_ID1, "different Name",
 				"different exception text"); 
 		WithExceptionOperator weo1 = new WithExceptionOperator(license1, exception1);
 		WithExceptionOperator weo2 = new WithExceptionOperator(license2, exception2);
@@ -62,7 +61,7 @@ public class WithExceptionOperatorTest extends TestCase {
 
 	public void testEqualsObject() throws InvalidSPDXAnalysisException {
 		SimpleLicensingInfo sameLicId = new ExtractedLicenseInfo(LICENSE_ID1, "different text");
-		LicenseException sameExceptionId = new LicenseException(EXCEPTION_ID1, "different Name",
+		LicenseException sameExceptionId = new ListedLicenseException(EXCEPTION_ID1, "different Name",
 				"different exception text"); 
 		WithExceptionOperator weo1 = new WithExceptionOperator(license1, exception1);
 		WithExceptionOperator weo2 = new WithExceptionOperator(license2, exception2);
@@ -80,29 +79,6 @@ public class WithExceptionOperatorTest extends TestCase {
 		weo1.setLicense(null);
 		assertEquals(2, weo1.verify().size());
 	}
-
-
-	public void testCopy() throws InvalidSPDXAnalysisException {
-		WithExceptionOperator weo1 = new WithExceptionOperator(license1, exception1);
-		IModelStore store = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		ModelCopyManager copyManager = new ModelCopyManager();
-		@SuppressWarnings("unused")
-		TypedValue tv = copyManager.copy(store, weo1.getModelStore(),
-				CompatibleModelStoreWrapper.documentUriIdToUri(weo1.getDocumentUri(), weo1.getId(), weo1.getModelStore()),
-				weo1.getType(), weo1.getDocumentUri(), DefaultModelStore.getDefaultDocumentUri(),
-				weo1.getDocumentUri(), DefaultModelStore.getDefaultDocumentUri());
-		WithExceptionOperator clone = (WithExceptionOperator) SpdxModelFactory.createModelObjectV2(store, 
-				DefaultModelStore.getDefaultDocumentUri(), weo1.getId(), SpdxConstantsCompatV2.CLASS_WITH_EXCEPTION_OPERATOR, copyManager);
-		ExtractedLicenseInfo lic1 = (ExtractedLicenseInfo)weo1.getLicense();
-		ExtractedLicenseInfo lic1FromClone = (ExtractedLicenseInfo)clone.getLicense();
-		assertEquals(lic1.getExtractedText(), lic1FromClone.getExtractedText());
-		LicenseException le1 = weo1.getException();
-		LicenseException le1FromClone = clone.getException();
-		assertEquals(le1.getLicenseExceptionId(), le1FromClone.getLicenseExceptionId());
-		assertEquals(le1.getLicenseExceptionText(), le1FromClone.getLicenseExceptionText());
-		assertEquals(le1.getName(), le1FromClone.getName());
-	}
-
 
 	public void testSetLicense() throws InvalidSPDXAnalysisException {
 		WithExceptionOperator weo1 = new WithExceptionOperator(license1, exception1);
@@ -142,10 +118,5 @@ public class WithExceptionOperatorTest extends TestCase {
 		assertEquals(EXCEPTION_ID2, le1.getLicenseExceptionId());
 		assertEquals(EXCEPTION_TEXT2, le1.getLicenseExceptionText());
 		assertEquals(EXCEPTION_NAME2, le1.getName());
-	}
-	
-	public void testClassPathException() throws InvalidSPDXAnalysisException, InvalidLicenseStringException {
-		List<String> result = LicenseInfoFactory.parseSPDXLicenseV2String("GPL-2.0-only WITH Classpath-exception-2.0").verify();
-		assertTrue(result.isEmpty());
 	}
 }

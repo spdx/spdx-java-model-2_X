@@ -23,8 +23,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-import org.spdx.library.Version;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxVerificationHelper;
+import org.spdx.library.model.v2.Version;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
 
 import junit.framework.TestCase;
 

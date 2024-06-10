@@ -28,6 +28,8 @@ import java.util.regex.Matcher;
 import javax.annotation.Nullable;
 
 import org.spdx.core.CoreModelObject;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.DefaultStoreNotInitialized;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
@@ -49,26 +51,54 @@ import org.spdx.storage.IModelStore;
 public class ExternalSpdxElement extends SpdxElement implements IndividualUriValue {
 	
 	// Note: The documentUri and ID must be specified
-
+	
+	public ExternalSpdxElement(String documentUri, String id) throws DefaultStoreNotInitialized, InvalidSPDXAnalysisException {
+		this(DefaultModelStore.getDefaultModelStore(), documentUri, id, DefaultModelStore.getDefaultCopyManager());
+	}
+	
 	/**
 	 * @param modelStore Store to store THIS reference to an external SPDX element
 	 * @param documentUri documentURI for representing the external document
 	 * @param id ID of the external SPDX element
-	 * @param create - always set to true
+	 * @param create this parameter is ignored since it is external
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalSpdxElement(IModelStore modelStore, String documentUri, String id, 
 			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri, id, copyManager, create);
+		super(modelStore, documentUri, id, copyManager, true);
+	}
+
+	/**
+	 * @param modelStore Store to store THIS reference to an external SPDX element
+	 * @param documentUri documentURI for representing the external document
+	 * @param id ID of the external SPDX element
+	 * @throws InvalidSPDXAnalysisException
+	 */
+	public ExternalSpdxElement(IModelStore modelStore, String documentUri, String id, 
+			@Nullable IModelCopyManager copyManager)
+			throws InvalidSPDXAnalysisException {
+		super(modelStore, documentUri, id, copyManager, true);
 	}
 	
 	/**
+	 * @param documentReferencingExternal document containing the external reference
 	 * @return external document ID for the external reference
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public String getExternalDocumentId() throws InvalidSPDXAnalysisException {
-		return this.getDocumentUri();
+	public String getExternalDocumentId(SpdxDocument documentReferencingExternal) throws InvalidSPDXAnalysisException {
+		Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_SPDX_ELEMENT_URI_PATTERN.matcher(getObjectUri());
+		if (!matcher.matches()) {
+			throw new InvalidSPDXAnalysisException("Invalid URI format: "+getObjectUri()+".  Expects namespace#SPDXRef-XXX");
+		}
+		Optional<ExternalDocumentRef> externalDocRef = ExternalDocumentRef.getExternalDocRefByDocNamespace(documentReferencingExternal.getModelStore(),
+				documentReferencingExternal.getDocumentUri(), matcher.group(1), documentReferencingExternal.getCopyManager(), 
+				documentReferencingExternal.getSpecVersion());
+		if (!externalDocRef.isPresent()) {
+			logger.error("Could not find or create the external document reference for document namespace "+ matcher.group(1));
+			throw new InvalidSPDXAnalysisException("Could not find or create the external document reference for document namespace "+ matcher.group(1));
+		}
+		return externalDocRef.get().getId();
 	}
 	
 	/**
@@ -94,26 +124,25 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	protected List<String> _verify(Set<String> verifiedIds, String specVersion) {
 		// we don't want to call super.verify since we really don't require those fields
 		List<String> retval = new ArrayList<>();
-		String id = this.getId();
-		Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_ELEMENT_REF_PATTERN.matcher(id);
+		String objectUri = getObjectUri();
+		Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_SPDX_ELEMENT_URI_PATTERN.matcher(objectUri);
 		if (!matcher.matches()) {				
 			retval.add("Invalid objectUri format for an external document reference.  Must be of the form "+SpdxConstantsCompatV2.EXTERNAL_ELEMENT_REF_PATTERN.pattern());
-		} else {
-			try {
-				externalDocumentIdToNamespace(matcher.group(1), getModelStore(), getDocumentUri(), getCopyManager());
-			} catch (InvalidSPDXAnalysisException e) {
-				retval.add(e.getMessage());
-			}
 		}
+		// TODO: See if there is a way to verify the referring SPDX document includes this referenced document URI
 		return retval;
 	}
-
+	
 	/**
-	 * @return the External URI associated with this external SPDX element
-	 * @throws InvalidSPDXAnalysisException
+	 * @param documentReferencingExternal document containing the external reference
+	 * @return the ID used for referencing this external element within the documentReferencingExternal
+	 * of the form DocRef-XXX:SpdxRef-YYY
+	 * @throws InvalidSPDXAnalysisException on error in SPDX parsing
 	 */
-	public String getExternalSpdxElementURI() throws InvalidSPDXAnalysisException {
-		return this.getDocumentUri() + "#" + getId();
+	public String referenceElementId(SpdxDocument documentReferencingExternal) throws InvalidSPDXAnalysisException {
+		return uriToExternalSpdxElementReference(getObjectUri(), documentReferencingExternal.getModelStore(),
+				documentReferencingExternal.getDocumentUri(), documentReferencingExternal.getCopyManager(),
+				documentReferencingExternal.getSpecVersion());
 	}
 	
 	/**
@@ -148,10 +177,10 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	 * @param copyManager if true, create the external doc ref if it is not already in the ModelStore
 	 * @param copyManager if non-null, create the external Doc ref if it is not a property of the SPDX Document
 	 * @param specVersion version of the spec used for this external SPDX element
-	 * @return external SPDX element ID in the form DocumentRef-XX:SPDXRef-YY
+	 * @return internal reference for the external SPDX element ID in the form DocumentRef-XX:SPDXRef-YY
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static String uriToExternalSpdxElementId(String uri,
+	public static String uriToExternalSpdxElementReference(String uri,
 			IModelStore stModelStore, String stDocumentUri, IModelCopyManager copyManager, String specVersion) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(uri, "URI can not be null");
 		Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_SPDX_ELEMENT_URI_PATTERN.matcher(uri);
@@ -187,17 +216,20 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 		if (!(compare instanceof ExternalSpdxElement)) {
 			return false;
 		}
-		return getId().equals(((ExternalSpdxElement)compare).getId());
+		return getObjectUri().equals(compare.getObjectUri());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.spdx.library.model.compat.v2.compat.v2.ModelObject#equivalent(org.spdx.library.model.compat.v2.compat.v2.ModelObject, boolean)
+	 */
+	@Override
+	public boolean equivalent(CoreModelObject compare, boolean ignoreRelatedElements) throws InvalidSPDXAnalysisException {
+		return equivalent(compare);
+	}
+	
 	@Override
 	public String getIndividualURI() {
-		try {
-			return getExternalSpdxElementURI();
-		} catch (InvalidSPDXAnalysisException e) {
-			logger.error("Error getting external SPDX element URI",e);
-			throw new RuntimeException(e);
-		}
+		return getObjectUri();
 	}
 	
 	@Override

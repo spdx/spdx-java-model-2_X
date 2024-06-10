@@ -20,14 +20,19 @@ package org.spdx.library.model.compat.v2.license;
 import java.util.Arrays;
 import java.util.List;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxModelFactory;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.compat.v2.MockCopyManager;
+import org.spdx.library.model.compat.v2.MockModelStore;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxModelFactory;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.license.DisjunctiveLicenseSet;
+import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import junit.framework.TestCase;
 
@@ -43,15 +48,17 @@ public class DisjunctiveLiceseSetTest extends TestCase {
 	ExtractedLicenseInfo[] NON_STD_LICENSES;
 	
 	IModelStore modelStore;
-	ModelCopyManager copyManager;
+	IModelCopyManager copyManager;
 
 	/* (non-Javadoc)
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		modelStore = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		copyManager = new ModelCopyManager();
+		modelStore = new MockModelStore();
+		copyManager = new MockCopyManager();
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(modelStore, "http://defaultdocument", copyManager);
 		NON_STD_LICENSES = new ExtractedLicenseInfo[IDS.length];
 		for (int i = 0; i < IDS.length; i++) {
 			NON_STD_LICENSES[i] = new ExtractedLicenseInfo(modelStore, DOCUMENT_URI, IDS[i], copyManager, true);
@@ -67,7 +74,7 @@ public class DisjunctiveLiceseSetTest extends TestCase {
 	}
 
 	public void testCreateDisjunctive() throws InvalidSPDXAnalysisException {
-		String id = modelStore.getNextId(IdType.Anonymous, DOCUMENT_URI);
+		String id = modelStore.getNextId(IdType.Anonymous);
 		DisjunctiveLicenseSet cls = new DisjunctiveLicenseSet(modelStore, DOCUMENT_URI, id, copyManager, true);
 		cls.setMembers(Arrays.asList(NON_STD_LICENSES));
 		DisjunctiveLicenseSet cls2 = (DisjunctiveLicenseSet) SpdxModelFactory.createModelObjectV2(modelStore, DOCUMENT_URI, id, 
@@ -80,7 +87,7 @@ public class DisjunctiveLiceseSetTest extends TestCase {
 	}
 	
 	public void testAddMember() throws InvalidSPDXAnalysisException {
-		String id = modelStore.getNextId(IdType.Anonymous, DOCUMENT_URI);
+		String id = modelStore.getNextId(IdType.Anonymous);
 		DisjunctiveLicenseSet cls = new DisjunctiveLicenseSet(modelStore, DOCUMENT_URI, id, copyManager, true);
 		cls.setMembers(Arrays.asList(NON_STD_LICENSES));
 		ExtractedLicenseInfo eli = new ExtractedLicenseInfo(modelStore, DOCUMENT_URI, "LicenseRef-test", copyManager, true);
@@ -106,7 +113,7 @@ public class DisjunctiveLiceseSetTest extends TestCase {
 	}
 	
 	public void testRemoveMember() throws InvalidSPDXAnalysisException {
-		String id = modelStore.getNextId(IdType.Anonymous, DOCUMENT_URI);
+		String id = modelStore.getNextId(IdType.Anonymous);
 		DisjunctiveLicenseSet cls = new DisjunctiveLicenseSet(modelStore, DOCUMENT_URI, id, copyManager, true);
 		cls.setMembers(Arrays.asList(NON_STD_LICENSES));
 		cls.removeMember(NON_STD_LICENSES[0]);

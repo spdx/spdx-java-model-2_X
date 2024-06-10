@@ -17,11 +17,15 @@
  */
 package org.spdx.library.model.compat.v2.license;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.storage.IModelStore;
-import org.spdx.storage.simple.InMemSpdxStore;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.compat.v2.MockCopyManager;
+import org.spdx.library.model.compat.v2.MockModelStore;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
+import org.spdx.library.model.v2.license.OrLaterOperator;
+import org.spdx.library.model.v2.license.SimpleLicensingInfo;
 
 import junit.framework.TestCase;
 
@@ -41,8 +45,8 @@ public class OrLaterOperatorTest extends TestCase {
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
-		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		license1 = new ExtractedLicenseInfo(LICENSE_ID1, LICENSE_TEXT1);
 		license2 = new ExtractedLicenseInfo(LICENSE_ID2, LICENSE_TEXT2);
 	}
@@ -52,7 +56,6 @@ public class OrLaterOperatorTest extends TestCase {
 	 */
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_3);
 	}
 	/**
 	 * Test method for {@link org.spdx.rdfparser.license.OrLaterOperator#hashCode()}.
@@ -86,16 +89,6 @@ public class OrLaterOperatorTest extends TestCase {
 		assertEquals(0, olo1.verify().size());
 		olo1.setLicense(null);
 		assertEquals(1, olo1.verify().size());
-	}
-
-	public void testCopyFrom() throws InvalidSPDXAnalysisException {
-		OrLaterOperator olo1 = new OrLaterOperator(license1);
-		IModelStore store = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		OrLaterOperator clone = new OrLaterOperator(store, "https://different.uri", "orLaterId", olo1.getCopyManager(), true);
-		clone.copyFrom(olo1);
-		ExtractedLicenseInfo lic1 = (ExtractedLicenseInfo)olo1.getLicense();
-		ExtractedLicenseInfo lic1FromClone = (ExtractedLicenseInfo)clone.getLicense();
-		assertEquals(lic1.getExtractedText(), lic1FromClone.getExtractedText());
 	}
 
 	/**

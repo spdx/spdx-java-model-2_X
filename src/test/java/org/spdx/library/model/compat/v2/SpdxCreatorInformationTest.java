@@ -9,10 +9,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.library.SpdxConstantsCompatV2;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.v2.GenericModelObject;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxCreatorInformation;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
 
 import junit.framework.TestCase;
 
@@ -22,7 +25,8 @@ public class SpdxCreatorInformationTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		gmo = new GenericModelObject();
 	}
 

@@ -1,12 +1,16 @@
 package org.spdx.library.model.compat.v2.license;
 
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.compat.v2.MockCopyManager;
+import org.spdx.library.model.compat.v2.MockModelStore;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.license.CrossRef;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import junit.framework.TestCase;
 
@@ -31,14 +35,16 @@ public class CrossRefTest extends TestCase {
 	CrossRef TEST_CROSSREF;
 	
 	IModelStore modelStore;
-	ModelCopyManager copyManager;
+	IModelCopyManager copyManager;
 
 	public void setUp() throws Exception {
 		super.setUp();
-		modelStore = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		copyManager = new ModelCopyManager();
+		modelStore = new MockModelStore();
+		copyManager = new MockCopyManager();
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(modelStore, "http://defaultdocument", copyManager);
 		TEST_CROSSREF = new CrossRef.CrossRefBuilder(modelStore, DOCUMENT_URI, 
-				modelStore.getNextId(IdType.Anonymous, DOCUMENT_URI), copyManager, TEST_URL1)
+				modelStore.getNextId(IdType.Anonymous), copyManager, TEST_URL1)
 				.setLive(TEST_ISLIVE1)
 				.setMatch(TEST_MATCH1)
 				.setOrder(TEST_ORDER1)
@@ -146,7 +152,7 @@ public class CrossRefTest extends TestCase {
 
 	public void testSetDetails() throws InvalidSPDXAnalysisException {
 		CrossRef result = new CrossRef.CrossRefBuilder(modelStore, DOCUMENT_URI, 
-				modelStore.getNextId(IdType.Anonymous, DOCUMENT_URI), copyManager, TEST_URL2).build();
+				modelStore.getNextId(IdType.Anonymous), copyManager, TEST_URL2).build();
 		assertEquals(TEST_URL2, result.getUrl().get());
 		assertFalse(result.getLive().isPresent());
 		assertFalse(result.getMatch().isPresent());

@@ -19,15 +19,19 @@ package org.spdx.library.model.compat.v2.license;
 
 import java.util.ArrayList;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.model.compat.v2.Checksum;
-import org.spdx.library.model.compat.v2.ExternalDocumentRef;
-import org.spdx.library.model.compat.v2.GenericModelObject;
-import org.spdx.library.model.compat.v2.SpdxDocument;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.compat.v2.MockCopyManager;
+import org.spdx.library.model.compat.v2.MockModelStore;
+import org.spdx.library.model.v2.Checksum;
+import org.spdx.library.model.v2.ExternalDocumentRef;
+import org.spdx.library.model.v2.GenericModelObject;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.v2.license.ExternalExtractedLicenseInfo;
 
 import junit.framework.TestCase;
 
@@ -67,7 +71,8 @@ public class ExternalLicenseRefTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		gmo = new GenericModelObject();
 		doc = new SpdxDocument(gmo.getModelStore(), gmo.getDocumentUri(), gmo.getCopyManager(), true);
 		CHECKSUM1 = gmo.createChecksum(ChecksumAlgorithm.SHA1, "A94A8FE5CCB19BA61C4C0873D391E987982FBBD3");
@@ -79,7 +84,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	}
 	
 	public void testVerify() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		assertEquals(0, elr.verify().size());
 	}
 
@@ -88,46 +93,46 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public void testEquivalentModelObject() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr1 = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr1 = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		assertTrue(elr1.equivalent(elr1));
-		ExternalExtractedLicenseInfo elr2 = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr2 = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		assertTrue(elr1.equivalent(elr2));
-		ExternalExtractedLicenseInfo elr3 = new ExternalExtractedLicenseInfo(ID2);
+		ExternalExtractedLicenseInfo elr3 = new ExternalExtractedLicenseInfo(DOCURI2, LICENSEREF2);
 		assertFalse(elr2.equivalent(elr3));
 	}
 	
-	public void testUriToExternalLicenseRefId() throws InvalidSPDXAnalysisException {
+	public void testUriToExternalLicenseRef() throws InvalidSPDXAnalysisException {
 		String uri = DOCURI1 + "#" + LICENSEREF1;
 		String expected = DOCID1 + ":" + LICENSEREF1;
-		String result = ExternalExtractedLicenseInfo.uriToExternalExtractedLicenseId(uri, gmo.getModelStore(),
-				gmo.getDocumentUri(), null);
+		String result = ExternalExtractedLicenseInfo.uriToExternalExtractedLicenseRef(uri, gmo.getModelStore(),
+				gmo.getDocumentUri(), null, gmo.getSpecVersion());
 		assertEquals(expected, result);
 		uri = DOCURI4 + "#" + LICENSEREF4;
-		String generatedDocId = "DocumentRef-gnrtd0";
-		expected = generatedDocId + ":" + LICENSEREF4;
 		try {
-			result = ExternalExtractedLicenseInfo.uriToExternalExtractedLicenseId(uri, gmo.getModelStore(),
-					gmo.getDocumentUri(), null);
+			result = ExternalExtractedLicenseInfo.uriToExternalExtractedLicenseRef(uri, gmo.getModelStore(),
+					gmo.getDocumentUri(), null, gmo.getSpecVersion());
 			fail("Expected to fail since DOCID4 has not been created");
 		} catch (InvalidSPDXAnalysisException e) {
 			// expected
 		}
-		result = ExternalExtractedLicenseInfo.uriToExternalExtractedLicenseId(uri, gmo.getModelStore(),
-				gmo.getDocumentUri(), gmo.getCopyManager());
-		assertEquals(expected, result);
+		result = ExternalExtractedLicenseInfo.uriToExternalExtractedLicenseRef(uri, gmo.getModelStore(),
+				gmo.getDocumentUri(), gmo.getCopyManager(), gmo.getSpecVersion());
+		assertTrue(result.endsWith(":" + LICENSEREF4));
+	
 		String LicenseRef5 = SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM + "LICENSEREF5";
 		uri = DOCURI4 + "#" + LicenseRef5;
-		expected = generatedDocId + ":" + LicenseRef5;
-		result = ExternalExtractedLicenseInfo.uriToExternalExtractedLicenseId(uri, gmo.getModelStore(),
-				gmo.getDocumentUri(), null);
-		assertEquals(expected, result);
+		result = ExternalExtractedLicenseInfo.uriToExternalExtractedLicenseRef(uri, gmo.getModelStore(),
+				gmo.getDocumentUri(), null, gmo.getSpecVersion());
+		assertTrue(result.endsWith(":" + LicenseRef5));
 	}
 	
-	public void testUriToExternalLicenseRef() throws InvalidSPDXAnalysisException {
-		String externalLicenseUri = DOCURI1 + "#" + LICENSEREF1;
-		ExternalExtractedLicenseInfo result = ExternalExtractedLicenseInfo.uriToExternalExtractedLicense(externalLicenseUri, DefaultModelStore.getDefaultModelStore(), DefaultModelStore.getDefaultDocumentUri(), null);
-		assertEquals(LICENSEREF1, result.getExternalLicenseRef());
-		assertEquals(ID1, result.getId());
+	public void testExternalElementReference() throws InvalidSPDXAnalysisException {
+		Checksum checksum = gmo.createChecksum(ChecksumAlgorithm.SHA1, "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3");
+		doc.getExternalDocumentRefs().add(gmo.createExternalDocumentRef(DOCID1, DOCURI1, checksum));
+		String expected = DOCID1 + ":" + LICENSEREF1;
+		ExternalExtractedLicenseInfo externalLicense = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
+		String result = externalLicense.referenceElementId(doc);
+		assertEquals(expected, result);
 	}
 
 	/**
@@ -135,7 +140,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public void testGetComment() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		try {
 		elr.getComment();	// Just testing to make sure it doesn't exception
 		} catch(Exception ex) {
@@ -148,7 +153,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public void testSetComment() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		try {
 			elr.setComment("New comment");
 			fail("This should have failed!");
@@ -161,7 +166,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.license.ExternalExtractedLicenseInfo#getSeeAlso()}.
 	 */
 	public void testGetSeeAlso() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		assertTrue(elr.getSeeAlso().isEmpty());
 	}
 
@@ -169,7 +174,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.license.ExternalExtractedLicenseInfo#setSeeAlso(java.util.Collection)}.
 	 */
 	public void testSetSeeAlso() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		try {
 			elr.setSeeAlso(new ArrayList<String>());
 			fail("This should have failed!");
@@ -182,7 +187,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.license.ExternalExtractedLicenseInfo#getExtractedText()}.
 	 */
 	public void testGetExtractedText() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		assertTrue(elr.getExtractedText().contains(LICENSEREF1));
 	}
 
@@ -190,15 +195,15 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.license.ExternalExtractedLicenseInfo#getExternalDocumentId()}.
 	 */
 	public void testGetExternalDocumentId() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
-		assertEquals(DOCID1, elr.getExternalDocumentId());
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
+		assertEquals(DOCURI1, elr.getExternalDocumentId());
 	}
 
 	/**
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.license.ExternalExtractedLicenseInfo#getExternalLicenseRef()}.
 	 */
 	public void testGetExternalLicenseRef() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		assertEquals(LICENSEREF1, elr.getExternalLicenseRef());
 	}
 
@@ -207,7 +212,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	 */
 	public void testGetExternalLicenseRefURI() throws InvalidSPDXAnalysisException {
 		String expected = DOCURI1 + "#" + LICENSEREF1;
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		assertEquals(expected, elr.getExternalExtractedLicenseURI());
 	}
 
@@ -227,7 +232,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	 */
 	public void testGetIndividualURI() throws InvalidSPDXAnalysisException {
 		String expected = DOCURI1 + "#" + LICENSEREF1;
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		assertEquals(expected, elr.getIndividualURI());
 	}
 
@@ -235,9 +240,9 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.license.ExtractedLicenseInfo#compareTo(org.spdx.library.model.compat.v2.compat.v2.license.ExtractedLicenseInfo)}.
 	 */
 	public void testCompareTo() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr1 = new ExternalExtractedLicenseInfo(ID1);
-		ExternalExtractedLicenseInfo elrSame = new ExternalExtractedLicenseInfo(ID1);
-		ExternalExtractedLicenseInfo elr2 = new ExternalExtractedLicenseInfo(ID2);
+		ExternalExtractedLicenseInfo elr1 = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
+		ExternalExtractedLicenseInfo elrSame = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
+		ExternalExtractedLicenseInfo elr2 = new ExternalExtractedLicenseInfo(DOCURI2, LICENSEREF2);
 		assertEquals(0, elr1.compareTo(elrSame));
 		assertTrue(elr1.compareTo(elr2) != 0);
 	}
@@ -246,7 +251,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.license.SimpleLicensingInfo#getName()}.
 	 */
 	public void testGetName() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		assertTrue(elr.getName().isEmpty());
 	}
 
@@ -254,7 +259,7 @@ public class ExternalLicenseRefTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.license.SimpleLicensingInfo#setName(java.lang.String)}.
 	 */
 	public void testSetName() throws InvalidSPDXAnalysisException {
-		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(ID1);
+		ExternalExtractedLicenseInfo elr = new ExternalExtractedLicenseInfo(DOCURI1, LICENSEREF1);
 		try {
 			elr.setName("New name");
 			fail("This should have failed!");

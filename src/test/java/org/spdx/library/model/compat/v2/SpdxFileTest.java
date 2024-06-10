@@ -8,20 +8,26 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.Version;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.library.model.compat.v2.enumerations.AnnotationType;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
-import org.spdx.library.model.compat.v2.enumerations.FileType;
-import org.spdx.library.model.compat.v2.enumerations.RelationshipType;
-import org.spdx.library.model.compat.v2.license.AnyLicenseInfo;
-import org.spdx.library.model.compat.v2.license.ConjunctiveLicenseSet;
-import org.spdx.library.model.compat.v2.license.DisjunctiveLicenseSet;
-import org.spdx.library.model.compat.v2.license.ExtractedLicenseInfo;
-import org.spdx.library.model.compat.v2.license.SpdxListedLicense;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.v2.Annotation;
+import org.spdx.library.model.v2.Checksum;
+import org.spdx.library.model.v2.GenericModelObject;
+import org.spdx.library.model.v2.Relationship;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxFile;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.Version;
+import org.spdx.library.model.v2.enumerations.AnnotationType;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.v2.enumerations.FileType;
+import org.spdx.library.model.v2.enumerations.RelationshipType;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.ConjunctiveLicenseSet;
+import org.spdx.library.model.v2.license.DisjunctiveLicenseSet;
+import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
+import org.spdx.library.model.v2.license.SpdxListedLicense;
 import org.spdx.storage.IModelStore.IdType;
 
 import junit.framework.TestCase;
@@ -55,7 +61,8 @@ public class SpdxFileTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		gmo = new GenericModelObject();
 		SHA1 = gmo.createChecksum(ChecksumAlgorithm.SHA1, "1123456789abcdef0123456789abcdef01234567");
 		ANNOTATION1 = gmo.createAnnotation("Organization: Annotator1", 
@@ -112,7 +119,7 @@ public class SpdxFileTest extends TestCase {
 		List<AnyLicenseInfo> seenLic = Arrays.asList(new AnyLicenseInfo[] {STANDARD_LICENSES[0]});
 		List<String> contributors = Arrays.asList(new String[] {"Contrib1", "Contrib2"});
 		
-		SpdxFile fileDep1 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile fileDep1 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"fileDep1", COMPLEX_LICENSE, seenLic, "Copyright1", SHA1)
 				.setLicenseComments("License Comments1")
 				.setComment("Comment1")
@@ -124,7 +131,7 @@ public class SpdxFileTest extends TestCase {
 		List<String> verify = fileDep1.verify();
 		assertEquals(0, verify.size());
 	
-		SpdxFile fileDep2 =gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile fileDep2 =gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"fileDep2", COMPLEX_LICENSE, seenLic, "Copyright2", SHA1)
 				.setComment("Comment2")
 				.addAnnotation(ANNOTATION3)
@@ -139,7 +146,7 @@ public class SpdxFileTest extends TestCase {
 		String licenseComment = "License comments";
 		
 		
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				name, COMPLEX_LICENSE, seenLic,copyright, SHA1)
 				.addAnnotation(ANNOTATION3)
 				.setFileContributors(contributors)
@@ -156,7 +163,7 @@ public class SpdxFileTest extends TestCase {
 	public void testVerify23Fields() throws InvalidSPDXAnalysisException {
 		
 		
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"name", null, Arrays.asList(new AnyLicenseInfo[] {}), null, SHA1)
 				.build();
 		List<String> ver = file.verify();
@@ -172,7 +179,7 @@ public class SpdxFileTest extends TestCase {
 		String comment = "file comments";
 		String copyright = "Copyrights";
 		String licenseComment = "License comments";
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				name, COMPLEX_LICENSE, seenLic,copyright, SHA1)
 				.addAnnotation(ANNOTATION3)
 				.setFileContributors(contributors)
@@ -191,7 +198,7 @@ public class SpdxFileTest extends TestCase {
 		List<FileType> fileTypes = Arrays.asList(new FileType[] {FileType.ARCHIVE, 
 				FileType.SPDX, FileType.OTHER, FileType.TEXT});
 		FileType initialFileType = FileType.IMAGE;
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"filename", COMPLEX_LICENSE, Arrays.asList(CONJUNCTIVE_LICENSES),
 				SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.addFileType(initialFileType)
@@ -215,7 +222,7 @@ public class SpdxFileTest extends TestCase {
 		List<AnyLicenseInfo> seenLic = Arrays.asList(new AnyLicenseInfo[] {STANDARD_LICENSES[0]});
 		List<String> contributors = Arrays.asList(new String[] {"Contrib1", "Contrib2"});
 		
-		SpdxFile fileDep1 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile fileDep1 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"fileDep1", COMPLEX_LICENSE, seenLic, "Copyright1", SHA1)
 				.setComment("Comment1")
 				.setAnnotations(Arrays.asList(new Annotation[] {ANNOTATION1, ANNOTATION2}))
@@ -224,7 +231,7 @@ public class SpdxFileTest extends TestCase {
 				.setFileContributors(contributors)
 				.setNoticeText("Notice Text")
 				.build();
-		SpdxFile fileDep2 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile fileDep2 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"fileDep2", COMPLEX_LICENSE, seenLic, "Copyright1", SHA1)
 				.addFileType(FileType.BINARY)
 				.addAnnotation(ANNOTATION3)
@@ -239,7 +246,7 @@ public class SpdxFileTest extends TestCase {
 		String licenseComment = "License comments";
 		Checksum checksum = gmo.createChecksum(ChecksumAlgorithm.SHA1, "0123456789abcdef0123456789abcdef01234567");
 		
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				name, COMPLEX_LICENSE, seenLic, copyright, checksum)
 				.setComment(comment)
 				.addAnnotation(ANNOTATION3)
@@ -251,7 +258,7 @@ public class SpdxFileTest extends TestCase {
 		file.addRelationship(file.createRelationship(fileDep1, RelationshipType.CONTAINS, "Relationship 1 comment"));
 		file.addRelationship(file.createRelationship(fileDep2, RelationshipType.DOCUMENTATION_OF, "Relationship 2 comment"));
 
-		SpdxFile file2 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file2 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				name, COMPLEX_LICENSE, seenLic, copyright, checksum)
 				.setComment(comment)
 				.addAnnotation(ANNOTATION3)
@@ -353,7 +360,7 @@ public class SpdxFileTest extends TestCase {
 		List<Checksum> checksums2 = Arrays.asList(new Checksum[] {checksum2, checksum4, checksum6});
 		List<Checksum> checksumSingle = Arrays.asList(new Checksum[] {gmo.createChecksum(ChecksumAlgorithm.SHA1,
 				"2fd4e1c67a2d28fced849ee1bb76e7391b93eb12")});
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"filename", COMPLEX_LICENSE, Arrays.asList(CONJUNCTIVE_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, checksum1)
 				.setChecksums(checksums1)
 				.build();
@@ -384,7 +391,7 @@ public class SpdxFileTest extends TestCase {
 		
 		String CONTRIBUTOR4 = "Contributor 4";
 		List<String> oneContributor = Arrays.asList(new String[] {CONTRIBUTOR4});
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"filename", COMPLEX_LICENSE, Arrays.asList(CONJUNCTIVE_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.setFileContributors(contributors)
 				.build();
@@ -405,7 +412,7 @@ public class SpdxFileTest extends TestCase {
 
 	public void testGetNoticeText() throws InvalidSPDXAnalysisException {
 		String fileNotice = "This is a file notice";
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"filename", COMPLEX_LICENSE, Arrays.asList(CONJUNCTIVE_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.build();
 		if (file.getNoticeText().isPresent() && !file.getNoticeText().get().isEmpty()) {
@@ -427,13 +434,13 @@ public class SpdxFileTest extends TestCase {
 		String fileName1 = "afile";
 		String fileName2 = "bfile";
 		
-		SpdxFile file1 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file1 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				fileName1, COMPLEX_LICENSE, Arrays.asList(CONJUNCTIVE_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.build();
-		SpdxFile file2 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file2 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				fileName2, COMPLEX_LICENSE, Arrays.asList(CONJUNCTIVE_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.build();
-		SpdxFile file3 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file3 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				fileName1, COMPLEX_LICENSE,Arrays.asList(CONJUNCTIVE_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.build();
 		
@@ -446,7 +453,7 @@ public class SpdxFileTest extends TestCase {
 		String COMMENT1 = "comment1";
 		String COMMENT2 = "comment2";
 		String COMMENT3 = "comment3";
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"filename", COMPLEX_LICENSE, Arrays.asList(CONJUNCTIVE_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.setComment(COMMENT1)
 				.build();
@@ -462,7 +469,7 @@ public class SpdxFileTest extends TestCase {
 	public void testSetAttributionText() throws InvalidSPDXAnalysisException {
 		String ATT1 = "attribution 1";
 		String ATT2 = "attribution 2";
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"filename", COMPLEX_LICENSE, Arrays.asList(CONJUNCTIVE_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.addAttributionText(ATT1)
 				.build();
@@ -479,10 +486,10 @@ public class SpdxFileTest extends TestCase {
 	
 	@SuppressWarnings("deprecation")
 	public void testDependency() throws InvalidSPDXAnalysisException {
-		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile file = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"filename", COMPLEX_LICENSE, Arrays.asList(CONJUNCTIVE_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.build();
-		SpdxFile dep = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()),
+		SpdxFile dep = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"dependency", STANDARD_LICENSES[0], Arrays.asList(STANDARD_LICENSES[0]), SpdxConstantsCompatV2.NOASSERTION_VALUE, SHA1)
 				.build();
 		Collection<SpdxFile> result = file.getFileDependency();

@@ -21,14 +21,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.storage.IModelStore;
-import org.spdx.storage.compat.v2.CompatibleModelStoreWrapper;
-import org.spdx.storage.simple.InMemSpdxStore;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.compat.v2.MockCopyManager;
+import org.spdx.library.model.compat.v2.MockModelStore;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.license.LicenseException;
+import org.spdx.library.model.v2.license.ListedLicenseException;
 
 import junit.framework.TestCase;
 
@@ -37,22 +37,6 @@ import junit.framework.TestCase;
  *
  */
 public class LicenseExceptionTest extends TestCase {
-
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
-	}
-
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_3);
-	}
 	
 	static final String EXCEPTION_ID1 = "id1";
 	static final String EXCEPTION_NAME1 = "name1";
@@ -71,9 +55,25 @@ public class LicenseExceptionTest extends TestCase {
 	static final String TEST_NAMESPACE = "http://spdx.org/test/namespace";
 	private static final String EXCEPTION_HTML_TEXT1 = "exception text one \n<div class=\"optional-license-text\">\nextra</div>\n";
 	private static final String EXCEPTION_HTML_TEXT2 = "<strong>exception text one extra</strong>";
+
+	/* (non-Javadoc)
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	protected void setUp() throws Exception {
+		super.setUp();
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
+	}
+
+	/* (non-Javadoc)
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
 	
 	public void testLicenseException() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertEquals(EXCEPTION_ID1, le.getLicenseExceptionId());
@@ -82,38 +82,15 @@ public class LicenseExceptionTest extends TestCase {
 		assertStringsCollectionsEquals(EXCEPTION_SEEALSO1, le.getSeeAlso());
 		assertEquals(EXCEPTION_COMMENT1, le.getComment());
 	}
-
-	public void testCreateResource() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
-				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_SEEALSO1,
-				EXCEPTION_COMMENT1);
-		le.setDeprecated(true);
-		InMemSpdxStore store = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		ModelCopyManager copyManager  = new ModelCopyManager();
-		copyManager.copy(store, DefaultModelStore.getDefaultModelStore(),
-				CompatibleModelStoreWrapper.documentUriIdToUri(SpdxConstantsCompatV2.LISTED_LICENSE_URL, EXCEPTION_ID1, false),
-				SpdxConstantsCompatV2.CLASS_SPDX_LICENSE_EXCEPTION, 
-				SpdxConstantsCompatV2.LISTED_LICENSE_URL, SpdxConstantsCompatV2.LISTED_LICENSE_URL, 
-				SpdxConstantsCompatV2.LISTED_LICENSE_URL, SpdxConstantsCompatV2.LISTED_LICENSE_URL);
-		LicenseException le2 = new LicenseException(store, DefaultModelStore.getDefaultDocumentUri(), EXCEPTION_ID1, copyManager, false);
-		
-		assertEquals(EXCEPTION_ID1, le2.getLicenseExceptionId());
-		assertEquals(EXCEPTION_NAME1, le2.getName());
-		assertEquals(EXCEPTION_TEXT1, le2.getLicenseExceptionText());
-		assertStringsCollectionsEquals(EXCEPTION_SEEALSO1, le2.getSeeAlso());
-		assertEquals(EXCEPTION_COMMENT1, le2.getComment());
-		assertTrue(le2.isDeprecated());
-	}
-
 	
 	public void testEquals() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_TEMPLATE1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
-		LicenseException le2 = new LicenseException(EXCEPTION_ID1,
+		LicenseException le2 = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME2, EXCEPTION_TEXT2, EXCEPTION_TEMPLATE2, EXCEPTION_SEEALSO2,
 				EXCEPTION_COMMENT2);
-		LicenseException le3 = new LicenseException(EXCEPTION_ID2,
+		LicenseException le3 = new ListedLicenseException(EXCEPTION_ID2,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_TEMPLATE1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertTrue(le.equals(le2));
@@ -122,7 +99,7 @@ public class LicenseExceptionTest extends TestCase {
 
 	
 	public void testSetComment() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertEquals(EXCEPTION_ID1, le.getLicenseExceptionId());
@@ -136,7 +113,7 @@ public class LicenseExceptionTest extends TestCase {
 		assertEquals(EXCEPTION_TEXT1, le.getLicenseExceptionText());
 		assertStringsCollectionsEquals(EXCEPTION_SEEALSO1, le.getSeeAlso());
 		assertEquals(EXCEPTION_COMMENT2, le.getComment());
-		LicenseException le2 = new LicenseException(DefaultModelStore.getDefaultModelStore(), DefaultModelStore.getDefaultDocumentUri(),
+		LicenseException le2 = new ListedLicenseException(DefaultModelStore.getDefaultModelStore(), DefaultModelStore.getDefaultDocumentUri(),
 				EXCEPTION_ID1, DefaultModelStore.getDefaultCopyManager(), false);
 		assertEquals(EXCEPTION_ID1, le2.getLicenseExceptionId());
 		assertEquals(EXCEPTION_NAME1, le2.getName());
@@ -153,22 +130,22 @@ public class LicenseExceptionTest extends TestCase {
 	
 	
 	public void testSetDeprecated() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertFalse(le.isDeprecated());
-		LicenseException le2 = new LicenseException(DefaultModelStore.getDefaultModelStore(), 
+		LicenseException le2 = new ListedLicenseException(DefaultModelStore.getDefaultModelStore(), 
 				DefaultModelStore.getDefaultDocumentUri(), EXCEPTION_ID1, DefaultModelStore.getDefaultCopyManager(), false);
 		assertFalse(le2.isDeprecated());
 		le2.setDeprecated(true);
 		assertTrue(le2.isDeprecated());
-		LicenseException le3 = new LicenseException(DefaultModelStore.getDefaultModelStore(), 
+		LicenseException le3 = new ListedLicenseException(DefaultModelStore.getDefaultModelStore(), 
 				DefaultModelStore.getDefaultDocumentUri(), EXCEPTION_ID1, DefaultModelStore.getDefaultCopyManager(), false);
 		assertTrue(le3.isDeprecated());
 	}
 	
 	public void testSetLicenseExceptionText() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertEquals(EXCEPTION_ID1, le.getLicenseExceptionId());
@@ -182,7 +159,7 @@ public class LicenseExceptionTest extends TestCase {
 		assertEquals(EXCEPTION_TEXT2, le.getLicenseExceptionText());
 		assertStringsCollectionsEquals(EXCEPTION_SEEALSO1, le.getSeeAlso());
 		assertEquals(EXCEPTION_COMMENT1, le.getComment());
-		LicenseException le2 = new LicenseException(DefaultModelStore.getDefaultModelStore(), 
+		LicenseException le2 = new ListedLicenseException(DefaultModelStore.getDefaultModelStore(), 
 				DefaultModelStore.getDefaultDocumentUri(), EXCEPTION_ID1, DefaultModelStore.getDefaultCopyManager(), false);
 		assertEquals(EXCEPTION_ID1, le2.getLicenseExceptionId());
 		assertEquals(EXCEPTION_NAME1, le2.getName());
@@ -199,7 +176,7 @@ public class LicenseExceptionTest extends TestCase {
 
 	
 	public void testSetLicenseExceptionTemplate() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_TEMPLATE1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertEquals(EXCEPTION_ID1, le.getLicenseExceptionId());
@@ -214,7 +191,7 @@ public class LicenseExceptionTest extends TestCase {
 		assertEquals(EXCEPTION_TEMPLATE2, le.getLicenseExceptionTemplate());
 		assertStringsCollectionsEquals(EXCEPTION_SEEALSO1, le.getSeeAlso());
 		assertEquals(EXCEPTION_COMMENT1, le.getComment());
-		LicenseException le2 = new LicenseException(DefaultModelStore.getDefaultModelStore(), DefaultModelStore.getDefaultDocumentUri(), 
+		LicenseException le2 = new ListedLicenseException(DefaultModelStore.getDefaultModelStore(), DefaultModelStore.getDefaultDocumentUri(), 
 				EXCEPTION_ID1, DefaultModelStore.getDefaultCopyManager(), false);
 		assertEquals(EXCEPTION_ID1, le2.getLicenseExceptionId());
 		assertEquals(EXCEPTION_NAME1, le2.getName());
@@ -232,7 +209,7 @@ public class LicenseExceptionTest extends TestCase {
 	
 	
 	public void testSetSeeAlso() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertEquals(EXCEPTION_ID1, le.getLicenseExceptionId());
@@ -246,7 +223,7 @@ public class LicenseExceptionTest extends TestCase {
 		assertEquals(EXCEPTION_TEXT1, le.getLicenseExceptionText());
 		assertStringsCollectionsEquals(EXCEPTION_SEEALSO2, le.getSeeAlso());
 		assertEquals(EXCEPTION_COMMENT1, le.getComment());
-		LicenseException le2 = new LicenseException(DefaultModelStore.getDefaultModelStore(), 
+		LicenseException le2 = new ListedLicenseException(DefaultModelStore.getDefaultModelStore(), 
 				DefaultModelStore.getDefaultDocumentUri(), EXCEPTION_ID1, DefaultModelStore.getDefaultCopyManager(), false);
 		assertEquals(EXCEPTION_ID1, le2.getLicenseExceptionId());
 		assertEquals(EXCEPTION_NAME1, le2.getName());
@@ -263,7 +240,7 @@ public class LicenseExceptionTest extends TestCase {
 
 	
 	public void testSetName() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertEquals(EXCEPTION_ID1, le.getLicenseExceptionId());
@@ -277,7 +254,7 @@ public class LicenseExceptionTest extends TestCase {
 		assertEquals(EXCEPTION_TEXT1, le.getLicenseExceptionText());
 		assertStringsCollectionsEquals(EXCEPTION_SEEALSO1, le.getSeeAlso());
 		assertEquals(EXCEPTION_COMMENT1, le.getComment());
-		LicenseException le2 = new LicenseException(DefaultModelStore.getDefaultModelStore(), 
+		LicenseException le2 = new ListedLicenseException(DefaultModelStore.getDefaultModelStore(), 
 				DefaultModelStore.getDefaultDocumentUri(), EXCEPTION_ID1, DefaultModelStore.getDefaultCopyManager(), false);
 		assertEquals(EXCEPTION_ID1, le2.getLicenseExceptionId());
 		assertEquals(EXCEPTION_NAME2, le2.getName());
@@ -294,13 +271,13 @@ public class LicenseExceptionTest extends TestCase {
 
 	
 	public void testHashCode() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_TEMPLATE1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
-		LicenseException le2 = new LicenseException(EXCEPTION_ID1,
+		LicenseException le2 = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME2, EXCEPTION_TEXT2, EXCEPTION_TEMPLATE2, EXCEPTION_SEEALSO2,
 				EXCEPTION_COMMENT2);
-		LicenseException le3 = new LicenseException(EXCEPTION_ID2,
+		LicenseException le3 = new ListedLicenseException(EXCEPTION_ID2,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_TEMPLATE1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertEquals(le.hashCode(), le2.hashCode());
@@ -309,11 +286,11 @@ public class LicenseExceptionTest extends TestCase {
 
 	
 	public void testVerify() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
+		LicenseException le = new ListedLicenseException(EXCEPTION_ID1,
 				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_TEMPLATE1, EXCEPTION_SEEALSO1,
 				EXCEPTION_COMMENT1);
 		assertEquals(0,le.verify().size());
-		LicenseException le2 = new LicenseException(DefaultModelStore.getDefaultModelStore(), 
+		LicenseException le2 = new ListedLicenseException(DefaultModelStore.getDefaultModelStore(), 
 				DefaultModelStore.getDefaultDocumentUri(), EXCEPTION_ID1, DefaultModelStore.getDefaultCopyManager(), false);
 		assertEquals(EXCEPTION_ID1, le2.getLicenseExceptionId());
 		assertEquals(EXCEPTION_NAME1, le2.getName());
@@ -339,41 +316,6 @@ public class LicenseExceptionTest extends TestCase {
 		for (String s:s1) {
 			assertTrue(s2.contains(s));
 		}
-	}
-
-	 public void testEquivalent() throws InvalidSPDXAnalysisException {
-		LicenseException le = new LicenseException(EXCEPTION_ID1,
-				EXCEPTION_NAME1, EXCEPTION_TEXT1, EXCEPTION_TEMPLATE1, EXCEPTION_SEEALSO1,
-				EXCEPTION_COMMENT1);
-		assertTrue(le.equivalent(le));
-		IModelStore modelStore = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		LicenseException le2 = new LicenseException(modelStore, "http://newDocUri", EXCEPTION_ID1, DefaultModelStore.getDefaultCopyManager(), true);
-		le2.setName(EXCEPTION_NAME1);
-		le2.setLicenseExceptionText(EXCEPTION_TEXT1);
-		le2.setLicenseExceptionTemplate(EXCEPTION_TEMPLATE1);
-		le2.setSeeAlso(EXCEPTION_SEEALSO1);
-		le2.setComment(EXCEPTION_COMMENT1);
-		assertTrue(le.equivalent(le2));
-		le2.setName(EXCEPTION_NAME2);
-		assertFalse(le.equivalent(le2));
-		le2.setName(EXCEPTION_NAME1);
-		assertTrue(le.equivalent(le2));
-		le2.setComment(EXCEPTION_COMMENT2);
-		assertFalse(le.equivalent(le2));
-		le2.setComment(EXCEPTION_COMMENT1);
-		assertTrue(le.equivalent(le2));
-		le2.setLicenseExceptionText(EXCEPTION_TEXT2);
-		assertFalse(le.equivalent(le2));
-		le2.setLicenseExceptionText(EXCEPTION_TEXT1);
-		assertTrue(le.equivalent(le2));
-		le2.setSeeAlso(EXCEPTION_SEEALSO2);
-		assertFalse(le.equivalent(le2));
-		le2.setSeeAlso(EXCEPTION_SEEALSO1);
-		assertTrue(le.equivalent(le2));
-		le2.setLicenseExceptionTemplate(EXCEPTION_TEMPLATE2);
-		assertFalse(le.equivalent(le2));
-		le2.setLicenseExceptionTemplate(EXCEPTION_TEMPLATE1);
-		assertTrue(le.equivalent(le2));
 	}
 	 
 	 public void testListedLicenseException() throws InvalidSPDXAnalysisException {

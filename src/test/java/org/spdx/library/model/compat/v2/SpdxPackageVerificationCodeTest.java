@@ -21,10 +21,12 @@ package org.spdx.library.model.compat.v2;
 import java.util.Arrays;
 import java.util.List;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.SpdxPackageVerificationCode;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
 
@@ -55,14 +57,15 @@ public class SpdxPackageVerificationCodeTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		IModelStore store = DefaultModelStore.getDefaultModelStore();
 		String docUri = DefaultModelStore.getDefaultDocumentUri();
-		ModelCopyManager copyManager = DefaultModelStore.getDefaultCopyManager();
+		IModelCopyManager copyManager = DefaultModelStore.getDefaultCopyManager();
 		VERIFICATION_CODES = new SpdxPackageVerificationCode[] {
-				new SpdxPackageVerificationCode(store, docUri,store.getNextId(IdType.Anonymous, docUri), copyManager, true),
-				new SpdxPackageVerificationCode(store, docUri,store.getNextId(IdType.Anonymous, docUri), copyManager, true),
-				new SpdxPackageVerificationCode(store, docUri,store.getNextId(IdType.Anonymous, docUri), copyManager, true)
+				new SpdxPackageVerificationCode(store, docUri,store.getNextId(IdType.Anonymous), copyManager, true),
+				new SpdxPackageVerificationCode(store, docUri,store.getNextId(IdType.Anonymous), copyManager, true),
+				new SpdxPackageVerificationCode(store, docUri,store.getNextId(IdType.Anonymous), copyManager, true)
 			};
 		for (int i = 0; i < VERIFICATION_CODES.length; i++) {
 			VERIFICATION_CODES[i].setValue(VALUES[i]);
@@ -75,7 +78,6 @@ public class SpdxPackageVerificationCodeTest extends TestCase {
 	 */
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_3);
 	}
 
 	/**

@@ -5,8 +5,6 @@
 package org.spdx.library.model.v2;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -23,8 +21,8 @@ import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.library.model.v2.enumerations.SpdxEnumFactoryCompatV2;
 import org.spdx.library.model.v2.license.ExternalExtractedLicenseInfo;
 import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
+import org.spdx.library.model.v2.license.LicenseException;
 import org.spdx.library.model.v2.license.SpdxListedLicense;
-import org.spdx.library.model.v2.license.SpdxListedLicenseException;
 import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
 import org.spdx.library.model.v2.license.SpdxNoneLicense;
 import org.spdx.storage.IModelStore;
@@ -40,34 +38,18 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 	
 	static final Logger logger = LoggerFactory.getLogger(SpdxModelInfoV2_X.class);
 	
-	static final Map<String, Object> URI_TO_INDIVIDUAL;
-	
-	static {
-		Map<String, Object> temp = new HashMap<>();
-		try {
-			temp.put(SpdxConstantsCompatV2.URI_VALUE_NONE, new SpdxNoneLicense());
-		} catch (InvalidSPDXAnalysisException e) {
-			logger.error("Unable to create a None license");
-		} //NOTE: There is also a NoneElement, but this is rarely used
-		try {
-			temp.put(SpdxConstantsCompatV2.URI_VALUE_NOASSERTION, new SpdxNoAssertionLicense());
-		} catch (InvalidSPDXAnalysisException e) {
-			logger.error("Unable to create a NoAssertion license");
-		} //NOTE: There is also a NoAssertionElement, but this is rarely used
-		URI_TO_INDIVIDUAL = Collections.unmodifiableMap(temp);
-	}
 
 	@Override
 	public @Nullable CoreModelObject createExternalElement(IModelStore store, String uri,
 			IModelCopyManager copyManager, String specVersion)
 			throws InvalidSPDXAnalysisException {
-		Matcher licenseMatcher = SpdxConstantsCompatV2.EXTERNAL_SPDX_ELEMENT_URI_PATTERN.matcher(uri);
+		Matcher licenseMatcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN.matcher(uri);
 		if (licenseMatcher.matches()) {
-			return new ExternalExtractedLicenseInfo(store, licenseMatcher.group(1), licenseMatcher.group(2), copyManager, true);
+			return new ExternalExtractedLicenseInfo(store, licenseMatcher.group(1), licenseMatcher.group(2), copyManager);
 		} 
-		Matcher elementMatcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN.matcher(uri);
+		Matcher elementMatcher = SpdxConstantsCompatV2.EXTERNAL_SPDX_ELEMENT_URI_PATTERN.matcher(uri);
 		if (elementMatcher.matches()) {
-			return new ExternalSpdxElement(store, elementMatcher.group(1), elementMatcher.group(2), copyManager, true);
+			return new ExternalSpdxElement(store, elementMatcher.group(1), elementMatcher.group(2), copyManager);
 		} else return null;
 	}
 
@@ -83,7 +65,21 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 
 	@Override
 	public @Nullable Object uriToIndividual(String uri) {
-		if (SpdxConstantsCompatV2.REFERENCE_TYPE_URI_PATTERN.matcher(uri).matches()) {
+		if (SpdxConstantsCompatV2.URI_VALUE_NONE.equals(uri)) {
+			try {
+				return new SpdxNoneLicense();
+			} catch (InvalidSPDXAnalysisException e) {
+				logger.error("Unable to create a None license");
+				return null;
+			} //NOTE: There is also a NoneElement, but this is rarely used
+		} else if (SpdxConstantsCompatV2.URI_VALUE_NOASSERTION.equals(uri)) {
+			try {
+				return new SpdxNoAssertionLicense();
+			} catch (InvalidSPDXAnalysisException e) {
+				logger.error("Unable to create a NoAssertion license");
+				return null;
+			} //NOTE: There is also a NoAssertionElement, but this is rarely used
+		} else if (SpdxConstantsCompatV2.REFERENCE_TYPE_URI_PATTERN.matcher(uri).matches()) {
 			try {
 				return new ReferenceType(uri);
 			} catch (InvalidSPDXAnalysisException e) {
@@ -91,7 +87,7 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 				return null;
 			}
 		} else {
-			return URI_TO_INDIVIDUAL.get(uri);
+			return null;
 		}
 	}
 
@@ -115,7 +111,7 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 			String id = objectUri.substring(SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX.length());
 			return SpdxModelFactory.getModelObjectV2(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, 
 					id, SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, copyManager, true);
-		} else if (SpdxListedLicenseException.class.isAssignableFrom(typeClass)) {
+		} else if (LicenseException.class.isAssignableFrom(typeClass)) {
 			// check that the URI is a listed license URI
 			if (!objectUri.startsWith(SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX)) {
 				logger.error("'" + objectUri + "' Listed license exception URI does not start with " +

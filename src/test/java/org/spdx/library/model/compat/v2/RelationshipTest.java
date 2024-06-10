@@ -25,23 +25,34 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxModelFactory;
-import org.spdx.library.Version;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.library.model.compat.v2.enumerations.AnnotationType;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
-import org.spdx.library.model.compat.v2.enumerations.RelationshipType;
-import org.spdx.library.model.compat.v2.license.AnyLicenseInfo;
-import org.spdx.library.model.compat.v2.license.ExtractedLicenseInfo;
-import org.spdx.library.model.compat.v2.license.LicenseInfoFactory;
-import org.spdx.library.model.compat.v2.license.SpdxNoAssertionLicense;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.v2.Annotation;
+import org.spdx.library.model.v2.Checksum;
+import org.spdx.library.model.v2.ExternalSpdxElement;
+import org.spdx.library.model.v2.GenericModelObject;
+import org.spdx.library.model.v2.GenericSpdxElement;
+import org.spdx.library.model.v2.Relationship;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.library.model.v2.SpdxElement;
+import org.spdx.library.model.v2.SpdxFile;
+import org.spdx.library.model.v2.SpdxModelFactory;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.SpdxPackage;
+import org.spdx.library.model.v2.Version;
+import org.spdx.library.model.v2.enumerations.AnnotationType;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.v2.enumerations.RelationshipType;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.DisjunctiveLicenseSet;
+import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
+import org.spdx.library.model.v2.license.SpdxListedLicense;
+import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import junit.framework.TestCase;
 
@@ -69,22 +80,23 @@ public class RelationshipTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		gmo = new GenericModelObject();
 		new SpdxDocument(gmo.getModelStore(), gmo.getDocumentUri(), gmo.getCopyManager(), true);
 		Checksum checksum = gmo.createChecksum(ChecksumAlgorithm.SHA1, "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3");
-		ExternalDocumentRef externalDoc = gmo.createExternalDocumentRef(gmo.getModelStore().getNextId(IdType.DocumentRef,gmo.getDocumentUri()), 
+		gmo.createExternalDocumentRef(gmo.getModelStore().getNextId(IdType.DocumentRef), 
 				"https://external.doc/one", checksum);
 		ANNOTATION1 = gmo.createAnnotation("Person: Annotator1",
 			AnnotationType.OTHER, DATE_NOW, "Comment1");
 		ANNOTATION2 = gmo.createAnnotation("Person: Annotator2",
 				AnnotationType.REVIEW, DATE_NOW, "Comment2");
 		RELATED_ELEMENT1 = new GenericSpdxElement(gmo.getModelStore(), gmo.getDocumentUri(), 
-				gmo.getModelStore().getNextId(IdType.Anonymous, gmo.getDocumentUri()), gmo.getCopyManager(), true);
+				gmo.getModelStore().getNextId(IdType.SpdxId), gmo.getCopyManager(), true);
 		RELATED_ELEMENT1.setName("relatedElementName1");
 		RELATED_ELEMENT1.setComment("related element comment 1");
-		RELATED_ELEMENT2 = new ExternalSpdxElement(gmo.getModelStore(), gmo.getDocumentUri(), 
-				externalDoc.getId() + ":SPDXRef-10", gmo.getCopyManager(), true);
+		RELATED_ELEMENT2 = new ExternalSpdxElement(gmo.getModelStore(), "http://external/doc", 
+				"SPDXRef-10", gmo.getCopyManager());
 	}
 
 	/* (non-Javadoc)
@@ -101,7 +113,7 @@ public class RelationshipTest extends TestCase {
 	public void testVerify() throws InvalidSPDXAnalysisException {
 		RelationshipType relationshipType1  = RelationshipType.DESCENDANT_OF;
 		String comment1 = "Comment1";
-		Relationship relationship = new Relationship(gmo.getModelStore(), gmo.getDocumentUri(), gmo.getModelStore().getNextId(IdType.Anonymous, gmo.getDocumentUri()), gmo.getCopyManager(), true);
+		Relationship relationship = new Relationship(gmo.getModelStore(), gmo.getDocumentUri(), gmo.getModelStore().getNextId(IdType.Anonymous), gmo.getCopyManager(), true);
 		assertEquals(2, relationship.verify().size());
 		relationship.setRelatedSpdxElement(RELATED_ELEMENT1);
 		assertEquals(1, relationship.verify().size());
@@ -219,13 +231,18 @@ public class RelationshipTest extends TestCase {
 	 */
 	public void testDocumentDescribes() throws InvalidSPDXAnalysisException {
 		String documentUri = "https://someuri";
-        ModelCopyManager copyManager = new ModelCopyManager();
-        IModelStore modelStore = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
+        IModelCopyManager copyManager = new MockCopyManager();
+        IModelStore modelStore = new MockModelStore();
         SpdxDocument document = SpdxModelFactory.createSpdxDocumentV2(modelStore, documentUri, copyManager);
         document.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
         document.setName("SPDX-tool-test");
         Checksum sha1Checksum = Checksum.create(modelStore, documentUri, ChecksumAlgorithm.SHA1, "d6a770ba38583ed4bb4525bd96e50461655d2758");
-        AnyLicenseInfo concludedLicense = LicenseInfoFactory.parseSPDXLicenseV2String("LGPL-2.0-only OR LicenseRef-2");
+        ExtractedLicenseInfo eli = new ExtractedLicenseInfo("LicenseRef-2", "License text");
+        SpdxListedLicense lic = new SpdxListedLicense("LGPL-2.0-only");
+        
+        DisjunctiveLicenseSet concludedLicense = new DisjunctiveLicenseSet();
+        concludedLicense.addMember(eli);
+        concludedLicense.addMember(lic);
         SpdxFile fileA = document.createSpdxFile("SPDXRef-fileA", "./package/fileA.c", concludedLicense,
                         Arrays.asList(new AnyLicenseInfo[0]), "Copyright 2008-2010 John Smith", sha1Checksum)
                 .build();
@@ -261,9 +278,7 @@ public class RelationshipTest extends TestCase {
 	public void testVerifyRelatedElement() throws InvalidSPDXAnalysisException {
 		RelationshipType relationshipType1  = RelationshipType.CONTAINED_BY;
 		String comment1 = "Comment1";
-		AnyLicenseInfo badConcludedLicense = LicenseInfoFactory.parseSPDXLicenseV2String("bad-license-objectUri");
-		assertTrue(badConcludedLicense instanceof ExtractedLicenseInfo);
-		((ExtractedLicenseInfo)badConcludedLicense).setExtractedText("text");
+		AnyLicenseInfo badConcludedLicense = new ExtractedLicenseInfo("bad-license-objectUri", "text");
 		assertEquals(1, badConcludedLicense.verify().size());
 		SpdxPackage pkg = gmo.createPackage("SPDXRef-package1", "packageName", badConcludedLicense, 
 				"Copyright", new SpdxNoAssertionLicense())

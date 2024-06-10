@@ -18,12 +18,15 @@ package org.spdx.library.model.compat.v2;
  */
 
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.library.model.compat.v2.enumerations.RelationshipType;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.v2.Relationship;
+import org.spdx.library.model.v2.SpdxElement;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.SpdxNoneElement;
+import org.spdx.library.model.v2.enumerations.RelationshipType;
 import org.spdx.storage.IModelStore;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import junit.framework.TestCase;
 
@@ -38,7 +41,8 @@ public class SpdxNoneElementTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 	}
 
 	/* (non-Javadoc)
@@ -46,12 +50,12 @@ public class SpdxNoneElementTest extends TestCase {
 	 */
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_3);
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 	}
 	
 	public void testHashCodeEquals() throws InvalidSPDXAnalysisException {
 		SpdxNoneElement e1 = new SpdxNoneElement();
-		IModelStore store = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
+		IModelStore store = new MockModelStore();
 		SpdxNoneElement e2 = new SpdxNoneElement(store, "https://doc.uri");
 		assertEquals(e1.hashCode(), e2.hashCode());
 		assertEquals(e1, e2);

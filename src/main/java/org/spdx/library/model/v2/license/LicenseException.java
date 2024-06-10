@@ -41,7 +41,7 @@ import org.spdx.storage.IModelStore;
  * @author Gary O'Neall
  * 
  */
-public class LicenseException extends ModelObjectV2 {
+public abstract class LicenseException extends ModelObjectV2 {
 	
 	/**
 	 * Create a new LicenseException object

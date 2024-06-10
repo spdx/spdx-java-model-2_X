@@ -160,7 +160,7 @@ public class Checksum extends ModelObjectV2 implements Comparable<Checksum>  {
 	 * @param algorithm
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	protected void setAlgorithm(ChecksumAlgorithm algorithm) throws InvalidSPDXAnalysisException {
+	public void setAlgorithm(ChecksumAlgorithm algorithm) throws InvalidSPDXAnalysisException {
 		if (strict) {
 			if (Objects.isNull(algorithm)) {
 				throw new InvalidSPDXAnalysisException("Can not set required checksum algorithm to null");
@@ -190,7 +190,7 @@ public class Checksum extends ModelObjectV2 implements Comparable<Checksum>  {
 	 * @param value
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	protected void setValue(String value) throws InvalidSPDXAnalysisException {
+	public void setValue(String value) throws InvalidSPDXAnalysisException {
 		if (strict) {
 			if (Objects.isNull(value)) {
 				throw new InvalidSPDXAnalysisException("Can not set required checksum value to null");

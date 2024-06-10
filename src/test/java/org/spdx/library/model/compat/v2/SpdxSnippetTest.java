@@ -24,21 +24,26 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.Version;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.library.model.compat.v2.enumerations.AnnotationType;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
-import org.spdx.library.model.compat.v2.license.AnyLicenseInfo;
-import org.spdx.library.model.compat.v2.license.ConjunctiveLicenseSet;
-import org.spdx.library.model.compat.v2.license.DisjunctiveLicenseSet;
-import org.spdx.library.model.compat.v2.license.ExtractedLicenseInfo;
-import org.spdx.library.model.compat.v2.license.SpdxListedLicense;
-import org.spdx.library.model.compat.v2.pointer.ByteOffsetPointer;
-import org.spdx.library.model.compat.v2.pointer.LineCharPointer;
-import org.spdx.library.model.compat.v2.pointer.StartEndPointer;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.v2.Annotation;
+import org.spdx.library.model.v2.GenericModelObject;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxFile;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.SpdxSnippet;
+import org.spdx.library.model.v2.Version;
+import org.spdx.library.model.v2.enumerations.AnnotationType;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.ConjunctiveLicenseSet;
+import org.spdx.library.model.v2.license.DisjunctiveLicenseSet;
+import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
+import org.spdx.library.model.v2.license.SpdxListedLicense;
+import org.spdx.library.model.v2.pointer.ByteOffsetPointer;
+import org.spdx.library.model.v2.pointer.LineCharPointer;
+import org.spdx.library.model.v2.pointer.StartEndPointer;
 import org.spdx.storage.IModelStore.IdType;
 
 import junit.framework.TestCase;
@@ -98,7 +103,8 @@ public class SpdxSnippetTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		gmo = new GenericModelObject();
 		ANNOTATION1 = gmo.createAnnotation("Organization: Annotator1", 
 				AnnotationType.OTHER, DATE_NOW, "Comment 1");
@@ -143,11 +149,11 @@ public class SpdxSnippetTest extends TestCase {
 				DISJUNCTIVE_LICENSES[2], NON_STD_LICENSES[2], CONJUNCTIVE_LICENSES[1]
 		}));
 		
-		FROM_FILE1 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, null),
+		FROM_FILE1 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"fromFile1", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, 
 				gmo.createChecksum(ChecksumAlgorithm.SHA1, "1123456789abcdef0123456789abcdef01234567")).build();
 
-		FROM_FILE2 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId, null),
+		FROM_FILE2 = gmo.createSpdxFile(gmo.getModelStore().getNextId(IdType.SpdxId),
 				"fromFile2", STANDARD_LICENSES[0], Arrays.asList(STANDARD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE, 
 				gmo.createChecksum(ChecksumAlgorithm.SHA1, "5555556789abcdef0123456789abcdef01234567")).build();
 		
@@ -170,14 +176,13 @@ public class SpdxSnippetTest extends TestCase {
 	 */
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_3);
 	}
 
 	/**
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.SpdxSnippet#verify()}.
 	 */
 	public void testVerify() throws InvalidSPDXAnalysisException {
-		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -186,7 +191,7 @@ public class SpdxSnippetTest extends TestCase {
 		List<String> result = snippet.verify();
 		assertEquals(0, result.size());
 		// missing file
-		SpdxSnippet snippet2 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet2 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -199,7 +204,7 @@ public class SpdxSnippetTest extends TestCase {
 		result = snippet2.verify();
 		assertTrue(result.size() > 0);
 		// missing byte range
-		SpdxSnippet snippet3 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet3 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -211,12 +216,12 @@ public class SpdxSnippetTest extends TestCase {
 	}
 	
 	public void testEquivalent() throws InvalidSPDXAnalysisException {
-		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
 				.build();
-		SpdxSnippet snippet2 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet2 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -224,7 +229,7 @@ public class SpdxSnippetTest extends TestCase {
 		assertTrue(snippet.equivalent(snippet2));
 		assertTrue(snippet2.equivalent(snippet));
 		// Different File
-		SpdxSnippet snippet3 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet3 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE2, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -232,7 +237,7 @@ public class SpdxSnippetTest extends TestCase {
 		assertFalse(snippet3.equivalent(snippet));
 		assertFalse(snippet.equivalent(snippet3));
 		// different byte range
-		SpdxSnippet snippet4  = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet4  = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET2_1, OFFSET2_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -245,7 +250,7 @@ public class SpdxSnippetTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.SpdxSnippet#setSnippetFromFile(org.spdx.library.model.compat.v2.compat.v2.SpdxFile)}.
 	 */
 	public void testSetSnippetFromFile() throws InvalidSPDXAnalysisException {
-		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -272,7 +277,7 @@ public class SpdxSnippetTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.SpdxSnippet#setByteRange(org.spdx.library.model.compat.v2.compat.v2.pointer.StartEndPointer)}.
 	 */
 	public void testSetByteRange() throws InvalidSPDXAnalysisException {
-		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -293,7 +298,7 @@ public class SpdxSnippetTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.SpdxSnippet#setLineRange(org.spdx.library.model.compat.v2.compat.v2.pointer.StartEndPointer)}.
 	 */
 	public void testSetLineRange() throws InvalidSPDXAnalysisException {
-		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -314,34 +319,34 @@ public class SpdxSnippetTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.SpdxSnippet#compareTo(org.spdx.library.model.compat.v2.compat.v2.SpdxSnippet)}.
 	 */
 	public void testCompareTo() throws InvalidSPDXAnalysisException {
-		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
 				.build();
 		// same
-		SpdxSnippet snippet2 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet2 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
 				.build();
 		assertEquals(0, snippet.compareTo(snippet2));
 		// different filename
-		SpdxSnippet snippet3 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet3 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"AsnippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
 				.build();
 		assertTrue(snippet.compareTo(snippet3) > 0);
 		// different from file
-		SpdxSnippet snippet4 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet4 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE2, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
 				.build();
 		assertTrue(snippet.compareTo(snippet4) < 0);
 		// different byterange
-		SpdxSnippet snippet5 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet5 = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", COMPLEX_LICENSE, Arrays.asList(NON_STD_LICENSES), SpdxConstantsCompatV2.NOASSERTION_VALUE,
 				FROM_FILE1, OFFSET2_1, OFFSET2_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -351,7 +356,7 @@ public class SpdxSnippetTest extends TestCase {
 
 	// Test to verify spec versions prior to 2.3 fail verify for missing license or copyright fields
 	public void testVerify23Fields() throws InvalidSPDXAnalysisException {
-		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", null, Arrays.asList(new AnyLicenseInfo[] {}), null,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.setLineRange(LINE1_1, LINE1_2)
@@ -364,7 +369,7 @@ public class SpdxSnippetTest extends TestCase {
 	public void testSetAttributionText() throws InvalidSPDXAnalysisException {
 		String ATT1 = "attribution 1";
 		String ATT2 = "attribution 2";
-		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId, null), 
+		SpdxSnippet snippet = gmo.createSpdxSnippet(gmo.getModelStore().getNextId(IdType.SpdxId), 
 				"snippetName", null, Arrays.asList(new AnyLicenseInfo[] {}), null,
 				FROM_FILE1, OFFSET1_1, OFFSET1_2)
 				.addAttributionText(ATT1)

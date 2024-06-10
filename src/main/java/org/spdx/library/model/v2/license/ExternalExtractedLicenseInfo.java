@@ -28,6 +28,8 @@ import java.util.regex.Matcher;
 import javax.annotation.Nullable;
 
 import org.spdx.core.CoreModelObject;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.DefaultStoreNotInitialized;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
@@ -35,6 +37,7 @@ import org.spdx.core.SimpleUriValue;
 import org.spdx.library.model.v2.ExternalDocumentRef;
 import org.spdx.library.model.v2.ExternalSpdxElement;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxDocument;
 import org.spdx.storage.IModelStore;
 
 /**
@@ -57,20 +60,42 @@ import org.spdx.storage.IModelStore;
  */
 public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo implements IndividualUriValue {
 	
-	// Note: the constructors which use the default model store are not allowed
+	// Note: the ID and document URI for the external extracted license info is requred
 	
 	/**
-	 * @param modelStore
-	 * @param documentUri
-	 * @param objectUri
-	 * @param copyManager
-	 * @param create
-	 * @throws InvalidSPDXAnalysisException
+	 * @param documentUri Document URI for the EXTERNAL document
+	 * @param id ID used in the EXTERNAL document
+	 * @throws InvalidSPDXAnalysisException on error generating object
+	 */
+	public ExternalExtractedLicenseInfo(String documentUri, String id) throws DefaultStoreNotInitialized, InvalidSPDXAnalysisException {
+		this(DefaultModelStore.getDefaultModelStore(), documentUri, id, DefaultModelStore.getDefaultCopyManager());
+	}
+	
+	/**
+	 * @param modelStore Store to be used to store the external reference
+	 * @param documentUri Document URI for the EXTERNAL document
+	 * @param id ID used in the EXTERNAL document
+	 * @param copyManager to be used
+	 * @param create this parameter is ignored since it is external
+	 * @throws InvalidSPDXAnalysisException on error generating object
 	 */
 	public ExternalExtractedLicenseInfo(IModelStore modelStore, String documentUri, String id, 
 			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri, id, copyManager, create);	
+		super(modelStore, documentUri, id, copyManager, true);	
+	}
+	
+	/**
+	 * @param modelStore Store to be used to store the external reference
+	 * @param documentUri Document URI for the EXTERNAL document
+	 * @param id ID used in the EXTERNAL document
+	 * @param copyManager to be used
+	 * @throws InvalidSPDXAnalysisException on error generating object
+	 */
+	public ExternalExtractedLicenseInfo(IModelStore modelStore, String documentUri, String id, 
+			@Nullable IModelCopyManager copyManager)
+			throws InvalidSPDXAnalysisException {
+		super(modelStore, documentUri, id, copyManager, true);	
 	}
 	
 	/**
@@ -104,16 +129,9 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	protected List<String> _verify(Set<String> verifiedIds, String specVersion) {
 		// we don't want to call super.verify since we really don't require those fields
 		List<String> retval = new ArrayList<>();
-		String id = this.getId();
-		Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_PATTERN.matcher(id);
+		Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN.matcher(getObjectUri());
 		if (!matcher.matches()) {				
-			retval.add("Invalid objectUri format for an external document reference.  Must be of the form "+SpdxConstantsCompatV2.EXTERNAL_ELEMENT_REF_PATTERN.pattern());
-		} else {
-			try {
-				ExternalSpdxElement.externalDocumentIdToNamespace(matcher.group(1), getModelStore(), getDocumentUri(), getCopyManager());
-			} catch (InvalidSPDXAnalysisException e) {
-				retval.add(e.getMessage());
-			}
+			retval.add("Invalid objectUri format for an external document reference.  Must be of the form "+SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN.pattern());
 		}
 		return retval;
 	}
@@ -123,16 +141,16 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public String getExternalExtractedLicenseURI() throws InvalidSPDXAnalysisException {
-		return getDocumentUri() + "#" + getId();
+		return getObjectUri();
 	}
 	
 	/**
 	 * @param externalExtractedLicenseId id of the form documentRef:id
 	 * @param stModelStore model store
 	 * @param stDocumentUri document URI for the document which is referring to the external license
-	 * @param copyManager
+	 * @param copyManager copyManager to use
 	 * @return The URI associated with the external LicenseRef with the ID externalLicenseRefId
-	 * @throws InvalidSPDXAnalysisException
+	 * @throws InvalidSPDXAnalysisException on SPDX error
 	 */
 	public static String externalExtractedLicenseIdToURI(String externalExtractedLicenseId,
 			IModelStore stModelStore, String stDocumentUri, IModelCopyManager copyManager) throws InvalidSPDXAnalysisException {
@@ -160,7 +178,7 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	 * @param specVersion - version of the SPDX spec the object complies with
 	 * @throws InvalidSPDXAnalysisException
 	 */
-	public static String uriToExternalExtractedLicenseId(String uri,
+	public static String uriToExternalExtractedLicenseRef(String uri,
 			IModelStore stModelStore, String stDocumentUri, IModelCopyManager copyManager, 
 			String specVersion) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(uri, "URI can not be null");
@@ -177,6 +195,25 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 		return externalDocRef.get().getId() + ":" + matcher.group(2);
 	}
 	
+	/**
+	 * @param documentReferencingExternal document containing the external reference
+	 * @return external document ID for the external reference
+	 * @throws InvalidSPDXAnalysisException
+	 */
+	public String referenceElementId(SpdxDocument documentReferencingExternal) throws InvalidSPDXAnalysisException {
+		Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN.matcher(getObjectUri());
+		if (!matcher.matches()) {
+			throw new InvalidSPDXAnalysisException("Invalid URI format: "+getObjectUri()+".  Expects namespace#LicenseRef-XXXX");
+		}
+		Optional<ExternalDocumentRef> externalDocRef = ExternalDocumentRef.getExternalDocRefByDocNamespace(documentReferencingExternal.getModelStore(),
+				documentReferencingExternal.getDocumentUri(), matcher.group(1), documentReferencingExternal.getCopyManager(), 
+				documentReferencingExternal.getSpecVersion());
+		if (!externalDocRef.isPresent()) {
+			logger.error("Could not find or create the external document reference for document namespace "+ matcher.group(1));
+			throw new InvalidSPDXAnalysisException("Could not find or create the external document reference for document namespace "+ matcher.group(1));
+		}
+		return externalDocRef.get().getId() + ":" + matcher.group(2);
+	}
 	/* (non-Javadoc)
 	 * @see org.spdx.library.model.compat.v2.compat.v2.ModelObject#equivalent(org.spdx.library.model.compat.v2.compat.v2.ModelObject)
 	 */
@@ -185,7 +222,7 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 		if (!(compare instanceof ExternalExtractedLicenseInfo)) {
 			return false;
 		}
-		return getId().equals(((ExternalExtractedLicenseInfo)compare).getId());
+		return getObjectUri().equals(((ExternalExtractedLicenseInfo)compare).getObjectUri());
 	}
 	
 	/* (non-Javadoc)

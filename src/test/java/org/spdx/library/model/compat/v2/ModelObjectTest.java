@@ -29,30 +29,37 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.SimpleUriValue;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxIdInUseException;
-import org.spdx.library.SpdxInvalidTypeException;
-import org.spdx.library.TypedValue;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
-import org.spdx.library.model.compat.v2.enumerations.ChecksumAlgorithm;
-import org.spdx.library.model.compat.v2.enumerations.RelationshipType;
-import org.spdx.library.model.compat.v2.license.AnyLicenseInfo;
-import org.spdx.library.model.compat.v2.license.ConjunctiveLicenseSet;
-import org.spdx.library.model.compat.v2.license.ExtractedLicenseInfo;
-import org.spdx.library.model.compat.v2.license.LicenseException;
-import org.spdx.library.model.compat.v2.license.SimpleLicensingInfo;
-import org.spdx.library.model.compat.v2.license.SpdxListedLicense;
-import org.spdx.library.model.compat.v2.license.SpdxNoAssertionLicense;
-import org.spdx.library.model.compat.v2.license.SpdxNoneLicense;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelCollection;
+import org.spdx.core.ModelRegistry;
+import org.spdx.core.SimpleUriValue;
+import org.spdx.core.SpdxIdInUseException;
+import org.spdx.core.SpdxInvalidTypeException;
+import org.spdx.core.TypedValue;
+import org.spdx.library.model.v2.Annotation;
+import org.spdx.library.model.v2.ExternalSpdxElement;
+import org.spdx.library.model.v2.GenericModelObject;
+import org.spdx.library.model.v2.ModelObjectV2;
+import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.library.model.v2.SpdxFile;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
+import org.spdx.library.model.v2.enumerations.RelationshipType;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.ConjunctiveLicenseSet;
+import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
+import org.spdx.library.model.v2.license.LicenseException;
+import org.spdx.library.model.v2.license.ListedLicenseException;
+import org.spdx.library.model.v2.license.SpdxListedLicense;
+import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
+import org.spdx.library.model.v2.license.SpdxNoneLicense;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
 import org.spdx.storage.IModelStore.ModelUpdate;
 import org.spdx.storage.PropertyDescriptor;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import junit.framework.TestCase;
 
@@ -113,18 +120,20 @@ public class ModelObjectTest extends TestCase {
 	
 	IModelStore store;
 	String docUri;
-	ModelCopyManager copyManager;
+	IModelCopyManager copyManager;
 	
 	/* (non-Javadoc)
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	protected void setUp() throws Exception {
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		super.setUp();
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		store = DefaultModelStore.getDefaultModelStore();
 		docUri = DefaultModelStore.getDefaultDocumentUri();
 		copyManager = DefaultModelStore.getDefaultCopyManager();
-		LicenseException lex = new LicenseException("Autoconf-exception-2.0", "Autoconf exception 2.0 name", "Autoconf exception 2.0 text");
-		ExtractedLicenseInfo eli1 = new ExtractedLicenseInfo(store.getNextId(IdType.LicenseRef, docUri));
+		LicenseException lex = new ListedLicenseException("Autoconf-exception-2.0", "Autoconf exception 2.0 name", "Autoconf exception 2.0 text");
+		ExtractedLicenseInfo eli1 = new ExtractedLicenseInfo(store.getNextId(IdType.LicenseRef));
 		eli1.setName("eli1");
 		eli1.setExtractedText("eli1 text");
 		ConjunctiveLicenseSet cls = new ConjunctiveLicenseSet();
@@ -285,7 +294,7 @@ public class ModelObjectTest extends TestCase {
 	 * Test method for {@link org.spdx.library.model.compat.v2.ModelObjectV2.v2.ModelObject#getModelStore()}.
 	 */
 	public void testGetModelStore() throws InvalidSPDXAnalysisException {
-		InMemSpdxStore store = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
+		MockModelStore store = new MockModelStore();
 		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
 		assertEquals(store, gmo.getModelStore());
 	}
@@ -319,8 +328,8 @@ public class ModelObjectTest extends TestCase {
 				assertTrue(compareLists(entry.getValue(), result.get()));
 			} else if (result.get() instanceof ModelObjectV2) {
 				assertEquals(entry.getValue(), result.get());
-			} else if (result.get() instanceof ModelCollectionV2) {
-				assertTrue(compareLists(entry.getValue(), ((ModelCollectionV2<?>)result.get()).toImmutableList()));
+			} else if (result.get() instanceof ModelCollection) {
+				assertTrue(compareLists(entry.getValue(), ((ModelCollection<?>)result.get()).toImmutableList()));
 			} else {
 				assertEquals(entry.getValue(), result.get());
 			}
@@ -585,12 +594,6 @@ public class ModelObjectTest extends TestCase {
 		addTestValues(gmo);
 		Collection<String> result = gmo.getStringCollection(TEST_LIST_PROPERTIES[0]);
 		assertTrue(compareLists(TEST_LIST_PROPERTY_VALUES[0], new ArrayList<>(result)));
-		try {
-			gmo.getStringCollection(TEST_LIST_PROPERTIES[1]);
-			fail("No exception on getting the wrong type");
-		} catch(SpdxInvalidTypeException ex) {
-			// expected
-		}
 	}
 
 	/**
@@ -605,12 +608,6 @@ public class ModelObjectTest extends TestCase {
 		addTestValues(gmo2);
 		assertTrue(gmo.equivalent(gmo2));
 		assertTrue(gmo2.equivalent(gmo));
-		// different store
-		InMemSpdxStore store2 = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		GenericModelObject gmo3 = new GenericModelObject(store2, docUri, TEST_ID, copyManager, true);
-		addTestValues(gmo3);
-		assertTrue(gmo.equivalent(gmo3));
-		assertTrue(gmo3.equivalent(gmo2));
 	}
 	
 	// We test symmetry in case of missing properties on either side explicitly because of issue-105
@@ -645,8 +642,8 @@ public class ModelObjectTest extends TestCase {
 		// Given
 		GenericModelObject firstObject = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
 		GenericModelObject secondObject = new GenericModelObject(store, docUri, "testId2", copyManager, true);
-		ModelCollectionV2<GenericModelObject> emptyModelCollection = new ModelCollectionV2<>(store, 
-				docUri, TEST_ID, TEST_PROPERTY1, copyManager, GenericModelObject.class);
+		ModelCollection<GenericModelObject> emptyModelCollection = new ModelCollection<GenericModelObject>(store, 
+				docUri + "#" + TEST_ID, TEST_PROPERTY1, copyManager, GenericModelObject.class, firstObject.getSpecVersion());
 		firstObject.setPropertyValue(TEST_PROPERTY1, emptyModelCollection);
 		secondObject.setPropertyValue(TEST_PROPERTY2, emptyModelCollection);
 		
@@ -667,8 +664,8 @@ public class ModelObjectTest extends TestCase {
 	
 	public void testEquivalentModelObjectProp() throws InvalidSPDXAnalysisException {
 		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
-		String id1 = "id1";
-		String id2 = "id2";
+		String id1 = "LicenseRef-id1";
+		String id2 = "LicenseRef-id2";
 		String text = "licenseText";
 		PropertyDescriptor prop = new PropertyDescriptor("property", SpdxConstantsCompatV2.SPDX_NAMESPACE);
 		ExtractedLicenseInfo eli = new ExtractedLicenseInfo(id1, text);
@@ -682,23 +679,18 @@ public class ModelObjectTest extends TestCase {
 		String licenseText = testResult.get().getExtractedText();
 		assertEquals(text, licenseText);
 		assertTrue(gmo.equivalent(gmo));
-		// different store
-		InMemSpdxStore store2 = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		GenericModelObject gmo3 = new GenericModelObject(store2, docUri, TEST_ID, copyManager, true);
-		gmo3.setPropertyValue(prop, eli2);
-		assertTrue(gmo.equivalent(gmo3));
 	}
 	
 	public void testEquivalentModelObjectList() throws InvalidSPDXAnalysisException {
 		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
-		String id1 = "id1";
-		String id2 = "id2";
+		String id1 = "LicenseRef-id1";
+		String id2 = "LicenseRef-id2";
 		String text = "licenseText";
 		PropertyDescriptor prop = new PropertyDescriptor("property", SpdxConstantsCompatV2.SPDX_NAMESPACE);
 		ExtractedLicenseInfo eli = new ExtractedLicenseInfo(id1, text);
 		ExtractedLicenseInfo eli2 = new ExtractedLicenseInfo(id2, text);
-		String id3 = "id3";
-		String id4 = "id4";
+		String id3 = "LicenseRef-id3";
+		String id4 = "LicenseRef-id4";
 		String text2 = "license text 2";
 		ExtractedLicenseInfo nextEli = new ExtractedLicenseInfo(id3, text2);
 		ExtractedLicenseInfo nextEli2 = new ExtractedLicenseInfo(id4, text2);
@@ -715,13 +707,6 @@ public class ModelObjectTest extends TestCase {
 		gmo2.addPropertyValueToCollection(prop, nextEli2);
 		assertTrue(gmo.equivalent(gmo2));
 		assertTrue(gmo2.equivalent(gmo));
-		// different store
-		InMemSpdxStore store2 = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		GenericModelObject gmo3 = new GenericModelObject(store2, docUri, TEST_ID, copyManager, true);
-		gmo3.addPropertyValueToCollection(prop, eli2);
-		gmo3.addPropertyValueToCollection(prop, nextEli2);
-		assertTrue(gmo.equivalent(gmo3));
-		assertTrue(gmo3.equivalent(gmo2));
 	}
 	
 	// We test a situation where for each element in list1, there is an equivalent item in list2, but
@@ -731,10 +716,10 @@ public class ModelObjectTest extends TestCase {
 		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
 		GenericModelObject gmo2 = new GenericModelObject(store, docUri, "TestId2", copyManager, true);
 		PropertyDescriptor property = new PropertyDescriptor("property", SpdxConstantsCompatV2.SPDX_NAMESPACE);
-		ExtractedLicenseInfo equivalentLicense = new ExtractedLicenseInfo("objectUri", "licenseText");
-		ExtractedLicenseInfo equivalentLicense2 = new ExtractedLicenseInfo("id2", "licenseText");
-		ExtractedLicenseInfo equivalentLicense3 = new ExtractedLicenseInfo("id3", "licenseText");
-		ExtractedLicenseInfo differentLicense = new ExtractedLicenseInfo("id4", "differentText");
+		ExtractedLicenseInfo equivalentLicense = new ExtractedLicenseInfo("LicenseRef-objectUri", "licenseText");
+		ExtractedLicenseInfo equivalentLicense2 = new ExtractedLicenseInfo("LicenseRef-id2", "licenseText");
+		ExtractedLicenseInfo equivalentLicense3 = new ExtractedLicenseInfo("LicenseRef-id3", "licenseText");
+		ExtractedLicenseInfo differentLicense = new ExtractedLicenseInfo("LicenseRef-id4", "differentText");
 		
 		gmo.addPropertyValueToCollection(property, equivalentLicense);
 		gmo.addPropertyValueToCollection(property, equivalentLicense2);
@@ -758,56 +743,11 @@ public class ModelObjectTest extends TestCase {
 		assertFalse(gmo.equals(gmo2));
 		assertFalse(gmo2.equals(gmo));
 		// same ID's, different store
-		InMemSpdxStore store2 = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
+		MockModelStore store2 = new MockModelStore();
 		GenericModelObject gmo3 = new GenericModelObject(store2, docUri, TEST_ID, copyManager, true);
 		addTestValues(gmo3);
 		assertTrue(gmo.equals(gmo3));
 		assertTrue(gmo3.equals(gmo));
-	}
-
-	/**
-	 * Test method for {@link org.spdx.library.model.compat.v2.ModelObjectV2.v2.ModelObject#clone()}.
-	 */
-	public void testClone() throws InvalidSPDXAnalysisException {
-		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
-		addTestValues(gmo);
-		InMemSpdxStore store2 = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		ModelObjectV2 result = gmo.clone(store2);
-		assertTrue(result instanceof GenericModelObject);
-		assertEquals(result, gmo);
-		assertTrue(result.equivalent(gmo));
-		assertTrue(gmo.equivalent(result));
-	}
-
-	/**
-	 * Test method for {@link org.spdx.library.model.compat.v2.ModelObjectV2.v2.ModelObject#copyFrom(org.spdx.library.model.compat.v2.ModelObjectV2.v2.ModelObject)}.
-	 */
-	public void testCopyFrom() throws InvalidSPDXAnalysisException {
-		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
-		addTestValues(gmo);
-		GenericModelObject gmo2 = new GenericModelObject(store, docUri, "id2", copyManager, true);
-		gmo2.copyFrom(gmo);
-		assertTrue(gmo.equivalent(gmo2));
-		// different store
-		InMemSpdxStore store2 = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		GenericModelObject gmo3 = new GenericModelObject(store2, docUri, TEST_ID, copyManager, true);
-		gmo3.copyFrom(gmo);
-		assertTrue(gmo.equivalent(gmo3));
-		assertTrue(gmo3.equivalent(gmo2));
-	}
-
-	/**
-	 * Test method for {@link org.spdx.library.model.compat.v2.ModelObjectV2.v2.ModelObject#idToIdType(java.lang.String)}.
-	 */
-	public void testIdToIdType() throws InvalidSPDXAnalysisException {
-		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
-		assertEquals(IdType.Anonymous, gmo.idToIdType("anything"));
-		assertEquals(IdType.DocumentRef, gmo.idToIdType(SpdxConstantsCompatV2.EXTERNAL_DOC_REF_PRENUM + "12"));
-		assertEquals(IdType.LicenseRef, gmo.idToIdType(SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM + "12"));
-		assertEquals(IdType.ListedLicense, gmo.idToIdType("Apache-2.0"));
-		assertEquals(IdType.Literal, gmo.idToIdType(SpdxConstantsCompatV2.NONE_VALUE));
-		assertEquals(IdType.Literal, gmo.idToIdType(SpdxConstantsCompatV2.NOASSERTION_VALUE));
-		assertEquals(IdType.SpdxId, gmo.idToIdType(SpdxConstantsCompatV2.SPDX_ELEMENT_REF_PRENUM + "12"));
 	}
 
 	/**
@@ -851,7 +791,7 @@ public class ModelObjectTest extends TestCase {
 		assertTrue(result.get() instanceof ExternalSpdxElement);
 		ExternalSpdxElement externalElement = (ExternalSpdxElement)result.get();
 		assertEquals(EXTERNAL_SPDX_ELEMENT_ID, externalElement.getExternalElementId());
-		assertEquals(EXTERNAL_SPDX_URI, externalElement.getExternalSpdxElementURI());
+		assertEquals(EXTERNAL_SPDX_URI, externalElement.getObjectUri());
 		
 		// Enum value
 		suv = new SimpleUriValue(ENUM_URI);
@@ -885,29 +825,11 @@ public class ModelObjectTest extends TestCase {
 		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
 		addTestValues(gmo);
 		for (int i = 0; i < TEST_ANYLICENSEINFO_LIST_PROPERTIES.length; i++) {
-			ModelCollectionV2<AnyLicenseInfo> result = (ModelCollectionV2<AnyLicenseInfo>)(ModelCollectionV2<?>)gmo.getObjectPropertyValueSet(TEST_ANYLICENSEINFO_LIST_PROPERTIES[i], AnyLicenseInfo.class);
+			ModelCollection<AnyLicenseInfo> result = (ModelCollection<AnyLicenseInfo>)(ModelCollection<?>)gmo.getObjectPropertyValueSet(TEST_ANYLICENSEINFO_LIST_PROPERTIES[i], AnyLicenseInfo.class);
 			assertTrue(compareLists(TEST_ANYLICENSEINFO_LIST_PROP_VALUES[i], result.toImmutableList()));
 		}
 	}
-	
-	public void testTypeCheckedCollection()  throws InvalidSPDXAnalysisException {
-		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
-		addTestValues(gmo);
-		gmo.getObjectPropertyValueSet(TEST_ANYLICENSEINFO_LIST_PROPERTIES[0], AnyLicenseInfo.class);
-		gmo.getObjectPropertyValueSet(TEST_ANYLICENSEINFO_LIST_PROPERTIES[0], SimpleLicensingInfo.class);
-		try {
-			gmo.getObjectPropertyValueSet(TEST_ANYLICENSEINFO_LIST_PROPERTIES[0], SpdxFile.class);
-			fail("Type check should not have passed");
-		} catch (InvalidSPDXAnalysisException ex) {
-			// expected
-		}
-		try {
-			gmo.getObjectPropertyValueSet(TEST_ANYLICENSEINFO_LIST_PROPERTIES[0], SpdxListedLicense.class);
-			fail("Type check should not have passed");
-		} catch (InvalidSPDXAnalysisException ex) {
-			// expected
-		}
-	}
+
 	
 	/**
 	 * Negative test for creating 2 model objects with incompatible types which should fail

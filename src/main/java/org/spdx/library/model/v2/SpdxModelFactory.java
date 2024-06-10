@@ -243,7 +243,7 @@ public class SpdxModelFactory {
 		if (id.contains(":")) {
 			// External document ref
 			try {
-				return Optional.of(new org.spdx.library.model.v2.ExternalSpdxElement(modelStore, documentUri, id, copyManager, true));
+				return Optional.of(new org.spdx.library.model.v2.ExternalSpdxElement(modelStore, documentUri, id, copyManager));
 			} catch(InvalidSPDXAnalysisException ex) {
 				logger.warn("Attempting to get a model object for an invalid SPDX ID.  Returning empty");
 				return Optional.empty();

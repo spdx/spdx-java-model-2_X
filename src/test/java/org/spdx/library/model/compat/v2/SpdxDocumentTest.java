@@ -22,14 +22,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.spdx.core.DefaultModelStore;
+import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.ModelRegistry;
-import org.spdx.library.ModelCopyManager;
-import org.spdx.library.Version;
 import org.spdx.library.model.v2.Annotation;
 import org.spdx.library.model.v2.Checksum;
 import org.spdx.library.model.v2.ExternalDocumentRef;
@@ -44,19 +41,18 @@ import org.spdx.library.model.v2.SpdxItem;
 import org.spdx.library.model.v2.SpdxModelFactory;
 import org.spdx.library.model.v2.SpdxModelInfoV2_X;
 import org.spdx.library.model.v2.SpdxPackage;
+import org.spdx.library.model.v2.Version;
 import org.spdx.library.model.v2.enumerations.AnnotationType;
 import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
 import org.spdx.library.model.v2.enumerations.FileType;
 import org.spdx.library.model.v2.enumerations.RelationshipType;
 import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
-import org.spdx.library.model.v2.license.LicenseInfoFactory;
 import org.spdx.library.model.v2.license.SimpleLicensingInfo;
 import org.spdx.library.model.v2.license.SpdxListedLicense;
 import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import junit.framework.TestCase;
 
@@ -118,9 +114,9 @@ public class SpdxDocumentTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
-		DefaultModelStore.initialize(new InMemSpdxStore(), "http://default/namespace", new ModelCopyManager());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		gmo = new GenericModelObject();
-		CCO_DATALICENSE = LicenseInfoFactory.getListedLicenseById("CC0-1.0");
+		CCO_DATALICENSE = new SpdxListedLicense("CC0-1.0");
 		LICENSE1 = new ExtractedLicenseInfo("LicenseRef-1", "License Text 1");
 		LICENSE2 = new ExtractedLicenseInfo("LicenseRef-2", "License Text 2");
 		LICENSE3 = new ExtractedLicenseInfo("LicenseRef-3", "License Text 3");
@@ -253,15 +249,12 @@ public class SpdxDocumentTest extends TestCase {
 	}
 
 	/**
-	 * Per 1309, if no creation info is available in the model, we'll assign a creation date, as one is mandatory,
-	 * and the License List Version (because we know what version we have).
+	 * Per 1309, if no creation info is available in the model, we'll assign a creation date, as one is mandatory.
 	 */
 	public void testDefaultCreationInfo() throws InvalidSPDXAnalysisException {
 		SpdxDocument doc = SpdxModelFactory.createSpdxDocumentV2(gmo.getModelStore(), gmo.getDocumentUri(), gmo.getCopyManager());
 		assertNotNull(doc.getCreationInfo());
 		assertTrue("Mandatory creation date missing from new SPDX Document.", !doc.getCreationInfo().getCreated().isEmpty());
-		Optional<String> licenseListVersion = doc.getCreationInfo().getLicenseListVersion();
-		assertTrue(licenseListVersion.isPresent() && StringUtils.isNotBlank(licenseListVersion.get()));
 	}
 	
 	public void testEquivalent() throws InvalidSPDXAnalysisException {
@@ -308,8 +301,7 @@ public class SpdxDocumentTest extends TestCase {
 		assertTrue(doc.equivalent(doc));
 		
 		String doc2Uri = "http://spdx.org/spdx/2ndoc/2342";
-		IModelStore model2 = new InMemSpdxStore();
-		SpdxDocument doc2 = SpdxModelFactory.createSpdxDocumentV2(model2, doc2Uri, gmo.getCopyManager());
+		SpdxDocument doc2 = SpdxModelFactory.createSpdxDocumentV2(gmo.getModelStore(), doc2Uri, gmo.getCopyManager());
 		doc2.setStrict(false);
 		doc2.setAnnotations(annotations);
 		doc2.setComment(DOC_COMMENT1);
@@ -327,7 +319,7 @@ public class SpdxDocumentTest extends TestCase {
 		doc2.setCreationInfo(CREATIONINFO1);
 		assertTrue(doc.equivalent(doc2));
 		// DataLicense
-		doc2.setDataLicense(LicenseInfoFactory.getListedLicenseById("APAFML"));
+		doc2.setDataLicense(new SpdxListedLicense("APAFML"));
 		assertFalse(doc.equivalent(doc2));
 		doc2.setDataLicense(CCO_DATALICENSE);
 		assertTrue(doc.equivalent(doc2));
@@ -386,7 +378,7 @@ public class SpdxDocumentTest extends TestCase {
 		List<String> result = doc.verify();
 		assertEquals(0, result.size());
 		// data license
-		doc.setDataLicense(LicenseInfoFactory.getListedLicenseById("AFL-3.0"));
+		doc.setDataLicense(new SpdxListedLicense("AFL-3.0"));
 		result = doc.verify();
 		assertEquals(1, result.size());
 		// Name
@@ -508,7 +500,7 @@ public class SpdxDocumentTest extends TestCase {
 		doc.setRelationships(relationships);
 		doc.setDocumentDescribes(items);
 		assertEquals(CCO_DATALICENSE, doc.getDataLicense());
-		SpdxListedLicense lic = LicenseInfoFactory.getListedLicenseById("Apache-2.0");
+		SpdxListedLicense lic = new SpdxListedLicense("Apache-2.0");
 		doc.setDataLicense(lic);
 		assertEquals(lic, doc.getDataLicense());
 	}
@@ -669,9 +661,9 @@ public class SpdxDocumentTest extends TestCase {
 	
 	// Test for issue 126 - removing a documentDescribes not properly decrementing use counts
 	public void testRemoveDescribes() throws InvalidSPDXAnalysisException {
-		IModelStore modelStore = new InMemSpdxStore();
+		IModelStore modelStore = new MockModelStore();
 		String docUri = "https://some.doc.uri";
-		ModelCopyManager copyManager = new ModelCopyManager();
+		IModelCopyManager copyManager = new MockCopyManager();
 		SpdxDocument doc = new SpdxDocument(modelStore, docUri, copyManager, true);
 		String describedElementId = "SPDXRef-describedElement";
 		SpdxElement describedElement = new GenericSpdxElement(modelStore, docUri, describedElementId, copyManager, true);

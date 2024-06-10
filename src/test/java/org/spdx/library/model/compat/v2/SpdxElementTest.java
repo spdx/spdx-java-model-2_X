@@ -18,21 +18,24 @@ package org.spdx.library.model.compat.v2;
  */
 
 
-
-import java.lang.annotation.Annotation;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import org.spdx.core.DefaultModelStore;
-import org.spdx.core.SpdxCoreConstants.SpdxMajorVersion;
-import org.spdx.library.ModelCopyManager;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.v2.Annotation;
 import org.spdx.library.model.v2.GenericModelObject;
+import org.spdx.library.model.v2.GenericSpdxElement;
+import org.spdx.library.model.v2.Relationship;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxElement;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.enumerations.AnnotationType;
+import org.spdx.library.model.v2.enumerations.RelationshipType;
 import org.spdx.storage.IModelStore.IdType;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import junit.framework.TestCase;
 
@@ -60,18 +63,19 @@ public class SpdxElementTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.initialize(new InMemSpdxStore(SpdxMajorVersion.VERSION_2), "http://default/document", new ModelCopyManager());
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 		gmo = new GenericModelObject();
 		ANNOTATION1 = gmo.createAnnotation("Person: Annotator1",
 			AnnotationType.OTHER, DATE_NOW, "Comment1");
 		ANNOTATION2 = gmo.createAnnotation("Person: Annotator2",
 				AnnotationType.REVIEW, DATE_NOW, "Comment2");
 		RELATED_ELEMENT1 = new GenericSpdxElement(gmo.getModelStore(), gmo.getDocumentUri(), 
-				gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()), gmo.getCopyManager(), true);
+				gmo.getModelStore().getNextId(IdType.SpdxId), gmo.getCopyManager(), true);
 		RELATED_ELEMENT1.setName("relatedElementName1");
 		RELATED_ELEMENT1.setComment("related element comment 1");
 		RELATED_ELEMENT2 = new GenericSpdxElement(gmo.getModelStore(), gmo.getDocumentUri(), 
-				gmo.getModelStore().getNextId(IdType.SpdxId, gmo.getDocumentUri()), gmo.getCopyManager(), true);
+				gmo.getModelStore().getNextId(IdType.SpdxId), gmo.getCopyManager(), true);
 		RELATED_ELEMENT2.setName("relatedElementName2");
 		RELATED_ELEMENT2.setComment("related element comment 2");
 	}

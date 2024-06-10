@@ -22,14 +22,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-
-import org.spdx.library.DefaultModelStore;
-import org.spdx.library.InvalidSPDXAnalysisException;
-import org.spdx.library.SpdxConstantsCompatV2;
-import org.spdx.library.SpdxConstants.SpdxMajorVersion;
+import org.spdx.core.DefaultModelStore;
+import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.ModelRegistry;
+import org.spdx.library.model.compat.v2.MockCopyManager;
+import org.spdx.library.model.compat.v2.MockModelStore;
+import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.license.CrossRef;
+import org.spdx.library.model.v2.license.SpdxListedLicense;
 import org.spdx.licenseTemplate.InvalidLicenseTemplateException;
-import org.spdx.storage.IModelStore;
-import org.spdx.storage.simple.InMemSpdxStore;
 
 import junit.framework.TestCase;
 
@@ -44,7 +45,8 @@ public class SpdxListedLicenseTest extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_2);
+		ModelRegistry.getModelRegistry().registerModel(new SpdxModelInfoV2_X());
+		DefaultModelStore.initialize(new MockModelStore(), "http://defaultdocument", new MockCopyManager());
 	}
 
 	/* (non-Javadoc)
@@ -52,7 +54,6 @@ public class SpdxListedLicenseTest extends TestCase {
 	 */
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		DefaultModelStore.reset(SpdxMajorVersion.VERSION_3);
 	}
 
 	public void testCreate() throws InvalidSPDXAnalysisException, InvalidLicenseTemplateException {
@@ -211,97 +212,6 @@ public class SpdxListedLicenseTest extends TestCase {
 		verify = compLic.verify();
 		assertEquals(0, verify.size());	
 	}
-	
-
-	public void testCopyOf() throws InvalidSPDXAnalysisException, InvalidLicenseTemplateException {
-
-		String name = "name";
-		String id = "AFL-3.0";
-		String text = "text";
-		Collection<String> sourceUrls = new ArrayList<String>(Arrays.asList(new String[] {"source url1", "source url2"}));
-		String notes = "notes";
-		String standardLicenseHeader = "Standard license header";
-		String template = "template";
-		String licenseHtml = "license HTML";
-		String deprecatedVersion = "3.5";
-		SpdxListedLicense stdl = new SpdxListedLicense(name, id, text,
-				sourceUrls, notes, standardLicenseHeader, template, true, null, licenseHtml, true, deprecatedVersion);
-		IModelStore store = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		SpdxListedLicense lic2 = new SpdxListedLicense(store, SpdxConstantsCompatV2.LISTED_LICENSE_URL, id, stdl.getCopyManager(), true);
-		lic2.copyFrom(stdl);
-
-		assertEquals(id, lic2.getLicenseId());
-		assertEquals(text, lic2.getLicenseText());
-		assertEquals(notes, lic2.getComment());
-		assertEquals(name, lic2.getName());
-		assertTrue(compareCollectionContent(sourceUrls, lic2.getSeeAlso()));
-		assertEquals(standardLicenseHeader, lic2.getStandardLicenseHeader());
-		assertEquals(template, lic2.getStandardLicenseTemplate());
-		assertTrue(lic2.getFsfLibre() == null);
-		assertEquals(licenseHtml, lic2.getLicenseTextHtml());
-		assertEquals(deprecatedVersion, lic2.getDeprecatedVersion());
-		assertEquals(true, lic2.isDeprecated());
-	}
-
-	/**
-	 * @param strings1
-	 * @param strings2
-	 * @return true if both arrays contain the same content independent of order
-	 */
-	private boolean compareCollectionContent(Collection<String> strings1,
-			Collection<String> strings2) {
-		if (strings1.size() != strings2.size()) {
-			return false;
-		}
-		for (Object s1:strings1) {
-			if (!strings2.contains(s1)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-
-	public void testEquivalent() throws InvalidSPDXAnalysisException {
-
-		String name = "name";
-		String name2 = "name2";
-		String id = "AFL-3.0";
-		String text = "text";
-		String text2 = "text2";
-		Collection<String> sourceUrls = new ArrayList<String>(Arrays.asList(new String[] {"source url1", "source url2"}));
-		Collection<String> sourceUrls2 =  new ArrayList<String>(Arrays.asList(new String[] {"source url2"}));
-		String notes = "notes";
-		String notes2 = "notes2";
-		String standardLicenseHeader = "Standard license header";
-		String standardLicenseHeader2 = "Standard license header2";
-		String template = "template";
-		String template2 = "template2";
-		
-		SpdxListedLicense stdl = new SpdxListedLicense(name, id, text,
-				sourceUrls, notes, standardLicenseHeader, template, true,null, null, false, null);
-		assertTrue(stdl.equivalent(stdl));
-		IModelStore store = new InMemSpdxStore(SpdxMajorVersion.VERSION_2);
-		SpdxListedLicense stdl2 = new SpdxListedLicense(store, SpdxConstantsCompatV2.LISTED_LICENSE_URL, id, stdl.getCopyManager(), true);
-		stdl2.setLicenseText(text2);
-		stdl2.setName(name2);
-		stdl2.setSeeAlso(sourceUrls2);
-		stdl2.setComment(notes2);
-		stdl2.setStandardLicenseHeader(standardLicenseHeader2);
-		stdl2.setStandardLicenseTemplate(template2);
-		assertTrue(stdl2.equivalent(stdl));
-		
-		SpdxListedLicense stdl3 = new SpdxListedLicense(store, SpdxConstantsCompatV2.LISTED_LICENSE_URL, "Apache-2.0", stdl.getCopyManager(), true);
-		stdl3.setLicenseText(text);
-		stdl3.setSeeAlso(sourceUrls);
-		stdl3.setComment(notes);
-		stdl3.setStandardLicenseHeader(standardLicenseHeader);
-		stdl3.setStandardLicenseTemplate(template);
-		
-		assertTrue(stdl2.equivalent(stdl));
-		assertFalse(stdl.equivalent(stdl3));
-	}
-	
 
 	public void testSetHeaderTemplate() throws InvalidSPDXAnalysisException {
 
