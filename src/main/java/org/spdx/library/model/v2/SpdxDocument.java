@@ -33,14 +33,12 @@ import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.ModelRegistry;
 import org.spdx.core.SpdxInvalidTypeException;
-import org.spdx.core.TypedValue;
 import org.spdx.library.model.v2.enumerations.RelationshipType;
 import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
 import org.spdx.library.model.v2.license.SpdxListedLicense;
 import org.spdx.library.model.v2.license.SpdxNoneLicense;
 import org.spdx.storage.IModelStore;
-import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.PropertyDescriptor;
 
 /**
@@ -75,47 +73,6 @@ public class SpdxDocument extends SpdxElement {
 		Map<String, ExternalDocumentRef> documentUrisToExternalDocRef = new HashMap<>();
 		for (ExternalDocumentRef docRef:externalDocumentRefs) {
 			documentUrisToExternalDocRef.put(docRef.getSpdxDocumentNamespace(), docRef);
-		}
-		// Iterate through ALL the IDs to initialize the external document references
-		IModelStoreLock lock = modelStore.enterCriticalSection(true);
-		try {
-			modelStore.getAllItems(null, null).forEach(tv -> {
-				try {
-					modelStore.getPropertyValueDescriptors(tv.getObjectUri()).forEach(prop -> {
-						try {
-							if (modelStore.isCollectionProperty(tv.getObjectUri(), prop)) {
-								modelStore.listValues(tv.getObjectUri(), prop).forEachRemaining(value -> {
-									if (value instanceof TypedValue) {
-										String targetObjectUri = ((TypedValue)value).getObjectUri();
-										documentUrisToExternalDocRef.entrySet().forEach(entry -> {
-											if (targetObjectUri.startsWith(entry.getKey())) {
-												modelStore.addExternalReference(targetObjectUri, this.getObjectUri(), entry.getValue());
-											}
-										});
-									}
-								});
-							} else {
-								Object value = modelStore.getValue(tv.getObjectUri(), prop);
-								if (value instanceof TypedValue) {
-									String targetObjectUri = ((TypedValue)value).getObjectUri();
-									documentUrisToExternalDocRef.entrySet().forEach(entry -> {
-										if (targetObjectUri.startsWith(entry.getKey())) {
-											modelStore.addExternalReference(targetObjectUri, this.getObjectUri(), entry.getValue());
-										}
-									});
-								}
-							}
-						} catch (InvalidSPDXAnalysisException e) {
-							logger.error("Error getting external document reference information for SPDX documents");
-						}
-					});
-				} catch (InvalidSPDXAnalysisException e) {
-					logger.error("Error getting external document reference information for SPDX documents");
-				}
-				
-			});
-		} finally {
-			leaveCriticalSection(lock);
 		}
 		
 		documentDescribes = new RelatedElementCollection(this, RelationshipType.DESCRIBES, null, specVersion);

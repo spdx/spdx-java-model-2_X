@@ -88,7 +88,7 @@ public abstract class SpdxElement extends ModelObjectV2 {
 		}
 		verifiedElementIds.add(this.getId());
 		// verify ID format
-		IdType idType = this.getModelStore().getIdType(this.getId());
+		IdType idType = this.getModelStore().getIdType(this.getObjectUri());
 		if (IdType.SpdxId.equals(idType)) {
 			if (!SpdxVerificationHelper.verifySpdxId(this.getId())) {
 				retval.add("Invalid SPDX ID: "+this.getId()+".  Must match the pattern "+SpdxConstantsCompatV2.SPDX_ELEMENT_REF_PATTERN);

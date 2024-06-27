@@ -19,8 +19,10 @@ package org.spdx.library.model.v2;
 
 import java.util.Optional;
 
+import org.spdx.core.DefaultModelStore;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.storage.IModelStore;
+import org.spdx.storage.IModelStore.IdType;
 
 /**
  * This SPDX element represents no SPDX element at all.
@@ -35,14 +37,14 @@ import org.spdx.storage.IModelStore;
  */
 public class SpdxNoneElement extends SpdxConstantElement {
 	
-	public static final String NONE_ELEMENT_ID = "NONE";
+	public static final String NONE_ELEMENT_NAME = SpdxConstantsCompatV2.NONE_VALUE;
 	
 	/**
 	 * Create a None element with default model store and document URI
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxNoneElement() throws InvalidSPDXAnalysisException {
-		super(NONE_ELEMENT_ID);
+		super(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
 	}
 	
 	/**
@@ -52,17 +54,17 @@ public class SpdxNoneElement extends SpdxConstantElement {
 	 */
 	public SpdxNoneElement(IModelStore modelStore, String documentUri)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri, NONE_ELEMENT_ID);
+		super(modelStore, documentUri, modelStore.getNextId(IdType.Anonymous));
 	}
 	
 	@Override
 	public String toString() {
-		return SpdxConstantsCompatV2.NONE_VALUE;
+		return NONE_ELEMENT_NAME;
 	}
 	
 	@Override
 	public Optional<String> getName() throws InvalidSPDXAnalysisException {
-		return Optional.of("NONE");
+		return Optional.of(NONE_ELEMENT_NAME);
 	}
 	
 	@Override

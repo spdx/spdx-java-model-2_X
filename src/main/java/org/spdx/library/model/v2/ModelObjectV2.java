@@ -117,6 +117,7 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 	public ModelObjectV2(String id) throws InvalidSPDXAnalysisException {
 		super(CompatibleModelStoreWrapper.documentUriIdToUri(DefaultModelStore.getDefaultDocumentUri(), id, DefaultModelStore.getDefaultModelStore()), LATEST_SPDX_2_VERSION);
 		this.documentUri = DefaultModelStore.getDefaultDocumentUri();
+		this.idPrefix = documentUri + "#";
 		this.id = id;
 	}
 
@@ -132,8 +133,7 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 			boolean create) throws InvalidSPDXAnalysisException {
 		super(modelStore, CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, identifier, modelStore), 
 				copyManager, create, LATEST_SPDX_2_VERSION, 
-				CompatibleModelStoreWrapper.documentUriToNamespace(documentUri, 
-						IdType.Anonymous.equals(modelStore.getIdType(CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, identifier, modelStore)))));
+				CompatibleModelStoreWrapper.documentUriToNamespace(documentUri));
 		Objects.requireNonNull(modelStore, "Model Store can not be null");
 		Objects.requireNonNull(documentUri, "Document URI can not be null");
 		Objects.requireNonNull(identifier, "ID can not be null");
@@ -252,9 +252,9 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 		} else if (result.get() instanceof IndividualUriValue) {
 			String uri = ((IndividualUriValue)result.get()).getIndividualURI();
 			if (SpdxConstantsCompatV2.URI_VALUE_NONE.equals(uri)) {
-				return Optional.of(new SpdxNoneLicense());
+				return Optional.of(new SpdxNoneLicense(this.modelStore, this.documentUri));
 			} else if (SpdxConstantsCompatV2.URI_VALUE_NOASSERTION.equals(uri)) {
-				return Optional.of(new SpdxNoAssertionLicense());
+				return Optional.of(new SpdxNoAssertionLicense(this.modelStore, this.documentUri));
 			} else {
 				logger.error("Can not convert a URI value to a license: "+uri);
 				throw new SpdxInvalidTypeException("Can not convert a URI value to a license: "+uri);
@@ -281,9 +281,9 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 		} else if (result.get() instanceof IndividualUriValue) {
 			String uri = ((IndividualUriValue)result.get()).getIndividualURI();
 			if (SpdxConstantsCompatV2.URI_VALUE_NONE.equals(uri)) {
-				return Optional.of(new SpdxNoneElement());
+				return Optional.of(new SpdxNoneElement(this.modelStore, this.documentUri));
 			} else if (SpdxConstantsCompatV2.URI_VALUE_NOASSERTION.equals(uri)) {
-				return Optional.of(new SpdxNoAssertionElement());
+				return Optional.of(new SpdxNoAssertionElement(this.modelStore, this.documentUri));
 			} else {
 				logger.error("Can not convert a URI value to an SPDX element: "+uri);
 				throw new SpdxInvalidTypeException("Can not convert a URI value to an SPDX element: "+uri);
@@ -315,7 +315,7 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 			return false;
 		}
 		ModelObjectV2 comp = (ModelObjectV2)o;
-		if (getModelStore().getIdType(id).equals(IdType.Anonymous)) {
+		if (getModelStore().isAnon(id)) {
 			return Objects.equals(modelStore, comp.getModelStore()) && Objects.equals(id, comp.getId()) && Objects.equals(documentUri, comp.getDocumentUri());
 		} else {
 			return Objects.equals(id, comp.getId()) && Objects.equals(documentUri, comp.getDocumentUri());
@@ -324,12 +324,12 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 	
 	@Override
 	public TypedValue toTypedValue() throws InvalidSPDXAnalysisException {
-		return CompatibleModelStoreWrapper.typedValueFromDocUri(this.documentUri, this.id, modelStore.getIdType(id).equals(IdType.Anonymous), this.getType());
+		return CompatibleModelStoreWrapper.typedValueFromDocUri(this.documentUri, this.id, modelStore.isAnon(id), this.getType());
 	}
 	
 	@Override
 	public boolean isNoAssertion(Object value) {
-		return ("NOASSERTION".equals(value) || value instanceof SpdxNoAssertionLicense || value instanceof SpdxNoAssertionElement);
+		return ("NOASSERTION".equals(value) || value instanceof SpdxNoAssertionLicense || value instanceof SpdxNoAssertionElement || value instanceof SpdxNoAssertion);
 	}
 	
 	// The following methods are helper methods to create Model Object subclasses using the same model store and document as this Model Object
@@ -444,7 +444,7 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 				ModelObjectHelper.addValueToCollection(getModelStore(), 
 						CompatibleModelStoreWrapper.documentUriIdToUri(getDocumentUri(), SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
 						SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF,
-						retval, copyManager);
+						retval, copyManager, idPrefix);
 				return retval;
 			}
 		} finally {

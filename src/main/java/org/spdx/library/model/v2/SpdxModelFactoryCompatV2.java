@@ -51,9 +51,9 @@ import org.slf4j.LoggerFactory;
  * @author Gary O'Neall
  *
  */
-public class SpdxModelFactory {
+public class SpdxModelFactoryCompatV2 {
 	
-	static final Logger logger = LoggerFactory.getLogger(SpdxModelFactory.class);
+	static final Logger logger = LoggerFactory.getLogger(SpdxModelFactoryCompatV2.class);
 	
 	public static Map<String, Class<?>> SPDX_TYPE_TO_CLASS_V2;
 	public static Map<Class<?>, String> SPDX_CLASS_TO_TYPE;
@@ -243,14 +243,22 @@ public class SpdxModelFactory {
 		if (id.contains(":")) {
 			// External document ref
 			try {
-				return Optional.of(new org.spdx.library.model.v2.ExternalSpdxElement(modelStore, documentUri, id, copyManager));
+				String externalObjectUri = ExternalSpdxElement.externalSpdxElementIdToURI(id, modelStore, documentUri, copyManager);
+				int poundIndex = externalObjectUri.indexOf('#');
+				if (poundIndex < 0) {
+					logger.warn("Unable to obtain a valid eternal object URi for external id "+id+".  Returning empty.");
+					return Optional.empty();
+				}
+				String externalId = externalObjectUri.substring(poundIndex+1);
+				String externalDocUri = externalObjectUri.substring(0, poundIndex);
+				return Optional.of(new org.spdx.library.model.v2.ExternalSpdxElement(modelStore, externalDocUri, externalId, copyManager));
 			} catch(InvalidSPDXAnalysisException ex) {
-				logger.warn("Attempting to get a model object for an invalid SPDX ID.  Returning empty");
+				logger.warn("Attempting to get a model object for an external SPDX element without an external document ref defined.  Returning empty");
 				return Optional.empty();
 			}
 		}
 		Optional<TypedValue> tv = modelStore.getTypedValue(
-				CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, id, modelStore.getIdType(id).equals(IdType.Anonymous)));
+				CompatibleModelStoreWrapper.documentUriIdToUri(documentUri, id, modelStore.isAnon(id)));
 		if (tv.isPresent()) {
 			String type = tv.get().getType();
 			try {
@@ -268,10 +276,33 @@ public class SpdxModelFactory {
 			}
 		}
 	}
-
-	public static ModelObjectV2 createModelObject(IModelStore stModelStore,
-			String objectUri, String type, IModelCopyManager copyManager) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	/**
+	 * @param type SPDX Type
+	 * @return class associated with the type
+	 * @throws InvalidSPDXAnalysisException 
+	 */
+	public static Class<? extends Object> typeToClass(String type) throws InvalidSPDXAnalysisException {
+		Class<?> retval = SPDX_TYPE_TO_CLASS_V2.get(type);
+		if (Objects.isNull(retval)) {
+			throw new InvalidSPDXAnalysisException("Unknown SPDX type: "+type);
+		}
+		return retval;
 	}
+	
+	/**
+	 * @param classUri URI for the class type
+	 * @return class represented by the URI
+	 * @throws InvalidSPDXAnalysisException
+	 */
+	public static Class<?> classUriToClass(String classUri) throws InvalidSPDXAnalysisException {
+		Objects.requireNonNull(classUri, "Missing required class URI");
+		int indexOfPound = classUri.lastIndexOf('#');
+		if (indexOfPound < 1) {
+			throw new InvalidSPDXAnalysisException("Invalid class URI: "+classUri);
+		}
+		String type = classUri.substring(indexOfPound+1);
+		return typeToClass(type);
+	}
+
 }

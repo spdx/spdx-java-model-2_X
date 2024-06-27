@@ -69,7 +69,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 			ModelCollection<ExternalDocumentRef> existingExternalRefs = new ModelCollection<ExternalDocumentRef>(stModelStore,
 					CompatibleModelStoreWrapper.documentUriIdToUri(stDocumentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
 					SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF, copyManager, ExternalDocumentRef.class, 
-					specVersion);
+					specVersion, null);
 			for (Object externalRef:existingExternalRefs) {
 				if (!(externalRef instanceof ExternalDocumentRef)) {
 					logger.warn("Incorrect type for an external document ref: "+externalRef.getClass().toString());
@@ -90,7 +90,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 				retval.setSpdxDocumentNamespace(externalDocUri);
 				ModelObjectHelper.addValueToCollection(stModelStore, 
 						CompatibleModelStoreWrapper.documentUriIdToUri(stDocumentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
-						SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF, retval, copyManager);
+						SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF, retval, copyManager, null);
 				return Optional.of(retval);
 			} else {
 				return Optional.empty();
@@ -190,7 +190,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 	 */
 	public String getSpdxDocumentNamespace() throws InvalidSPDXAnalysisException {
 		Optional<Object> docNamespace = getModelStore().getValue(
-				CompatibleModelStoreWrapper.documentUriIdToUri(getDocumentUri(), getId(), getModelStore().getIdType(getId()) == IdType.Anonymous), 
+				CompatibleModelStoreWrapper.documentUriIdToUri(getDocumentUri(), getId(), getModelStore().isAnon(getId())), 
 				SpdxConstantsCompatV2.PROP_EXTERNAL_SPDX_DOCUMENT);
 		if (!docNamespace.isPresent()) {
 			logger.warn("SPDX document namespace not found");
@@ -262,7 +262,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 		}
 		if (this.getModelStore().exists(
 				CompatibleModelStoreWrapper.documentUriIdToUri(docNamespace, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false))) {
-			return (Optional<SpdxDocument>)(Optional<?>)Optional.of(SpdxModelFactory.createModelObjectV2(
+			return (Optional<SpdxDocument>)(Optional<?>)Optional.of(SpdxModelFactoryCompatV2.createModelObjectV2(
 					getModelStore(), docNamespace, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, 
 					SpdxConstantsCompatV2.CLASS_SPDX_DOCUMENT, getCopyManager()));
 		} else {

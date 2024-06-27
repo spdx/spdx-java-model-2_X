@@ -92,7 +92,7 @@ public class RelatedElementCollection implements Collection<SpdxElement> {
 		this.relationshipCollection = new ModelCollection<Relationship>(owningElement.getModelStore(),
 				CompatibleModelStoreWrapper.documentUriIdToUri(owningElement.getDocumentUri(), owningElement.getId(), owningElement.getModelStore()),
 				SpdxConstantsCompatV2.PROP_RELATIONSHIP, 
-				owningElement.getCopyManager(), Relationship.class, specVersion);
+				owningElement.getCopyManager(), Relationship.class, specVersion, owningElement.getIdPrefix());
 		this.relationshipTypeFilter = relationshipTypeFilter;
 		this.relatedElementTypeFilter = relatedElementTypeFilter;
 	}

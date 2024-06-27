@@ -17,9 +17,15 @@ import org.spdx.core.ModelRegistry;
 import org.spdx.library.model.v2.ExternalSpdxElement;
 import org.spdx.library.model.v2.ReferenceType;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
+import org.spdx.library.model.v2.SpdxElement;
 import org.spdx.library.model.v2.SpdxModelInfoV2_X;
+import org.spdx.library.model.v2.SpdxNoAssertion;
+import org.spdx.library.model.v2.SpdxNoAssertionElement;
+import org.spdx.library.model.v2.SpdxNone;
+import org.spdx.library.model.v2.SpdxNoneElement;
 import org.spdx.library.model.v2.SpdxPackage;
 import org.spdx.library.model.v2.Version;
+import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.library.model.v2.license.ExternalExtractedLicenseInfo;
 import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
 import org.spdx.library.model.v2.license.SpdxNoneLicense;
@@ -78,12 +84,16 @@ public class SpdxModelInfoV2_XTest {
 	@Test
 	public void testUriToIndividual() {
 		// None License
-		assertTrue(modelInfo.uriToIndividual(SpdxConstantsCompatV2.URI_VALUE_NONE) instanceof SpdxNoneLicense);
+		assertTrue(modelInfo.uriToIndividual(SpdxConstantsCompatV2.URI_VALUE_NONE, null) instanceof SpdxNone);
+		assertTrue(modelInfo.uriToIndividual(SpdxConstantsCompatV2.URI_VALUE_NONE, AnyLicenseInfo.class) instanceof SpdxNoneLicense);
+		assertTrue(modelInfo.uriToIndividual(SpdxConstantsCompatV2.URI_VALUE_NONE, SpdxElement.class) instanceof SpdxNoneElement);
 		// NoAssertionLicense
-		assertTrue(modelInfo.uriToIndividual(SpdxConstantsCompatV2.URI_VALUE_NOASSERTION) instanceof SpdxNoAssertionLicense);
+		assertTrue(modelInfo.uriToIndividual(SpdxConstantsCompatV2.URI_VALUE_NOASSERTION, null) instanceof SpdxNoAssertion);
+		assertTrue(modelInfo.uriToIndividual(SpdxConstantsCompatV2.URI_VALUE_NOASSERTION, AnyLicenseInfo.class) instanceof SpdxNoAssertionLicense);
+		assertTrue(modelInfo.uriToIndividual(SpdxConstantsCompatV2.URI_VALUE_NOASSERTION, SpdxElement.class) instanceof SpdxNoAssertionElement);
 		// Reference Type
 		String refUri = "http://spdx.org/rdf/references/something";
-		Object ref = modelInfo.uriToIndividual(refUri);
+		Object ref = modelInfo.uriToIndividual(refUri, null);
 		assertTrue(ref instanceof ReferenceType);
 		assertEquals(refUri, ((ReferenceType)ref).getIndividualURI());
 	}

@@ -31,6 +31,7 @@ import java.util.Optional;
 
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
+import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.ModelCollection;
 import org.spdx.core.ModelRegistry;
@@ -202,7 +203,8 @@ public class ModelObjectTest extends TestCase {
 	protected boolean compareLists(Object olist1, Object olist2) throws InvalidSPDXAnalysisException {
 		List<Object> list1;
 		if (olist1 instanceof List) {
-			if (((List<Object>)(olist1)).size() > 0 && ((List<Object>)(olist1)).get(0) instanceof ModelObjectV2) {
+			if (((List<Object>)(olist1)).size() > 0 && (((List<Object>)(olist1)).get(0) instanceof ModelObjectV2) &&
+					!(((List<Object>)(olist1)).get(0) instanceof IndividualUriValue)) {
 				// convert type TypedValue
 				list1 = new ArrayList<Object>();
 				for (Object o:((List<Object>)(olist1))) {
@@ -212,7 +214,8 @@ public class ModelObjectTest extends TestCase {
 				list1 = (List<Object>)(olist1);
 			}
 		} else if (olist1 instanceof Object[]) {
-			if (((Object[])olist1).length > 0 && ((Object[])olist1)[0] instanceof ModelObjectV2) {
+			if (((Object[])olist1).length > 0 && ((Object[])olist1)[0] instanceof ModelObjectV2 &&
+					!(((Object[])olist1)[0] instanceof IndividualUriValue)) {
 				list1 = new ArrayList<Object>();
 				for (Object o:((Object[])olist1)) {
 					list1.add(((ModelObjectV2)o).toTypedValue());
@@ -225,7 +228,8 @@ public class ModelObjectTest extends TestCase {
 		}
 		List<Object> list2;
 		if (olist2 instanceof List) {
-			if (((List<Object>)(olist2)).size() > 0 && ((List<Object>)(olist2)).get(0) instanceof ModelObjectV2) {
+			if (((List<Object>)(olist2)).size() > 0 && ((List<Object>)(olist2)).get(0) instanceof ModelObjectV2 &&
+					!(((List<Object>)(olist2)).get(0) instanceof IndividualUriValue)) {
 				// convert type TypedValue
 				list2 = new ArrayList<Object>();
 				for (Object o:((List<Object>)(olist2))) {
@@ -235,7 +239,8 @@ public class ModelObjectTest extends TestCase {
 				list2 = (List<Object>)(olist2);
 			}
 		} else if (olist2 instanceof Object[]) {
-			if (((Object[])olist2).length > 0 && ((Object[])olist2)[0] instanceof ModelObjectV2) {
+			if (((Object[])olist2).length > 0 && ((Object[])olist2)[0] instanceof ModelObjectV2 &&
+					!(((Object[])olist2)[0] instanceof IndividualUriValue)) {
 				list2 = new ArrayList<Object>();
 				for (Object o:((Object[])olist2)) {
 					list2.add(((ModelObjectV2)o).toTypedValue());
@@ -643,7 +648,8 @@ public class ModelObjectTest extends TestCase {
 		GenericModelObject firstObject = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
 		GenericModelObject secondObject = new GenericModelObject(store, docUri, "testId2", copyManager, true);
 		ModelCollection<GenericModelObject> emptyModelCollection = new ModelCollection<GenericModelObject>(store, 
-				docUri + "#" + TEST_ID, TEST_PROPERTY1, copyManager, GenericModelObject.class, firstObject.getSpecVersion());
+				docUri + "#" + TEST_ID, TEST_PROPERTY1, copyManager, GenericModelObject.class, 
+				firstObject.getSpecVersion(), null);
 		firstObject.setPropertyValue(TEST_PROPERTY1, emptyModelCollection);
 		secondObject.setPropertyValue(TEST_PROPERTY2, emptyModelCollection);
 		

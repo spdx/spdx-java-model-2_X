@@ -20,11 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.SimpleUriValue;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
+import org.spdx.storage.IModelStore.IdType;
 
 /**
  * A special license meaning that no license was found
@@ -33,19 +35,19 @@ import org.spdx.storage.IModelStore;
  */
 public class SpdxNoneLicense extends AnyLicenseInfo implements IndividualUriValue {
 	
-	static final String NONE_LICENSE_ID = "SPDX_NONE_LICENSE";
+	static final String NONE_LICENSE_NAME = "SPDX_NONE_LICENSE";
 	
 	/**
 	 * Create a new NoneLicense with the default store and default document URI
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public SpdxNoneLicense() throws InvalidSPDXAnalysisException {
-		super(NONE_LICENSE_ID);
+		super(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
 	}
 
 	public SpdxNoneLicense(IModelStore modelStore, String documentUri)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri, NONE_LICENSE_ID, null, true);
+		super(modelStore, documentUri, modelStore.getNextId(IdType.Anonymous), null, true);
 	}
 
 	/* (non-Javadoc)

@@ -20,11 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.SimpleUriValue;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
+import org.spdx.storage.IModelStore.IdType;
 
 /**
  * Special class of license to represent no asserted license license in the file or packages
@@ -33,19 +35,19 @@ import org.spdx.storage.IModelStore;
  */
 public class SpdxNoAssertionLicense extends AnyLicenseInfo implements IndividualUriValue {
 	
-	static final String NOASSERTION_LICENSE_ID = "NOASSERTION_LICENSE_ID";
+	static final String NOASSERTION_LICENSE_NAME = "NOASSERTION_LICENSE_ID";
 	
 	/**
 	 * Create a new No Assertion license with the default store and default document URI
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public SpdxNoAssertionLicense() throws InvalidSPDXAnalysisException {
-		super(NOASSERTION_LICENSE_ID);
+		super(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
 	}
 
 	public SpdxNoAssertionLicense(IModelStore modelStore, String documentUri)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri, NOASSERTION_LICENSE_ID, null, true);
+		super(modelStore, documentUri, modelStore.getNextId(IdType.Anonymous), null, true);
 	}
 	
 	/* (non-Javadoc)
