@@ -167,7 +167,7 @@ public class SpdxFile extends SpdxItem implements Comparable<SpdxFile> {
 	}
 	
 	@Override
-	protected PropertyDescriptor getLicenseInfoFromFilesPropertyName() {
+	protected PropertyDescriptor getLicenseInfoFromFilesPropertyDescriptor() {
 		return SpdxConstantsCompatV2.PROP_FILE_SEEN_LICENSE;
 	}
 	

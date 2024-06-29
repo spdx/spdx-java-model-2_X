@@ -105,9 +105,11 @@ public class SpdxModelInfoV2_XTest {
 	@Test
 	public void testCreateModelObject() throws InvalidSPDXAnalysisException {
 		String objectUri = "http://prefix#" + SpdxConstantsCompatV2.SPDX_ELEMENT_REF_PRENUM + "test";
-		CoreModelObject result =modelInfo.createModelObject(modelStore, objectUri, SpdxConstantsCompatV2.CLASS_SPDX_PACKAGE, copyManager, Version.TWO_POINT_THREE_VERSION, true);
+		String prefix = "https://prefix2";
+		CoreModelObject result =modelInfo.createModelObject(modelStore, objectUri, SpdxConstantsCompatV2.CLASS_SPDX_PACKAGE, copyManager, Version.TWO_POINT_THREE_VERSION, true, prefix);
 		assertTrue(result instanceof SpdxPackage);
 		assertEquals(objectUri, result.getObjectUri());
+		assertEquals("http://prefix#", result.getIdPrefix());
 	}
 
 }

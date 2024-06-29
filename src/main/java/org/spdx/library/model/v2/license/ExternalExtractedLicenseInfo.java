@@ -98,6 +98,11 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 		super(modelStore, documentUri, id, copyManager, true);	
 	}
 	
+	@Override
+	public boolean isExternal() {
+		return true;
+	}
+	
 	/**
 	 * @return external document ID for the external reference
 	 * @throws InvalidSPDXAnalysisException

@@ -122,7 +122,7 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 	@Override
 	public CoreModelObject createModelObject(IModelStore modelStore,
 			String objectUri, String type, IModelCopyManager copyManager,
-			String specVersion, boolean create) throws InvalidSPDXAnalysisException {
+			String specVersion, boolean create, String prefix) throws InvalidSPDXAnalysisException {
 		if (!SpdxModelFactoryCompatV2.SPDX_TYPE_TO_CLASS_V2.containsKey(type)) {
 			logger.error(type+" not a supported type for SPDX spec version 2.X");
 			throw new InvalidSPDXAnalysisException(type+" not a supported type for SPDX spec version 2.X");
@@ -169,7 +169,6 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 			}
 			return SpdxModelFactoryCompatV2.getModelObjectV2(modelStore, matcher.group(1), matcher.group(2), type, copyManager, create);
 		} else if (ExtractedLicenseInfo.class.isAssignableFrom(typeClass)) {
-			//TODO: Do we want to check for external references? if (modelStore.getExternalReferenceMap(objectUri) != null && ??)
 			if (IdType.Anonymous.equals(modelStore.getIdType(objectUri))) {
 				logger.error("Extracted licenses must not be anonomous types - missing ID for "+objectUri);
 				throw new InvalidSPDXAnalysisException("Extracted licenses must not be anonomous types - missing ID for "+objectUri);
@@ -187,6 +186,9 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 				int index = objectUri.lastIndexOf('#');
 				documentUri = objectUri.substring(0, index);
 				id = objectUri.substring(index + 1);
+			} else if (Objects.nonNull(prefix)) {
+				documentUri = prefix.endsWith("#") ? prefix.substring(0, prefix.length()-1) : prefix;
+				id = objectUri;
 			} else {
 				documentUri = DefaultModelStore.getDefaultDocumentUri();
 				id = objectUri;

@@ -126,7 +126,7 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 	}
 	
 	@Override
-	public PropertyDescriptor getLicenseInfoFromFilesPropertyName() {
+	public PropertyDescriptor getLicenseInfoFromFilesPropertyDescriptor() {
 		return SpdxConstantsCompatV2.PROP_LICENSE_INFO_FROM_SNIPPETS;
 	}
 	

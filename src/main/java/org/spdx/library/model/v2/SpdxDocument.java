@@ -160,7 +160,7 @@ public class SpdxDocument extends SpdxElement {
 			return retval.get();
 		} else {
 			logger.warn("No data license for "+getName());
-			return new SpdxNoneLicense();
+			return new SpdxNoneLicense(getModelStore(), getDocumentUri());
 		}
 	}
 	

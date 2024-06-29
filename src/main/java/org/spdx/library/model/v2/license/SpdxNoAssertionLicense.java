@@ -35,7 +35,7 @@ import org.spdx.storage.IModelStore.IdType;
  */
 public class SpdxNoAssertionLicense extends AnyLicenseInfo implements IndividualUriValue {
 	
-	static final String NOASSERTION_LICENSE_NAME = "NOASSERTION_LICENSE_ID";
+	static final String NOASSERTION_LICENSE_ID = "NOASSERTION_LICENSE_ID";
 	
 	/**
 	 * Create a new No Assertion license with the default store and default document URI

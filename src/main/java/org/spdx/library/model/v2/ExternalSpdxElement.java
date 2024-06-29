@@ -101,6 +101,11 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 		return externalDocRef.get().getId();
 	}
 	
+	@Override
+	public boolean isExternal() {
+		return true;
+	}
+	
 	/**
 	 * @return element ID used in the external document
 	 * @throws InvalidSPDXAnalysisException

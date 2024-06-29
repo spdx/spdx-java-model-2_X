@@ -226,7 +226,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 			return retval.get();
 		} else {
 			logger.warn("No declared license provided - returning NoAssertion");
-			return new SpdxNoAssertionLicense();
+			return new SpdxNoAssertionLicense(getModelStore(), getDocumentUri());
 		}
 	}
 	

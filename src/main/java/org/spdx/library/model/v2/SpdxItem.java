@@ -69,7 +69,7 @@ public abstract class SpdxItem extends SpdxElement {
 	/**
 	 * @return Property name for licenseInfoFromFiles.  Override if using a subproperty of "licenseDeclared".
 	 */
-	protected PropertyDescriptor getLicenseInfoFromFilesPropertyName() {
+	protected PropertyDescriptor getLicenseInfoFromFilesPropertyDescriptor() {
 		return SpdxConstantsCompatV2.PROP_PACKAGE_LICENSE_INFO_FROM_FILES;
 	}
 	
@@ -99,7 +99,7 @@ public abstract class SpdxItem extends SpdxElement {
 	
 	@SuppressWarnings("unchecked")
 	public Collection<AnyLicenseInfo> getLicenseInfoFromFiles() throws InvalidSPDXAnalysisException {
-		return (Collection<AnyLicenseInfo>)(Collection<?>)this.getObjectPropertyValueSet(getLicenseInfoFromFilesPropertyName(), AnyLicenseInfo.class);
+		return (Collection<AnyLicenseInfo>)(Collection<?>)this.getObjectPropertyValueSet(getLicenseInfoFromFilesPropertyDescriptor(), AnyLicenseInfo.class);
 	}
 	
 	/**

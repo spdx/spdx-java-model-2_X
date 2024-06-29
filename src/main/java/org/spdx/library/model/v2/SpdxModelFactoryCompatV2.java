@@ -243,14 +243,10 @@ public class SpdxModelFactoryCompatV2 {
 		if (id.contains(":")) {
 			// External document ref
 			try {
-				String externalObjectUri = ExternalSpdxElement.externalSpdxElementIdToURI(id, modelStore, documentUri, copyManager);
-				int poundIndex = externalObjectUri.indexOf('#');
-				if (poundIndex < 0) {
-					logger.warn("Unable to obtain a valid eternal object URi for external id "+id+".  Returning empty.");
-					return Optional.empty();
-				}
-				String externalId = externalObjectUri.substring(poundIndex+1);
-				String externalDocUri = externalObjectUri.substring(0, poundIndex);
+				String externalUri = org.spdx.library.model.v2.ExternalSpdxElement.externalSpdxElementIdToURI(id, modelStore, documentUri, copyManager);
+				int poundIndex = externalUri.indexOf('#');
+				String externalId = externalUri.substring(poundIndex+1);
+				String externalDocUri = externalUri.substring(0, poundIndex);
 				return Optional.of(new org.spdx.library.model.v2.ExternalSpdxElement(modelStore, externalDocUri, externalId, copyManager));
 			} catch(InvalidSPDXAnalysisException ex) {
 				logger.warn("Attempting to get a model object for an external SPDX element without an external document ref defined.  Returning empty");
@@ -268,9 +264,9 @@ public class SpdxModelFactoryCompatV2 {
 			}
 		} else {
 			if (SpdxConstantsCompatV2.NOASSERTION_VALUE.equals(id)) {
-				return Optional.of(new org.spdx.library.model.v2.SpdxNoAssertionElement());
+				return Optional.of(new org.spdx.library.model.v2.SpdxNoAssertionElement(modelStore, documentUri));
 			} else if (SpdxConstantsCompatV2.NONE_VALUE.equals(id)) {
-				return Optional.of(new org.spdx.library.model.v2.SpdxNoneElement());
+				return Optional.of(new org.spdx.library.model.v2.SpdxNoneElement(modelStore, documentUri));
 			} else {
 				return Optional.empty();
 			}

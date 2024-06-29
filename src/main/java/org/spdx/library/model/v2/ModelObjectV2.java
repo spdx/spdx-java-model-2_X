@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 import javax.annotation.Nullable;
 
@@ -244,7 +245,7 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 	 */
 	@SuppressWarnings("unchecked")
 	public Optional<AnyLicenseInfo> getAnyLicenseInfoPropertyValue(PropertyDescriptor propertyDescriptor) throws InvalidSPDXAnalysisException {
-		Optional<Object> result = getObjectPropertyValue(propertyDescriptor);
+		Optional<Object> result = getObjectPropertyValue(propertyDescriptor, AnyLicenseInfo.class);
 		if (!result.isPresent()) {
 			return Optional.empty();
 		} else if (result.get() instanceof AnyLicenseInfo) {
@@ -273,7 +274,7 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 	 */
 	@SuppressWarnings("unchecked")
 	protected Optional<SpdxElement> getElementPropertyValue(PropertyDescriptor propertyDescriptor) throws InvalidSPDXAnalysisException {
-		Optional<Object> result = getObjectPropertyValue(propertyDescriptor);
+		Optional<Object> result = getObjectPropertyValue(propertyDescriptor, SpdxElement.class);
 		if (!result.isPresent()) {
 			return Optional.empty();
 		} else if (result.get() instanceof SpdxElement) {
@@ -285,8 +286,12 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 			} else if (SpdxConstantsCompatV2.URI_VALUE_NOASSERTION.equals(uri)) {
 				return Optional.of(new SpdxNoAssertionElement(this.modelStore, this.documentUri));
 			} else {
-				logger.error("Can not convert a URI value to an SPDX element: "+uri);
-				throw new SpdxInvalidTypeException("Can not convert a URI value to an SPDX element: "+uri);
+				Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_SPDX_ELEMENT_URI_PATTERN.matcher(uri);
+				if (!matcher.matches()) {
+					logger.error("Can not convert a URI value to an SPDX element: "+uri);
+					throw new SpdxInvalidTypeException("Can not convert a URI value to an SPDX element: "+uri);
+				}
+				return Optional.of(new ExternalSpdxElement(modelStore, matcher.group(1), matcher.group(2), copyManager, true));
 			}
 		} else {
 			logger.error("Invalid type for SpdxElement property: "+result.get().getClass().toString());
