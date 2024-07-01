@@ -22,8 +22,6 @@ import java.util.Optional;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.storage.IModelStore;
-import org.spdx.storage.IModelStore.IdType;
-
 /**
  * This SPDX element represents no assertion as to an actual SPDX element.
  * 
@@ -37,14 +35,14 @@ import org.spdx.storage.IModelStore.IdType;
  */
 public class SpdxNoAssertionElement extends SpdxConstantElement {
 	
-	private static final String NOASSERTION_ELEMENT_NAME = SpdxConstantsCompatV2.NOASSERTION_VALUE;
+	private static final String NOASSERTION_ELEMENT_ID = SpdxConstantsCompatV2.NOASSERTION_VALUE;
 
 	/**
 	 * Create a None element with default model store and document URI
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxNoAssertionElement() throws InvalidSPDXAnalysisException {
-		super(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
+		super(NOASSERTION_ELEMENT_ID);
 	}
 	
 	/**
@@ -54,7 +52,7 @@ public class SpdxNoAssertionElement extends SpdxConstantElement {
 	 */
 	public SpdxNoAssertionElement(IModelStore modelStore, String documentUri)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri, modelStore.getNextId(IdType.Anonymous));
+		super(modelStore, documentUri, NOASSERTION_ELEMENT_ID);
 	}
 	
 	@Override
@@ -64,7 +62,7 @@ public class SpdxNoAssertionElement extends SpdxConstantElement {
 	
 	@Override
 	public Optional<String> getName() throws InvalidSPDXAnalysisException {
-		return Optional.of(NOASSERTION_ELEMENT_NAME);
+		return Optional.of(NOASSERTION_ELEMENT_ID);
 	}
 	
 	@Override

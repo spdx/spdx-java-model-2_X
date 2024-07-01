@@ -53,7 +53,9 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	// Note: The documentUri and ID must be specified
 	
 	public ExternalSpdxElement(String documentUri, String id) throws DefaultStoreNotInitialized, InvalidSPDXAnalysisException {
-		this(DefaultModelStore.getDefaultModelStore(), documentUri, id, DefaultModelStore.getDefaultCopyManager());
+		this(DefaultModelStore.getDefaultModelStore(), 
+				checkConvertDocumentUri(documentUri, id, DefaultModelStore.getDefaultModelStore()), 
+				checkConvertId(id), DefaultModelStore.getDefaultCopyManager());
 	}
 	
 	/**
@@ -66,7 +68,7 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	public ExternalSpdxElement(IModelStore modelStore, String documentUri, String id, 
 			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri, id, copyManager, true);
+		super(modelStore, checkConvertDocumentUri(documentUri, id, modelStore), checkConvertId(id), copyManager, true);
 	}
 
 	/**
@@ -78,9 +80,37 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	public ExternalSpdxElement(IModelStore modelStore, String documentUri, String id, 
 			@Nullable IModelCopyManager copyManager)
 			throws InvalidSPDXAnalysisException {
-		super(modelStore, documentUri, id, copyManager, true);
+		super(modelStore, checkConvertDocumentUri(documentUri, id, modelStore), checkConvertId(id), copyManager, true);
 	}
 	
+	/**
+	 * @param documentUri document URI passed into the constructor
+	 * @param id passed into the constructor
+	 * @return if id contains a colon (':'), look up the external document URI, otherwise return the documentUri parameter
+	 * @throws InvalidSPDXAnalysisException 
+	 */
+	private static String checkConvertDocumentUri(String documentUri,
+			String id, IModelStore modelStore) throws InvalidSPDXAnalysisException {
+		if (id.contains(":")) {
+			String externalUri = externalSpdxElementIdToURI(id, modelStore, documentUri, null);
+			return externalUri.substring(0, externalUri.indexOf('#'));
+		} else {
+			return documentUri;
+		}
+	}
+
+	/**
+	 * @param id id passed into a constructor
+	 * @return if id contains a colon ':', remove the document reference from the value otherwise just return the id
+	 */
+	private static String checkConvertId(String id) {
+		if (id.contains(":")) {
+			return id.substring(id.lastIndexOf(':')+1);
+		} else {
+			return id;
+		}
+	}
+
 	/**
 	 * @param documentReferencingExternal document containing the external reference
 	 * @return external document ID for the external reference
