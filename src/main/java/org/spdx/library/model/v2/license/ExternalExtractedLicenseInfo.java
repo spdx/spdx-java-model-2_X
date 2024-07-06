@@ -38,6 +38,7 @@ import org.spdx.library.model.v2.ExternalDocumentRef;
 import org.spdx.library.model.v2.ExternalSpdxElement;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxDocument;
+import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 
 /**
@@ -356,5 +357,39 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	@Override
 	public int hashCode() {
 		return SimpleUriValue.getIndividualUriValueHash(this);
+	}
+	
+	@Override
+	public String toString() {
+		List<ExternalDocumentRef> matchingDocRefs = new ArrayList<>();
+		try {
+			modelStore.getAllItems(null, SpdxConstantsCompatV2.CLASS_SPDX_DOCUMENT).forEach(docTv -> {
+				try {
+					String docUriForMatch = docTv.getObjectUri().substring(0, docTv.getObjectUri().indexOf('#'));
+					modelStore.getAllItems(docUriForMatch, SpdxConstantsCompatV2.CLASS_EXTERNAL_DOC_REF).forEach(docRefTv -> {
+						try {
+							ExternalDocumentRef docRef = new ExternalDocumentRef(modelStore, docUriForMatch, 
+									CompatibleModelStoreWrapper.objectUriToId(false, docRefTv.getObjectUri(), docUriForMatch),
+									copyManager, false);
+							if (this.getDocumentUri().equals(docRef.getSpdxDocumentNamespace())) {
+								matchingDocRefs.add(docRef);
+							}
+						} catch (InvalidSPDXAnalysisException e) {
+							logger.error("Error getting external document ref", e);
+						}
+					});
+				} catch (InvalidSPDXAnalysisException e) {
+					logger.error("Error getting external document ref", e);
+				}
+			});
+		} catch (InvalidSPDXAnalysisException e) {
+			logger.error("Error getting SPDX documents for toString", e);
+		} 
+		if (matchingDocRefs.size() == 1) {
+			// unambiguous - we can return the short form
+			return matchingDocRefs.get(0).getId() + ":" + this.getId();
+		} else {
+			return getObjectUri();
+		}
 	}
 }
