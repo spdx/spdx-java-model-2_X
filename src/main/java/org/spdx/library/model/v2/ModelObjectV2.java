@@ -641,5 +641,18 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 	public String toString() {
 		return this.getType() + " " + this.id;
 	}
+	
+	@Override
+	protected boolean isEquivalentToNull(Object propertyValue, PropertyDescriptor descriptor) {
+		if (super.isEquivalentToNull(propertyValue, descriptor)) {
+			return true;
+		}
+		if (!SpdxConstantsCompatV2.PROP_PACKAGE_FILES_ANALYZED.equals(descriptor)) {
+			return false;
+		}
+		@SuppressWarnings("rawtypes")
+		Object value = propertyValue instanceof Optional ? ((Optional)propertyValue).get() : propertyValue;
+		return value instanceof Boolean && (Boolean)value == true;
+	}
 
 }
