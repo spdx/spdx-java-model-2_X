@@ -33,7 +33,7 @@ import org.spdx.storage.IModelStore.IdType;
 /**
  * @author Gary O'Neall
  * 
- * Compatible model info for all supported spec version 2 (2.0, 2.1, 2.2, 2.3)
+ * Compatible model info for all supported spec version 2 (2.0, 2.1, 2.2, 2.2.1, 2.3)
  *
  */
 public class SpdxModelInfoV2_X implements ISpdxModelInfo {
@@ -57,7 +57,7 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 
 	@Override
 	public List<String> getSpecVersions() {
-		return Arrays.asList(new String[] {"SPDX-2.0", "SPDX-2.1", "SPDX-2.2", "SPDX-2.3"});
+		return Arrays.asList(new String[] {"SPDX-2.0", "SPDX-2.1", "SPDX-2.2", "SPDX-2.2.1", "SPDX-2.3"});
 	}
 
 	@Override
