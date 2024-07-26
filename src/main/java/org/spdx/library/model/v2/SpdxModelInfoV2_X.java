@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 
 import javax.annotation.Nullable;
+import javax.lang.model.element.Element;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 
 	@Override
 	public @Nullable CoreModelObject createExternalElement(IModelStore store, String uri,
-			IModelCopyManager copyManager, String specVersion)
+			IModelCopyManager copyManager, Class<?> type, String specVersion)
 			throws InvalidSPDXAnalysisException {
 		Matcher licenseMatcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN.matcher(uri);
 		if (licenseMatcher.matches()) {
@@ -200,6 +201,11 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 	@Override
 	public Map<String, Class<?>> getTypeToClassMap() {
 		return SpdxModelFactoryCompatV2.SPDX_TYPE_TO_CLASS_V2;
+	}
+
+	@Override
+	public boolean canBeExternal(Class<?> clazz) {
+		return AnyLicenseInfo.class.isAssignableFrom(clazz) || Element.class.isAssignableFrom(clazz);
 	}
 
 }
