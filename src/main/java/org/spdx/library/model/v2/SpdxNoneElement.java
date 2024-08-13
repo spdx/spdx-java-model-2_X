@@ -44,7 +44,7 @@ public class SpdxNoneElement extends SpdxConstantElement {
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxNoneElement() throws InvalidSPDXAnalysisException {
-		super(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
+		super(NONE_ELEMENT_NAME);
 	}
 	
 	/**

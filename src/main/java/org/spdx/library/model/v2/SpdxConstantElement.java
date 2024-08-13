@@ -27,6 +27,7 @@ import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.SimpleUriValue;
 import org.spdx.storage.IModelStore;
+import org.spdx.storage.NullModelStore;
 
 /**
  * Type of SpdxElement which is a constant unmodifiable element
@@ -40,7 +41,7 @@ public abstract class SpdxConstantElement extends SpdxElement implements Individ
 	private Collection<Relationship> relationships = Collections.unmodifiableCollection(new ArrayList<>());
 	
 	public SpdxConstantElement(String id) throws InvalidSPDXAnalysisException {
-		super(id);
+		super(new NullModelStore(), "https://spdx.org/rdf/2.3.1", id, null, true);
 	}
 	
 	/**
@@ -52,6 +53,11 @@ public abstract class SpdxConstantElement extends SpdxElement implements Individ
 	public SpdxConstantElement(IModelStore modelStore, String documentUri, String id)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, null, true);
+	}
+	
+	@Override
+	public boolean isExternal() {
+		return true;
 	}
 
 	@Override

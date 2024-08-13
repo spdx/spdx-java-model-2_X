@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.SimpleUriValue;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
+import org.spdx.storage.NullModelStore;
 import org.spdx.storage.IModelStore.IdType;
 
 /**
@@ -42,12 +42,17 @@ public class SpdxNoAssertionLicense extends AnyLicenseInfo implements Individual
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public SpdxNoAssertionLicense() throws InvalidSPDXAnalysisException {
-		super(DefaultModelStore.getDefaultModelStore().getNextId(IdType.Anonymous));
+		super(new NullModelStore(), "https://spdx.org/rdf/2.3.1", "NoAssertion", null, true);
 	}
 
 	public SpdxNoAssertionLicense(IModelStore modelStore, String documentUri)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, modelStore.getNextId(IdType.Anonymous), null, true);
+	}
+	
+	@Override
+	public boolean isExternal() {
+		return true;
 	}
 	
 	/* (non-Javadoc)

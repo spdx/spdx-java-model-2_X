@@ -19,7 +19,6 @@ package org.spdx.library.model.v2;
 
 import java.util.Optional;
 
-import org.spdx.core.DefaultModelStore;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.storage.IModelStore;
 /**
