@@ -369,7 +369,7 @@ public class SpdxConstantsCompatV2 {
 
 	// License list version Format
 
-    public static final Pattern LICENSE_LIST_VERSION_PATTERN = Pattern.compile("^[a-zA-Z0-9]+\\.[a-zA-Z0-9]+");
+    public static final Pattern LICENSE_LIST_VERSION_PATTERN = Pattern.compile("^[a-zA-Z0-9]+\\.[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)?");
 	// Standard value strings
 	public static String NONE_VALUE = "NONE";
 	public static String NOASSERTION_VALUE = "NOASSERTION";

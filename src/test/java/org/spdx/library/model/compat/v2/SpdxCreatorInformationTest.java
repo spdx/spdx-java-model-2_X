@@ -87,6 +87,19 @@ public class SpdxCreatorInformationTest extends TestCase {
 		assertEquals(licenseVersion, ci.getLicenseListVersion().get());
 		assertEquals(0, ci.verify().size());
 	}
+	
+	public void testSemVerLicenseListVersion() throws InvalidSPDXAnalysisException {
+		List<String> creators = new ArrayList<>(Arrays.asList(new String[] {"Person: me"}));
+		DateFormat format = new SimpleDateFormat(SpdxConstantsCompatV2.SPDX_DATE_FORMAT);
+		String date = format.format(new Date());
+		SpdxCreatorInformation ci = gmo.createCreationInfo(creators, date);
+		String licenseVersion = "1.1";
+		ci.setLicenseListVersion(licenseVersion);
+		assertEquals(0, ci.verify().size());
+		licenseVersion = "1.1.2";
+		ci.setLicenseListVersion(licenseVersion);
+		assertEquals(0, ci.verify().size());
+	}
 
 	public void testGetSetComment() throws InvalidSPDXAnalysisException {
 		List<String> creators = new ArrayList<>(Arrays.asList(new String[] {"Person: me"}));
