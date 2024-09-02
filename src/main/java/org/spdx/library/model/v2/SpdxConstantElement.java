@@ -47,7 +47,7 @@ public abstract class SpdxConstantElement extends SpdxElement implements Individ
 	/**
 	 * @param modelStore where the model is stored
 	 * @param documentUri Unique document URI
-	 * @param objectUri ID for the constant element
+	 * @param id ID for the constant element
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxConstantElement(IModelStore modelStore, String documentUri, String id)

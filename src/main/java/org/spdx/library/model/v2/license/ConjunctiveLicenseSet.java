@@ -40,16 +40,20 @@ public class ConjunctiveLicenseSet extends LicenseSet {
 		super();
 	}
 
+	/**
+	 * @param id identifier
+	 * @throws InvalidSPDXAnalysisException
+	 */
 	public ConjunctiveLicenseSet(String id) throws InvalidSPDXAnalysisException {
 		super(id);
 	}
 
 	/**
-	 * @param modelStore
-	 * @param documentUri
-	 * @param objectUri
-	 * @param copyManager
-	 * @param create
+	 * @param modelStore container which includes the model data
+	 * @param documentUri URI for the SPDX document containing the model data
+	 * @param id identifier
+	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
+	 * @param create if true, create the license if it does not exist
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ConjunctiveLicenseSet(IModelStore modelStore, String documentUri, String id, 

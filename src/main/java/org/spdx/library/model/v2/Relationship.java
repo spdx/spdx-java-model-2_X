@@ -44,7 +44,7 @@ public class Relationship extends ModelObjectV2 implements Comparable<Relationsh
 	}
 
 	/**
-	 * @param objectUri
+	 * @param id identifier
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public Relationship(String id) throws InvalidSPDXAnalysisException {
@@ -52,11 +52,11 @@ public class Relationship extends ModelObjectV2 implements Comparable<Relationsh
 	}
 
 	/**
-	 * @param modelStore
-	 * @param documentUri
-	 * @param objectUri
-	 * @param copyManager
-	 * @param create
+	 * @param modelStore container which includes the model data
+	 * @param documentUri URI for the SPDX document containing the model data
+	 * @param id identifier
+	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
+	 * @param create if true, create the license if it does not exist
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public Relationship(IModelStore modelStore, String documentUri, String id, IModelCopyManager copyManager,

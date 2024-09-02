@@ -109,7 +109,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 	}
 	
 	/**
-	 * @param objectUri
+	 * @param id identifier
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalDocumentRef(String id) throws InvalidSPDXAnalysisException {

@@ -49,7 +49,7 @@ public class ExternalRef extends ModelObjectV2 implements Comparable<ExternalRef
 	}
 
 	/**
-	 * @param objectUri
+	 * @param id identifier
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalRef(String id) throws InvalidSPDXAnalysisException {
@@ -57,11 +57,11 @@ public class ExternalRef extends ModelObjectV2 implements Comparable<ExternalRef
 	}
 
 	/**
-	 * @param modelStore
-	 * @param documentUri
-	 * @param objectUri
-	 * @param create
-	 * @param copyManager
+	 * @param modelStore container which includes the model data
+	 * @param documentUri URI for the SPDX document containing the model data
+	 * @param id identifier
+	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
+	 * @param create if true, create the license if it does not exist
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalRef(IModelStore modelStore, String documentUri, String id, 

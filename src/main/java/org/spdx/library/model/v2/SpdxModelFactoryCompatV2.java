@@ -231,7 +231,7 @@ public class SpdxModelFactoryCompatV2 {
 	 * @param modelStore Store for the SPDX Spec version 2 model
 	 * @param documentUri Document URI for for the ID
 	 * @param copyManager Optional copy manager for copying any properties from other model
-	 * @param objectUri ID for the model object
+	 * @param id ID for the model object
 	 * @return SPDX Version 2 compatible ModelObjectV2 with the ID in the model store
 	 * @throws InvalidSPDXAnalysisException 
 	 */
