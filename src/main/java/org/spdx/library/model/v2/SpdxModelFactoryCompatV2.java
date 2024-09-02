@@ -23,9 +23,9 @@ import org.spdx.core.SpdxIdNotFoundException;
 import org.spdx.core.TypedValue;
 import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.library.model.v2.license.SpdxListedLicense;
-import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
+import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

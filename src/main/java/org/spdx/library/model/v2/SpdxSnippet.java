@@ -36,10 +36,10 @@ import org.spdx.library.model.v2.pointer.ByteOffsetPointer;
 import org.spdx.library.model.v2.pointer.LineCharPointer;
 import org.spdx.library.model.v2.pointer.SinglePointer;
 import org.spdx.library.model.v2.pointer.StartEndPointer;
-import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.IModelStore.IdType;
+import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 import org.spdx.storage.PropertyDescriptor;
 
 /**
