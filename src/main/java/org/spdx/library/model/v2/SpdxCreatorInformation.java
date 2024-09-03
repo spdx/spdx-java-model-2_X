@@ -31,7 +31,9 @@ import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.storage.IModelStore;
 
 /**
- * @author gary
+ * Provides the necessary information for forward and backward compatibility for processing tools.
+ * 
+ * @author Gary O'Neall
  *
  */
 public class SpdxCreatorInformation extends ModelObjectV2 {

@@ -28,6 +28,8 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
 /**
+ * Pointer for lines and characters
+ * 
  * @author Gary O'Neall
  *
  */
