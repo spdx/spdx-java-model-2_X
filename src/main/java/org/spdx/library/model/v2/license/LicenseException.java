@@ -47,7 +47,7 @@ public abstract class LicenseException extends ModelObjectV2 {
 	 * Create a new LicenseException object
 	 * @param modelStore container which includes the license exception
 	 * @param documentUri URI for the SPDX document containing the license exception
-	 * @param objectUri identifier for the license exception
+	 * @param id identifier for the license exception
 	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
 	 * @param create if true, create the license exception if it does not exist
 	 * @throws InvalidSPDXAnalysisException 

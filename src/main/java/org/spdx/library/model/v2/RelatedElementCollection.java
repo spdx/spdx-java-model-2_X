@@ -35,9 +35,9 @@ import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.ModelCollection;
 import org.spdx.core.SpdxIdInUseException;
 import org.spdx.library.model.v2.enumerations.RelationshipType;
-import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
+import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 
 /**
  * Collection of SPDX elements related to an SpdxElement

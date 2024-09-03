@@ -38,8 +38,8 @@ import org.spdx.library.model.v2.ExternalDocumentRef;
 import org.spdx.library.model.v2.ExternalSpdxElement;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.library.model.v2.SpdxDocument;
-import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
+import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 
 /**
  * @author Gary O'Neall

@@ -36,10 +36,10 @@ import org.spdx.library.model.v2.pointer.ByteOffsetPointer;
 import org.spdx.library.model.v2.pointer.LineCharPointer;
 import org.spdx.library.model.v2.pointer.SinglePointer;
 import org.spdx.library.model.v2.pointer.StartEndPointer;
-import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.IModelStore.IdType;
+import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 import org.spdx.storage.PropertyDescriptor;
 
 /**
@@ -62,7 +62,7 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 	}
 
 	/**
-	 * @param objectUri
+	 * @param id identifier
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxSnippet(String id) throws InvalidSPDXAnalysisException {
@@ -71,11 +71,11 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 	}
 
 	/**
-	 * @param modelStore
-	 * @param documentUri
-	 * @param objectUri
-	 * @param copyManager
-	 * @param create
+	 * @param modelStore container which includes the model data
+	 * @param documentUri URI for the SPDX document containing the model data
+	 * @param id identifier
+	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
+	 * @param create if true, create the license if it does not exist
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -487,7 +487,7 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 		 * Build a snippet with the required parameters
 		 * @param modelStore Storage for the model objects
 		 * @param documentUri SPDX Document URI for a document associated with this model
-		 * @param objectUri ID for this object - must be unique within the SPDX document
+		 * @param id ID for this object - must be unique within the SPDX document
 		 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
 		 * @param name - File name
 		 * @param concludedLicense license concluded

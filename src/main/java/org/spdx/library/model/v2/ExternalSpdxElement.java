@@ -34,8 +34,8 @@ import org.spdx.core.IModelCopyManager;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.SimpleUriValue;
-import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
+import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 
 
 /**
@@ -209,7 +209,6 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	 * @param uri URI with the external document namespace and the external SPDX ref in the form namespace#SPDXRef-[NUM]
 	 * @param stModelStore
 	 * @param stDocumentUri documentUri for the document referencing the external document
-	 * @param copyManager if true, create the external doc ref if it is not already in the ModelStore
 	 * @param copyManager if non-null, create the external Doc ref if it is not a property of the SPDX Document
 	 * @param specVersion version of the spec used for this external SPDX element
 	 * @return internal reference for the external SPDX element ID in the form DocumentRef-XX:SPDXRef-YY

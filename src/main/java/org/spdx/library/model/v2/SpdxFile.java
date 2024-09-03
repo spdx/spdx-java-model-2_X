@@ -57,7 +57,7 @@ public class SpdxFile extends SpdxItem implements Comparable<SpdxFile> {
 	}
 
 	/**
-	 * @param objectUri
+	 * @param id identifier
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxFile(String id) throws InvalidSPDXAnalysisException {
@@ -66,10 +66,11 @@ public class SpdxFile extends SpdxItem implements Comparable<SpdxFile> {
 	}
 
 	/**
-	 * @param modelStore
-	 * @param documentUri
-	 * @param objectUri
-	 * @param create
+	 * @param modelStore container which includes the model data
+	 * @param documentUri URI for the SPDX document containing the model data
+	 * @param id identifier
+	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
+	 * @param create if true, create the license if it does not exist
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	@SuppressWarnings("unchecked")
@@ -354,7 +355,7 @@ public class SpdxFile extends SpdxItem implements Comparable<SpdxFile> {
 		 * Build a file with the required parameters
 		 * @param modelStore Storage for the model objects
 		 * @param documentUri SPDX Document URI for a document associated with this model
-		 * @param objectUri ID for this object - must be unique within the SPDX document
+		 * @param id ID for this object - must be unique within the SPDX document
 		 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
 		 * @param name - File name
 		 * @param concludedLicense license concluded

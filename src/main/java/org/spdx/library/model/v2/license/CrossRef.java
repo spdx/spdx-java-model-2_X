@@ -48,7 +48,7 @@ public class CrossRef extends ModelObjectV2 {
 	}
 
 	/**
-	 * @param objectUri
+	 * @param id identifier
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public CrossRef(String id) throws InvalidSPDXAnalysisException {
@@ -56,11 +56,11 @@ public class CrossRef extends ModelObjectV2 {
 	}
 
 	/**
-	 * @param modelStore
-	 * @param documentUri
-	 * @param objectUri
-	 * @param copyManager
-	 * @param create
+	 * @param modelStore container which includes the model data
+	 * @param documentUri URI for the SPDX document containing the model data
+	 * @param id identifier
+	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
+	 * @param create if true, create the license if it does not exist
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public CrossRef(IModelStore modelStore, String documentUri, String id, IModelCopyManager copyManager, boolean create)
@@ -348,7 +348,7 @@ public class CrossRef extends ModelObjectV2 {
 		 * Create a CrossRef with the required parameters
 		 * @param modelStore Storage for the model objects
 		 * @param documentUri SPDX Document URI for a document associated with this model
-		 * @param objectUri ID for this object - must be unique within the SPDX document
+		 * @param id ID for this object - must be unique within the SPDX document
 		 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
 		 * @param url URL for the CrossRef
 		 */

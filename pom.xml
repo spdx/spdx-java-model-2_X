@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.spdx</groupId>
   <artifactId>spdx-java-model-2_X</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <name>spdx-java-model-2_X</name>
   <description>SPDX model versions 2.0, 2.1, and 2.3</description>
   <packaging>jar</packaging>
@@ -30,7 +30,7 @@
   <scm>
     <url>https://github.com/spdx/spdx-java-model-2_X</url>
     <connection>scm:git:git://github.com/spdx/spdx-java-model-2_X.git</connection>
-    <developerConnection>scm:git:git@github.com:/spdx/spdx-java-model-2_X.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:spdx/spdx-java-model-2_X.git</developerConnection>
   </scm>
   <distributionManagement>
     <repository>
@@ -43,6 +43,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>8</maven.compiler.target>
+    <dependency-check-maven.version>8.0.1</dependency-check-maven.version>
   </properties>
   <profiles>
     <profile>
@@ -72,7 +73,7 @@
       </properties>
     </profile>
     <profile>
-      <id>gpg-signing</id>
+      <id>release</id>
       <build>
         <plugins>
           <plugin>
@@ -120,7 +121,7 @@
   	<dependency>
   		<groupId>org.spdx</groupId>
   		<artifactId>spdx-java-core</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
+  		<version>0.1.0-Alpha</version>
   	</dependency>
     <dependency>
     	<groupId>com.google.code.gson</groupId>
@@ -240,7 +241,7 @@
       <plugin>
         <groupId>org.spdx</groupId>
         <artifactId>spdx-maven-plugin</artifactId>
-        <version>0.6.4</version>
+        <version>0.7.4</version>
         <executions>
           <execution>
             <id>build-spdx</id>
@@ -276,6 +277,21 @@
           </creators>
           <originator>Organization: Linux Foundation</originator>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+          <releaseProfiles>release</releaseProfiles>
+          <goals>deploy</goals>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>${dependency-check-maven.version}</version>
       </plugin>
     </plugins>
   </build>

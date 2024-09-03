@@ -36,10 +36,10 @@ import org.spdx.core.ModelObjectHelper;
 import org.spdx.core.SimpleUriValue;
 import org.spdx.core.SpdxInvalidTypeException;
 import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
-import org.spdx.storage.CompatibleModelStoreWrapper;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IModelStoreLock;
 import org.spdx.storage.IModelStore.IdType;
+import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 
 /**
  * Information about an external SPDX document reference including the checksum.  
@@ -109,7 +109,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 	}
 	
 	/**
-	 * @param objectUri
+	 * @param id identifier
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public ExternalDocumentRef(String id) throws InvalidSPDXAnalysisException {
