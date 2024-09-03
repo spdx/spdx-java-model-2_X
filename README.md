@@ -8,4 +8,4 @@ Please refer to the [Spdx-Java-Library](https://github.com/spdx/spdx-java-Librar
 
 ## Development Status
 
-Very much under development and not very stable.
+Still under development and may be unstable.
