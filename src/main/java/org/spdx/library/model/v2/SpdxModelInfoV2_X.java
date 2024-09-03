@@ -32,10 +32,10 @@ import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
 
 /**
- * @author Gary O'Neall
  * 
  * Compatible model info for all supported spec version 2 (2.0, 2.1, 2.2, 2.2.1, 2.3)
  *
+ * @author Gary O'Neall
  */
 public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 	

@@ -32,8 +32,9 @@ import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
 import org.spdx.storage.IModelStore;
 
 /**
- * @author gary
- *
+ * Verification Code for packages
+ * 
+ * @author Gary O'Neall
  */
 public class SpdxPackageVerificationCode extends ModelObjectV2 {
 

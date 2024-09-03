@@ -45,10 +45,6 @@ import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
  * @author Gary O'Neall
  *
  */
-/**
- * @author gary
- *
- */
 public class RelatedElementCollection implements Collection<SpdxElement> {
 	
 	static final Logger logger = LoggerFactory.getLogger(RelatedElementCollection.class);
