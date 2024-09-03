@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.spdx</groupId>
   <artifactId>spdx-java-model-2_X</artifactId>
-  <version>0.1.0-Alpha</version>
+  <version>0.1.1-SNAPSHOT</version>
   <name>spdx-java-model-2_X</name>
   <description>SPDX model versions 2.0, 2.1, and 2.3</description>
   <packaging>jar</packaging>
@@ -31,7 +31,7 @@
     <url>https://github.com/spdx/spdx-java-model-2_X</url>
     <connection>scm:git:git://github.com/spdx/spdx-java-model-2_X.git</connection>
     <developerConnection>scm:git:git@github.com:spdx/spdx-java-model-2_X.git</developerConnection>
-    <tag>v0.1.0-Alpha</tag>
+    <tag>HEAD</tag>
   </scm>
   <distributionManagement>
     <repository>
