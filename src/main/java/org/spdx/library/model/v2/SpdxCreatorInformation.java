@@ -261,7 +261,7 @@ public class SpdxCreatorInformation extends ModelObjectV2 {
 		    if (SpdxConstantsCompatV2.LICENSE_LIST_VERSION_PATTERN.matcher(version).matches()) {
 		        return null;
 		    } else {
-		        return "License list version does not match the pattern M.N";
+		        return "License list version does not match the pattern M.N or M.N.P";
 		    }
 		}
 	}
