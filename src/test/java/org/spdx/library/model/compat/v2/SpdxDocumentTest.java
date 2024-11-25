@@ -678,5 +678,25 @@ public class SpdxDocumentTest extends TestCase {
 		doc.getDocumentDescribes().remove(describedElement);
 		modelStore.delete(CompatibleModelStoreWrapper.documentUriIdToUri(docUri, describedElementId, false));
 	}
+	
+	// Test for issue 3 - zero document describes with a single package should pass validation
+	public void testSinglePackage() throws InvalidSPDXAnalysisException {
+		IModelStore modelStore = new MockModelStore();
+		String docUri = "https://some.doc.uri";
+		IModelCopyManager copyManager = new MockCopyManager();
+		SpdxDocument doc = new SpdxDocument(modelStore, docUri, copyManager, true);
+		doc.setCreationInfo(doc.createCreationInfo(Arrays.asList(CREATORS1), DATE1));
+		doc.setDataLicense(new SpdxListedLicense(modelStore, docUri, "CC0-1.0", copyManager, true));
+		doc.setName(DOC_NAME1);
+		doc.createPackage(doc.getModelStore().getNextId(IdType.SpdxId),
+				"Package 1", LICENSE1, "Pkg Copyright1", LICENSE2)
+				.setDownloadLocation("hg+https://hg.myproject.org/MyProject#src/somefile.c")
+				.setLicenseComments("Pkg License Comment 1")
+				.setFilesAnalyzed(false)
+				.setVersionInfo("version1")
+				.build();
+		List<String> verify = doc.verify();
+		assertTrue(verify.isEmpty());
+	}
 
 }

@@ -133,7 +133,6 @@ public class SpdxDocument extends SpdxElement {
 			}
 			return (SpdxCreatorInformation)retval.get();
 		} else {
-			logger.warn("No creation info for document "+getName());
 			return null;
 		}
 	}
@@ -322,13 +321,10 @@ public class SpdxDocument extends SpdxElement {
 		// documentDescribes relationships
 		try {
 			if (getDocumentDescribes().size() == 0) {
-				retval.add("Document must have at least one relationship of type DOCUMENT_DESCRIBES");
-				// Note - relationships are verified in the superclass.  This should also recursively
-				// verify any other important objects.
-			} else {
-				for (SpdxElement element:getDocumentDescribes()) {
-					retval.addAll(element.verify(verifiedIds, specVersion));
+				if (getModelStore().getAllItems(getDocumentUri(), SpdxConstantsCompatV2.CLASS_SPDX_PACKAGE).count() != 1) {
+					retval.add("Document must have at least one relationship of type DOCUMENT_DESCRIBES or contain only a single SpdxPackage");
 				}
+				// Note - relationships are verified in the superclass which includes the documentDescribes relationship
 			}
 		} catch (InvalidSPDXAnalysisException e) {
 			retval.add("Error getting document describes: "+e.getMessage());
