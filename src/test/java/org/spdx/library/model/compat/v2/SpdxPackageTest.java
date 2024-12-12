@@ -87,7 +87,8 @@ public class SpdxPackageTest extends TestCase {
 	
 	static final String DATE_NOW = new SimpleDateFormat(SpdxConstantsCompatV2.SPDX_DATE_FORMAT).format(new Date());
 	static final String DATE_THEN = new SimpleDateFormat(SpdxConstantsCompatV2.SPDX_DATE_FORMAT).format(new GregorianCalendar(2021, Calendar.JANUARY, 11).getTime());
-	
+	private static final String DOWNLOAD_LOCATION_S3 = "s3://my-bucket.s3.eu-central-1.amazonaws.com";
+
 	SpdxElement RELATED_ELEMENT1;
 	SpdxElement RELATED_ELEMENT2;
 	Relationship RELATIONSHIP1;
@@ -603,6 +604,10 @@ public class SpdxPackageTest extends TestCase {
 		pkg.setDownloadLocation(DOWNLOAD_LOCATION2);
 		assertEquals(DOWNLOAD_LOCATION2, pkg.getDownloadLocation().get());
 		assertEquals(DOWNLOAD_LOCATION2, pkg2.getDownloadLocation().get());
+		pkg.setDownloadLocation(DOWNLOAD_LOCATION_S3);
+		assertEquals(DOWNLOAD_LOCATION_S3, pkg.getDownloadLocation().get());
+		assertEquals(DOWNLOAD_LOCATION_S3, pkg2.getDownloadLocation().get());
+		assertTrue(pkg.verify().isEmpty());
 	}
 
 	/**
