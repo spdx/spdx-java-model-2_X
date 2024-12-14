@@ -334,7 +334,7 @@ public class ModelObjectTest extends TestCase {
 			} else if (result.get() instanceof ModelObjectV2) {
 				assertEquals(entry.getValue(), result.get());
 			} else if (result.get() instanceof ModelCollection) {
-				assertTrue(compareLists(entry.getValue(), ((ModelCollection<?>)result.get()).toImmutableList()));
+				assertTrue(compareLists(entry.getValue(), ((ModelCollection)result.get()).toImmutableList()));
 			} else {
 				assertEquals(entry.getValue(), result.get());
 			}
@@ -647,7 +647,7 @@ public class ModelObjectTest extends TestCase {
 		// Given
 		GenericModelObject firstObject = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
 		GenericModelObject secondObject = new GenericModelObject(store, docUri, "testId2", copyManager, true);
-		ModelCollection<GenericModelObject> emptyModelCollection = new ModelCollection<GenericModelObject>(store, 
+		ModelCollection emptyModelCollection = new ModelCollection(store,
 				docUri + "#" + TEST_ID, TEST_PROPERTY1, copyManager, GenericModelObject.class, 
 				firstObject.getSpecVersion(), null);
 		firstObject.setPropertyValue(TEST_PROPERTY1, emptyModelCollection);
@@ -831,7 +831,7 @@ public class ModelObjectTest extends TestCase {
 		GenericModelObject gmo = new GenericModelObject(store, docUri, TEST_ID, copyManager, true);
 		addTestValues(gmo);
 		for (int i = 0; i < TEST_ANYLICENSEINFO_LIST_PROPERTIES.length; i++) {
-			ModelCollection<AnyLicenseInfo> result = (ModelCollection<AnyLicenseInfo>)(ModelCollection<?>)gmo.getObjectPropertyValueSet(TEST_ANYLICENSEINFO_LIST_PROPERTIES[i], AnyLicenseInfo.class);
+			ModelCollection result = (ModelCollection)(ModelCollection)gmo.getObjectPropertyValueSet(TEST_ANYLICENSEINFO_LIST_PROPERTIES[i], AnyLicenseInfo.class);
 			assertTrue(compareLists(TEST_ANYLICENSEINFO_LIST_PROP_VALUES[i], result.toImmutableList()));
 		}
 	}

@@ -49,7 +49,7 @@ public class RelatedElementCollection implements Collection<SpdxElement> {
 	
 	static final Logger logger = LoggerFactory.getLogger(RelatedElementCollection.class);
 	
-	ModelCollection<Relationship> relationshipCollection;
+	ModelCollection relationshipCollection;
 	private RelationshipType relationshipTypeFilter;
 	private String relatedElementTypeFilter;
 	/**
@@ -85,7 +85,7 @@ public class RelatedElementCollection implements Collection<SpdxElement> {
 			@Nullable String relatedElementTypeFilter, String specVersion) throws InvalidSPDXAnalysisException {
 		Objects.requireNonNull(owningElement, "Owning element can not be null");
 		this.owningElement = owningElement;
-		this.relationshipCollection = new ModelCollection<Relationship>(owningElement.getModelStore(),
+		this.relationshipCollection = new ModelCollection(owningElement.getModelStore(),
 				CompatibleModelStoreWrapper.documentUriIdToUri(owningElement.getDocumentUri(), owningElement.getId(), owningElement.getModelStore()),
 				SpdxConstantsCompatV2.PROP_RELATIONSHIP, 
 				owningElement.getCopyManager(), Relationship.class, specVersion, owningElement.getIdPrefix());
@@ -373,7 +373,7 @@ public class RelatedElementCollection implements Collection<SpdxElement> {
 	/**
 	 * @return the relationshipCollection
 	 */
-	public ModelCollection<Relationship> getRelationshipCollection() {
+	public ModelCollection getRelationshipCollection() {
 		return relationshipCollection;
 	}
 
