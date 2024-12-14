@@ -122,7 +122,7 @@
   	<dependency>
   		<groupId>org.spdx</groupId>
   		<artifactId>spdx-java-core</artifactId>
-  		<version>0.1.0-Alpha</version>
+  		<version>1.0.0-RC1</version>
   	</dependency>
     <dependency>
     	<groupId>com.google.code.gson</groupId>

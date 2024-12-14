@@ -66,7 +66,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 		Objects.requireNonNull(externalDocUri, "External document URI can not be null");
 		IModelStoreLock lock = stModelStore.enterCriticalSection(false);
 		try {
-			ModelCollection<ExternalDocumentRef> existingExternalRefs = new ModelCollection<ExternalDocumentRef>(stModelStore,
+			ModelCollection existingExternalRefs = new ModelCollection(stModelStore,
 					CompatibleModelStoreWrapper.documentUriIdToUri(stDocumentUri, SpdxConstantsCompatV2.SPDX_DOCUMENT_ID, false),
 					SpdxConstantsCompatV2.PROP_SPDX_EXTERNAL_DOC_REF, copyManager, ExternalDocumentRef.class, 
 					specVersion, null);
