@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10};
+var data = {"i0":6,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -357,12 +357,20 @@ extends org.spdx.core.CoreModelObject</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i11" class="rowColor">
+<td class="colFirst"><code><a href="license/ExtractedLicenseInfo.html" title="class in org.spdx.library.model.v2.license">ExtractedLicenseInfo</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createExtractedLicense(java.lang.String,java.lang.String)">createExtractedLicense</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;id,
+                      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;text)</code></th>
+<td class="colLast">
+<div class="block">Constructs <a href="license/ExtractedLicenseInfo.html" title="class in org.spdx.library.model.v2.license"><code>ExtractedLicenseInfo</code></a> with text set.</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="pointer/LineCharPointer.html" title="class in org.spdx.library.model.v2.pointer">LineCharPointer</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createLineCharPointer(org.spdx.library.model.v2.SpdxElement,int)">createLineCharPointer</a></span>&#8203;(<a href="SpdxElement.html" title="class in org.spdx.library.model.v2">SpdxElement</a>&nbsp;referencedElement,
                      int&nbsp;lineNumber)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="SpdxPackage.SpdxPackageBuilder.html" title="class in org.spdx.library.model.v2">SpdxPackage.SpdxPackageBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createPackage(java.lang.String,java.lang.String,org.spdx.library.model.v2.license.AnyLicenseInfo,java.lang.String,org.spdx.library.model.v2.license.AnyLicenseInfo)">createPackage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;id,
              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
@@ -373,20 +381,20 @@ extends org.spdx.core.CoreModelObject</pre>
 <div class="block">Create an SpdxPackageBuilder with all required fields for a filesAnalyzed=false using this objects model store and document URI</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="SpdxPackageVerificationCode.html" title="class in org.spdx.library.model.v2">SpdxPackageVerificationCode</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createPackageVerificationCode(java.lang.String,java.util.Collection)">createPackageVerificationCode</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value,
                              <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;excludedFileNames)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="Relationship.html" title="class in org.spdx.library.model.v2">Relationship</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createRelationship(org.spdx.library.model.v2.SpdxElement,org.spdx.library.model.v2.enumerations.RelationshipType,java.lang.String)">createRelationship</a></span>&#8203;(<a href="SpdxElement.html" title="class in org.spdx.library.model.v2">SpdxElement</a>&nbsp;relatedElement,
                   <a href="enumerations/RelationshipType.html" title="enum in org.spdx.library.model.v2.enumerations">RelationshipType</a>&nbsp;relationshipType,
                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;comment)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="SpdxFile.SpdxFileBuilder.html" title="class in org.spdx.library.model.v2">SpdxFile.SpdxFileBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createSpdxFile(java.lang.String,java.lang.String,org.spdx.library.model.v2.license.AnyLicenseInfo,java.util.Collection,java.lang.String,org.spdx.library.model.v2.Checksum)">createSpdxFile</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;id,
               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
@@ -398,7 +406,7 @@ extends org.spdx.core.CoreModelObject</pre>
 <div class="block">Create an SpdxFileBuilder with all of the required properties - the build() method will build the file</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="SpdxSnippet.SpdxSnippetBuilder.html" title="class in org.spdx.library.model.v2">SpdxSnippet.SpdxSnippetBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createSpdxSnippet(java.lang.String,java.lang.String,org.spdx.library.model.v2.license.AnyLicenseInfo,java.util.Collection,java.lang.String,org.spdx.library.model.v2.SpdxFile,int,int)">createSpdxSnippet</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;id,
                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
@@ -412,73 +420,73 @@ extends org.spdx.core.CoreModelObject</pre>
 <div class="block">Create an SpdxSnippetBuilder with all of the required properties - the build() method will build the file</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="pointer/StartEndPointer.html" title="class in org.spdx.library.model.v2.pointer">StartEndPointer</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createStartEndPointer(org.spdx.library.model.v2.pointer.SinglePointer,org.spdx.library.model.v2.pointer.SinglePointer)">createStartEndPointer</a></span>&#8203;(<a href="pointer/SinglePointer.html" title="class in org.spdx.library.model.v2.pointer">SinglePointer</a>&nbsp;startPointer,
                      <a href="pointer/SinglePointer.html" title="class in org.spdx.library.model.v2.pointer">SinglePointer</a>&nbsp;endPointer)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;o)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="license/AnyLicenseInfo.html" title="class in org.spdx.library.model.v2.license">AnyLicenseInfo</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAnyLicenseInfoPropertyValue(org.spdx.storage.PropertyDescriptor)">getAnyLicenseInfoPropertyValue</a></span>&#8203;(org.spdx.storage.PropertyDescriptor&nbsp;propertyDescriptor)</code></th>
 <td class="colLast">
 <div class="block">Converts property values to an AnyLicenseInfo if possible - if NONE or NOASSERTION URI value, convert to the appropriate license</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDocumentUri()">getDocumentUri</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="SpdxElement.html" title="class in org.spdx.library.model.v2">SpdxElement</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getElementPropertyValue(org.spdx.storage.PropertyDescriptor)">getElementPropertyValue</a></span>&#8203;(org.spdx.storage.PropertyDescriptor&nbsp;propertyDescriptor)</code></th>
 <td class="colLast">
 <div class="block">Converts property values to an SpdxElement if possible - if NONE or NOASSERTION URI value, convert to the appropriate SpdxElement</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getId()">getId</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hashCode()">hashCode</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isEquivalentToNull(java.lang.Object,org.spdx.storage.PropertyDescriptor)">isEquivalentToNull</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;propertyValue,
                   org.spdx.storage.PropertyDescriptor&nbsp;descriptor)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isNoAssertion(java.lang.Object)">isNoAssertion</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isRelatedElement(org.spdx.storage.PropertyDescriptor)">isRelatedElement</a></span>&#8203;(org.spdx.storage.PropertyDescriptor&nbsp;propertyDescriptor)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>org.spdx.core.TypedValue</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toTypedValue()">toTypedValue</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#verify(java.util.Set,java.lang.String)">verify</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;verifiedIElementds,
       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;specVersion)</code></th>
@@ -1162,6 +1170,31 @@ extends org.spdx.core.CoreModelObject</pre>
 </dl>
 </li>
 </ul>
+<a id="createExtractedLicense(java.lang.String,java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createExtractedLicense</h4>
+<pre class="methodSignature">public&nbsp;<a href="license/ExtractedLicenseInfo.html" title="class in org.spdx.library.model.v2.license">ExtractedLicenseInfo</a>&nbsp;createExtractedLicense&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;id,
+                                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;text)
+                                            throws org.spdx.core.InvalidSPDXAnalysisException</pre>
+<div class="block">Constructs <a href="license/ExtractedLicenseInfo.html" title="class in org.spdx.library.model.v2.license"><code>ExtractedLicenseInfo</code></a> with text set.
+
+ <p> Note that object construction has side-effects relating to a document and modelStore,
+ requiring document context.
+ This may bind usage of <a href="license/ExtractedLicenseInfo.html" title="class in org.spdx.library.model.v2.license"><code>ExtractedLicenseInfo</code></a> instances to the document that they were created by!</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>id</code> - id that the text relates to</dd>
+<dd><code>text</code> - license text corresponding to the id</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>returns a constructed object</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>org.spdx.core.InvalidSPDXAnalysisException</code></dd>
+</dl>
+</li>
+</ul>
 <a id="toString()">
 <!--   -->
 </a>
@@ -1258,7 +1291,7 @@ extends org.spdx.core.CoreModelObject</pre>
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2024 <a href="http://spdx.org">SPDX</a>. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2025 <a href="http://spdx.org">SPDX</a>. All rights reserved.</small></p>
 </footer>
 </body>
 </html>
