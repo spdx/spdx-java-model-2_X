@@ -46,6 +46,7 @@ import org.spdx.library.model.v2.license.AnyLicenseInfo;
 import org.spdx.library.model.v2.license.ConjunctiveLicenseSet;
 import org.spdx.library.model.v2.license.CrossRef.CrossRefBuilder;
 import org.spdx.library.model.v2.license.DisjunctiveLicenseSet;
+import org.spdx.library.model.v2.license.ExtractedLicenseInfo;
 import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
 import org.spdx.library.model.v2.license.SpdxNoneLicense;
 import org.spdx.library.model.v2.pointer.ByteOffsetPointer;
@@ -637,7 +638,25 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 		return new CrossRefBuilder(this.modelStore, this.documentUri, 
 				this.modelStore.getNextId(IdType.Anonymous), this.copyManager, url);
 	}
-	
+
+	/**
+	 * Constructs {@link ExtractedLicenseInfo} with text set.
+	 *
+	 * <p> Note that object construction has side-effects relating to a document and modelStore,
+	 * requiring document context.
+	 * This may bind usage of {@link ExtractedLicenseInfo} instances to the document that they were created by!
+	 *
+	 * @param id id that the text relates to
+	 * @param text license text corresponding to the id
+	 * @return returns a constructed object
+	 * @throws InvalidSPDXAnalysisException
+	 */
+	public ExtractedLicenseInfo createExtractedLicense(String id, String text) throws InvalidSPDXAnalysisException {
+		ExtractedLicenseInfo eli = new ExtractedLicenseInfo(modelStore, documentUri, id, copyManager, true);
+		eli.setExtractedText(text);
+		return eli;
+	}
+
 	@Override
 	public String toString() {
 		return this.getType() + " " + this.id;
