@@ -29,6 +29,7 @@ import org.spdx.core.CoreModelObject;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
+import org.spdx.core.SpdxInvalidTypeException;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.licenseTemplate.InvalidLicenseTemplateException;
 import org.spdx.licenseTemplate.LicenseTemplateRuleException;
@@ -252,6 +253,11 @@ public class SpdxListedLicense extends License {
 		}
 	}
 
+	/**
+	 * Builder class for creating instances of {@link SpdxListedLicense}
+	 *
+	 * @author Gary O'Neall
+	 */
 	public static class Builder {
 		private String id;
 		private String name;
@@ -359,9 +365,9 @@ public class SpdxListedLicense extends License {
 			this.deprecatedVersion = deprecatedVersion;
 			return this;
 		}
-		
+
 		public Builder addCrossRefs(CrossRef crossRef) {
-;			this.crossRefs.add(crossRef);
+			this.crossRefs.add(crossRef);
 			return this;
 		}
 	}
