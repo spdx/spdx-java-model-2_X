@@ -29,7 +29,6 @@ import org.spdx.core.CoreModelObject;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.core.SpdxInvalidTypeException;
 import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.licenseTemplate.InvalidLicenseTemplateException;
 import org.spdx.licenseTemplate.LicenseTemplateRuleException;
@@ -47,8 +46,9 @@ public class SpdxListedLicense extends License {
 	
 	/**
 	 * Open or create a model object with the default store and default document URI
+	 *
 	 * @param id ID for this object - must be unique within the SPDX document
-	 * @throws InvalidSPDXAnalysisException 
+	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxListedLicense(String id) throws InvalidSPDXAnalysisException {
 		this(DefaultModelStore.getDefaultModelStore(), SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, id, 
@@ -57,12 +57,13 @@ public class SpdxListedLicense extends License {
 
 	/**
 	 * Create a new SPDX Listed License object
+	 *
 	 * @param modelStore container which includes the license
 	 * @param documentUri URI for the SPDX document containing the license
 	 * @param id identifier for the license
 	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
 	 * @param create if true, create the license if it does not exist
-	 * @throws InvalidSPDXAnalysisException 
+	 * @throws InvalidSPDXAnalysisException
 	 */
 	@SuppressWarnings("unchecked")
 	public SpdxListedLicense(IModelStore modelStore, String documentUri, String id, 
@@ -73,6 +74,8 @@ public class SpdxListedLicense extends License {
 	}
 	
 	/**
+	 * Constructs a new {@link SpdxListedLicense} with the specified parameters
+	 *
 	 * @param name License name
 	 * @param id License ID
 	 * @param text License text
@@ -107,6 +110,8 @@ public class SpdxListedLicense extends License {
 	}
 
 	/**
+	 * Constructs a new {@link SpdxListedLicense} using the specified builder
+	 *
 	 * @param builder Builder configured with desired parameters
 	 * @throws InvalidSPDXAnalysisException
 	 */
@@ -131,9 +136,14 @@ public class SpdxListedLicense extends License {
 	}
 	
 	/**
+	 * Returns an HTML fragment containing the license text
+	 *
+	 * If the HTML version of the license text is available, it is returned directly,
+	 * Otherwise, the method attempts to format the license text using a standard license template.
+	 *
 	 * @return HTML fragment containing the License Text
-	 * @throws InvalidLicenseTemplateException 
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidLicenseTemplateException
+	 * @throws InvalidSPDXAnalysisException
 	 */
 	public String getLicenseTextHtml() throws InvalidLicenseTemplateException, InvalidSPDXAnalysisException {
 		Optional<String> licenseTextHtml = getStringPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_TEXT_HTML);
@@ -156,17 +166,20 @@ public class SpdxListedLicense extends License {
 	
 	/**
 	 * Set the licenseTextHtml
+	 *
 	 * @param licenseTextHtml HTML fragment representing the license text
-	 * @throws InvalidSPDXAnalysisException 
+	 * @throws InvalidSPDXAnalysisException
 	 */
 	public void setLicenseTextHtml(String licenseTextHtml) throws InvalidSPDXAnalysisException {
 		setPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_TEXT_HTML, licenseTextHtml);
 	}
 	
 	/**
+	 * Return the licenseTextHtml
+	 *
 	 * @return HTML fragment containing the License standard header text
-	 * @throws InvalidLicenseTemplateException 
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidLicenseTemplateException
+	 * @throws InvalidSPDXAnalysisException
 	 */
 	public String getLicenseHeaderHtml() throws InvalidLicenseTemplateException, InvalidSPDXAnalysisException {
 		Optional<String> licenseHeaderHtml = getStringPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_HEADER_HTML);
@@ -189,16 +202,19 @@ public class SpdxListedLicense extends License {
 	
 	/**
 	 * Set the licenseHeaderTemplateHtml
+	 *
 	 * @param licenseHeaderHtml HTML fragment representing the license standard header text
-	 * @throws InvalidSPDXAnalysisException 
+	 * @throws InvalidSPDXAnalysisException
 	 */
 	public void setLicenseHeaderHtml(String licenseHeaderHtml) throws InvalidSPDXAnalysisException {
 		setPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_HEADER_HTML, licenseHeaderHtml);
 	}
 	
 	/**
+	 * Return the version of the listed license when it was first deprecated
+	 *
 	 * @return the deprecatedVersion
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException
 	 */
 	public String getDeprecatedVersion() throws InvalidSPDXAnalysisException {
 		Optional<String> depVersion = getStringPropertyValue(SpdxConstantsCompatV2.PROP_LIC_DEPRECATED_VERSION);
@@ -210,8 +226,10 @@ public class SpdxListedLicense extends License {
 	}
 
 	/**
+	 * Set the version of the listed license when it was first deprecated
+	 *
 	 * @param deprecatedVersion the deprecatedVersion to set
-	 * @throws InvalidSPDXAnalysisException 
+	 * @throws InvalidSPDXAnalysisException
 	 */
 	public void setDeprecatedVersion(String deprecatedVersion) throws InvalidSPDXAnalysisException {
 		setPropertyValue(SpdxConstantsCompatV2.PROP_LIC_DEPRECATED_VERSION, deprecatedVersion);
