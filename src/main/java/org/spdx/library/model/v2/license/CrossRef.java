@@ -325,6 +325,11 @@ public class CrossRef extends ModelObjectV2 {
 		return crossRefDetails;
 	}
 	
+	/**
+	 * Builder class for creating instances of {@link CrossRef}
+	 *
+	 * @author Gary O'Neall
+	 */
 	public static class CrossRefBuilder {
 		// required fields - Model Object
 		IModelStore modelStore;
