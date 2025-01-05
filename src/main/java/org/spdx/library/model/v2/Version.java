@@ -25,8 +25,8 @@ import java.util.regex.Matcher;
 
 /**
  * Static class to manage the SPDX versions and the version of the implementation classes
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class Version {
 

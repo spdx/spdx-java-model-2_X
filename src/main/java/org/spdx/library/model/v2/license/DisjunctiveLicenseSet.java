@@ -31,8 +31,8 @@ import org.spdx.storage.IModelStore;
 
 /**
  * A set of licenses where there is a choice of one of the licenses in the set
+ * 
  * @author Gary O'Neall
- *
  */
 public class DisjunctiveLicenseSet extends LicenseSet {
 	

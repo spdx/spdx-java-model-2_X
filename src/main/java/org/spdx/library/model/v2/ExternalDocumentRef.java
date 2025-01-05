@@ -42,7 +42,8 @@ import org.spdx.storage.IModelStore.IdType;
 import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 
 /**
- * Information about an external SPDX document reference including the checksum.  
+ * Information about an external SPDX document reference including the checksum.
+ *
  * This allows for verification of the external references.
  * 
  * @author Gary O'Neall

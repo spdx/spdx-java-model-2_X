@@ -30,9 +30,8 @@ import org.spdx.storage.IModelStore;
 
 /**
  * A Relationship represents a relationship between two SpdxElements.
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class Relationship extends ModelObjectV2 implements Comparable<Relationship> {
 	

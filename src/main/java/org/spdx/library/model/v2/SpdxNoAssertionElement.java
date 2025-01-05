@@ -30,7 +30,6 @@ import org.spdx.storage.IModelStore;
  * This element has no properties and a fixed ID of "NOASSERTION".
  *  
  * @author Gary O'Neall
- *
  */
 public class SpdxNoAssertionElement extends SpdxConstantElement {
 	

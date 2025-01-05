@@ -32,8 +32,8 @@ import org.spdx.storage.IModelStore;
 
 /**
  * An Annotation is a comment on an SpdxItem by an agent.
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class Annotation extends ModelObjectV2 implements Comparable<Annotation> {
 

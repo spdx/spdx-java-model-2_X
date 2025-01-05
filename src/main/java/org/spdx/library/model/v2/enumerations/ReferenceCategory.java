@@ -22,9 +22,8 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 
 /**
  * Reference category for external refs
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public enum ReferenceCategory implements IndividualUriValue {
 	PACKAGE_MANAGER("referenceCategory_packageManager"),

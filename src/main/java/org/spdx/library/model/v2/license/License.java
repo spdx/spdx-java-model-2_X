@@ -38,7 +38,6 @@ import org.spdx.storage.IModelStore.ModelUpdate;
  * Subclasses should extend this class to add additional properties.
  * 
  * @author Gary O'Neall
- *
  */
 public abstract class License extends SimpleLicensingInfo {
 

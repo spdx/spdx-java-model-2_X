@@ -40,9 +40,8 @@ import org.spdx.storage.PropertyDescriptor;
 
 /**
  * Wraps a model store providing a compatible interface to the 1.X version of the SPDX Java Library
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class CompatibleModelStoreWrapper implements IModelStore {
 	

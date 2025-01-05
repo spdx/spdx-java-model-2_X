@@ -23,8 +23,8 @@ import org.spdx.storage.PropertyDescriptor;
 
 /**
  * Constants which map to the SPDX specifications for versions prior to SPDX Spec version 3.0
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class SpdxConstantsCompatV2 {
 	

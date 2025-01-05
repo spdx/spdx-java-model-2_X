@@ -27,9 +27,8 @@ import org.spdx.storage.IModelStore.IdType;
 
 /**
  * Generic SPDX element - primarily used for testing
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class GenericSpdxElement extends SpdxElement {
 

@@ -30,8 +30,8 @@ import org.spdx.storage.IModelStore.IdType;
 
 /**
  * Special class of license to represent no asserted license license in the file or packages
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class SpdxNoAssertionLicense extends AnyLicenseInfo implements IndividualUriValue {
 	

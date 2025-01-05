@@ -23,8 +23,8 @@ import org.spdx.storage.IModelStore;
 
 /**
  * Generic SPDX item - primarily used for testing
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class GenericSpdxItem extends SpdxItem {
 

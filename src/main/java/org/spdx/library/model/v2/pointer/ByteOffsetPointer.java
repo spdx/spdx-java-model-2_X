@@ -29,8 +29,8 @@ import org.spdx.storage.IModelStore;
 
 /**
  * Byte offset pointer per RDF 2.3.2.2 ByteOffsetPointer Class
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class ByteOffsetPointer extends SinglePointer {
 

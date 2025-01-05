@@ -33,6 +33,7 @@ import org.spdx.storage.PropertyDescriptor;
 
 /**
  * An SpdxItem is a potentially copyrightable work.
+ *
  * @author Gary O'Neall
  */
 public abstract class SpdxItem extends SpdxElement {

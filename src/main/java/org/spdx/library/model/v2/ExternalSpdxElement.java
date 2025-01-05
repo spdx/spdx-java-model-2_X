@@ -39,7 +39,8 @@ import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 
 
 /**
- * This is an SPDX element which is in an external document.  
+ * This is an SPDX element which is in an external document.
+ *
  * Note that the ExternalSpdxElement is implemented differently than the previous major version of the
  * SPDX libraries.
  * 

@@ -22,9 +22,8 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 
 /**
  * Enum constants for Checksum Algorithms
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public enum ChecksumAlgorithm implements IndividualUriValue {
 	SHA1("checksumAlgorithm_sha1"),

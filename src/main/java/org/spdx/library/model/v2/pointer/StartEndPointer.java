@@ -33,8 +33,11 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
 /**
- * A compound pointer pointing out parts of a document by means of a range delimited by a pair of single pointers that define the start point and the end point.
+ * A compound pointer pointing out parts of a document by means of a range
+ * delimited by a pair of single pointers that define the start point and the end point.
+ *
  * See http://www.w3.org/2009/pointers and https://www.w3.org/WAI/ER/Pointers/WD-Pointers-in-RDF10-20110427
+ *
  * @author Gary O'Neall
  */
 public class StartEndPointer extends CompoundPointer implements Comparable<StartEndPointer> {

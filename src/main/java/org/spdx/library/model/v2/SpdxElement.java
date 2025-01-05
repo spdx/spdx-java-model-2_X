@@ -36,9 +36,9 @@ import org.spdx.storage.PropertyDescriptor;
 /**
  * An SpdxElement is any thing described in SPDX, either a document or an SpdxItem. 
  * SpdxElements can be related to other SpdxElements.
- * 
+ *
  * If a subproperty is used for the name property name, getNamePropertyName should be overridden.
- * 
+ *
  * @author Gary O'Neall
  */
 public abstract class SpdxElement extends ModelObjectV2 {

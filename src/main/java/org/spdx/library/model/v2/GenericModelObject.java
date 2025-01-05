@@ -28,11 +28,12 @@ import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.storage.IModelStore;
 
 /**
- * Primarily used for testing, this model object does not implement any unique getters and setters nor
+ * Generic model object - primarily used for testing.
+ *
+ * This model object does not implement any unique getters and setters nor
  * does it implement any verification.
  * 
  * @author Gary O'Neall
- *
  */
 public class GenericModelObject extends ModelObjectV2 {
 

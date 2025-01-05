@@ -20,8 +20,9 @@ package org.spdx.library.model.v2.license;
 import org.spdx.core.InvalidSPDXAnalysisException;
 
 /**
- * @author gary
+ * Exception thrown when an error occurs related to SPDX listed licenses
  *
+ * @author Gary O'Neall
  */
 public class SpdxListedLicenseException extends InvalidSPDXAnalysisException {
 

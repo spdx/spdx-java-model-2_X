@@ -36,8 +36,11 @@ import org.spdx.library.model.v2.SpdxElement;
 import org.spdx.storage.IModelStore;
 
 /**
- * A pointing method made up of a unique pointer. This is an abstract single pointer that provides the necessary framework, 
+ * A pointing method made up of a unique pointer
+ *
+ * This is an abstract single pointer that provides the necessary framework, 
  * but it does not provide any kind of pointer, so more specific subclasses must be used.
+ *
  * See http://www.w3.org/2009/pointers and https://www.w3.org/WAI/ER/Pointers/WD-Pointers-in-RDF10-20110427
  * 
  * @author Gary O'Neall

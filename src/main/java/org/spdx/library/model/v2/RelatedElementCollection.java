@@ -41,9 +41,8 @@ import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 
 /**
  * Collection of SPDX elements related to an SpdxElement
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class RelatedElementCollection implements Collection<SpdxElement> {
 	

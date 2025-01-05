@@ -30,9 +30,8 @@ import org.spdx.storage.IModelStore;
 
 /**
  * Represents a License Exception present on the SPDX License List
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class ListedLicenseException extends LicenseException {
 

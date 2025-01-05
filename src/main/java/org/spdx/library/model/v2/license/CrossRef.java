@@ -34,9 +34,8 @@ import org.spdx.storage.IModelStore.IModelStoreLock;
 
 /**
  * Cross reference details for the a URL reference
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class CrossRef extends ModelObjectV2 {
 	

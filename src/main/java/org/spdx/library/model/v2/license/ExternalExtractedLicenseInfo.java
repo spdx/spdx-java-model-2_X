@@ -42,7 +42,6 @@ import org.spdx.storage.IModelStore;
 import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 
 /**
- * 
  * This class represents an ExtractedLicenseInfo which is stored in an external SPDX document.
  * 
  * Note that the actual properties for this ExtractedLicenseInfo is in an external document so
@@ -58,7 +57,6 @@ import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
  * The ID is the ID for the LicenseRef in the external document.
  * 
  * @author Gary O'Neall
- *
  */
 public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo implements IndividualUriValue {
 	

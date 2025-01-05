@@ -22,8 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author gary
+ * SPDX enum factory
  *
+ * @author Gary O'Neall
  */
 public class SpdxEnumFactoryCompatV2 {
 	

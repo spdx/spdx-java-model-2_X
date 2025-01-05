@@ -23,6 +23,7 @@ import org.spdx.core.SimpleUriValue;
 
 /**
  * Type of external reference
+ *
  * Note that there are very few required fields for this class in that
  * the external reference type does not need to be provided in the SPDX
  * document for the document to be valid.

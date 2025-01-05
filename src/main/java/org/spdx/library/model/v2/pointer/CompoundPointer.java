@@ -33,9 +33,13 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
 /**
- * A pointing method made up of a pair of pointers that identify a well defined section within a document delimited by a begin and an end.
+ * A pointing method made up of a pair of pointers that identify a well defined
+ * section within a document delimited by a begin and an end.
+ *
  * See http://www.w3.org/2009/pointers and https://www.w3.org/WAI/ER/Pointers/WD-Pointers-in-RDF10-20110427
+ *
  * This is an abstract class of pointers which must be subclassed
+ *
  * @author Gary O'Neall
  */
 public abstract class CompoundPointer extends ModelObjectV2 {
