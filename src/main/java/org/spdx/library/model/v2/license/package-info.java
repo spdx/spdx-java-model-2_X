@@ -16,9 +16,8 @@
  *   limitations under the License.
  */
 /**
- * @author Gary O'Neall
- * 
  * Model for the SPDX version 2 license related objects
- *
+ * 
+ * @author Gary O'Neall
  */
 package org.spdx.library.model.v2.license;

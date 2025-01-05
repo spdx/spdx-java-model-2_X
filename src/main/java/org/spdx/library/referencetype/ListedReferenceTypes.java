@@ -38,9 +38,10 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 
 /**
  * Singleton class that maintains the current SPDX listed reference types.
+ * <p>
  * The listed reference types are maintained by the SPDX community.
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class ListedReferenceTypes {
 	

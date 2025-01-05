@@ -35,8 +35,8 @@ import javax.annotation.Nullable;
 /**
  * A specific form of license information where there is a set of licenses
  * represented
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public abstract class LicenseSet extends AnyLicenseInfo {
 	

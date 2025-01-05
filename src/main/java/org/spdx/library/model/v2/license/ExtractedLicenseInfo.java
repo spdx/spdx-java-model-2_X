@@ -36,11 +36,12 @@ import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
 
 /**
- * An ExtractedLicensingInfo represents a license or licensing notice that was found in the package. 
+ * An ExtractedLicensingInfo represents a license or licensing notice that was found in the package.
+ *
  * Any license text that is recognized as a license may be represented as a License 
  * rather than an ExtractedLicensingInfo.
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
 	

@@ -27,12 +27,13 @@ import org.spdx.storage.IModelStore;
 
 /**
  * This abstract class represents several ways of describing licensing information.
+ *
  * License info can be described as a set of conjunctive licenses (where all licenses
  * terms must apply), a set of disjunctive licenses (where there is a choice of one
  * license among the set described) or a specific license.  The specific licenses
  * are of a SimpleLicensingInfoType
+ * 
  * @author Gary O'Neall
- *
  */
 public abstract class AnyLicenseInfo extends ModelObjectV2 {
 	

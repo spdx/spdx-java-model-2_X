@@ -27,7 +27,6 @@ import org.spdx.storage.IModelStore;
  * which represents a license not included within the SPDX document.
  * 
  * @author Gary O'Neall
- *
  */
 public abstract class AbstractExtractedLicenseInfo extends SimpleLicensingInfo
 implements Comparable<AbstractExtractedLicenseInfo> {

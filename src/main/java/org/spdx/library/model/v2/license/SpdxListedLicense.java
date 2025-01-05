@@ -37,8 +37,8 @@ import org.spdx.storage.IModelStore;
 
 /**
  * Listed license for SPDX as listed at spdx.org/licenses
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class SpdxListedLicense extends License {
 	

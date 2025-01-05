@@ -7,9 +7,9 @@ package org.spdx.library.model.v2;
 import org.spdx.core.IndividualUriValue;
 
 /**
+ * Represents either a NoneLicense OR a NoneElement
  * 
- * Represents either a NoneLicense OR a NoneElement - the correct class should
- * be replaced by the caller based on the context
+ * The correct class should be replaced by the caller based on the context.
  * 
  * @author Gary O'Neall
  */

@@ -49,7 +49,6 @@ import org.slf4j.LoggerFactory;
  * Types are defined classes in the SpdxConstantsCompatV2 class and map to the standard SPDX model
  * 
  * @author Gary O'Neall
- *
  */
 public class SpdxModelFactoryCompatV2 {
 	

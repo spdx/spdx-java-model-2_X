@@ -35,8 +35,8 @@ import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
 
 /**
  * Holds static methods used for verify various property values
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class SpdxVerificationHelper {
 	

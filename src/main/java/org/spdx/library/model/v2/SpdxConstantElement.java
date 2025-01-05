@@ -31,9 +31,8 @@ import org.spdx.storage.NullModelStore;
 
 /**
  * Type of SpdxElement which is a constant unmodifiable element
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public abstract class SpdxConstantElement extends SpdxElement implements IndividualUriValue {
 

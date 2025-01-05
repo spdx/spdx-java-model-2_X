@@ -30,8 +30,8 @@ import org.spdx.storage.IModelStore.IdType;
 
 /**
  * A special license meaning that no license was found
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class SpdxNoneLicense extends AnyLicenseInfo implements IndividualUriValue {
 	

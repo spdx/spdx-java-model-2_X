@@ -60,7 +60,6 @@ import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 import org.spdx.storage.PropertyDescriptor;
 
 /**
- * 
  * Superclass for all SPDX spec version 2 model objects
  * 
  * Provides the primary interface to the storage class that access and stores the data for 
@@ -93,7 +92,6 @@ import org.spdx.storage.PropertyDescriptor;
  * This class also handles the conversion of a ModelObjectV2 to and from a TypeValue for storage in the ModelStore.
  *
  * @author Gary O'Neall
- * 
  */
 public abstract class ModelObjectV2 extends CoreModelObject {
 	

@@ -31,7 +31,6 @@ import org.spdx.storage.IModelStore;
  * Pointer for lines and characters
  * 
  * @author Gary O'Neall
- *
  */
 public class LineCharPointer extends SinglePointer {
 

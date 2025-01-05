@@ -23,9 +23,8 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 /**
  * File Type is intrinsic to the file, independent of how the file is being used.  
  * A file may have more than one file type assigned to it.
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public enum FileType implements IndividualUriValue {
 	APPLICATION("fileType_application"),

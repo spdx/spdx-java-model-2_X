@@ -41,6 +41,7 @@ import org.spdx.storage.PropertyDescriptor;
 /**
  * A File represents a named sequence of information 
  * that is contained in a software package.
+ *
  * @author Gary O'Neall
  */
 public class SpdxFile extends SpdxItem implements Comparable<SpdxFile> {

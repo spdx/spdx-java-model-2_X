@@ -33,6 +33,7 @@ import org.spdx.storage.IModelStore;
 
 /**
  * A license that has a With exception operator (e.g. GPL-2.0 WITH Autoconf-exception-2.0)
+ *
  * @author Gary O'Neall
  */
 public class WithExceptionOperator extends AnyLicenseInfo {

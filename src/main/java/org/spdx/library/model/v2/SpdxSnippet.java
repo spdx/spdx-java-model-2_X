@@ -43,12 +43,13 @@ import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 import org.spdx.storage.PropertyDescriptor;
 
 /**
- * Snippets can optionally be used when a file is known to have some content that has been included from another original source.  
+ * Snippets can optionally be used when a file is known to have some content
+ * that has been included from another original source.
+ * <p>
  * They are useful for denoting when part of a file may have been originally created under another license.
  * Each instance of Snippet Information needs to be associated with a specific File in an SPDX Document.
  * 
  * @author Gary O'Neall
- *
  */
 public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 	

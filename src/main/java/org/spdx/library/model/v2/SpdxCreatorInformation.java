@@ -32,9 +32,8 @@ import org.spdx.storage.IModelStore;
 
 /**
  * Provides the necessary information for forward and backward compatibility for processing tools.
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class SpdxCreatorInformation extends ModelObjectV2 {
 

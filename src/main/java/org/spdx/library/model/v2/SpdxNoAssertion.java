@@ -7,11 +7,11 @@ package org.spdx.library.model.v2;
 import org.spdx.core.IndividualUriValue;
 
 /**
- * @author Gary O'Neall
- * 
- * Represents either a NoAssertionLicense OR a NoAssertionElement - the correct class should
- * be replaced by the caller based on the context
+ * Represents either a NoAssertionLicense OR a NoAssertionElement.
  *
+ * The correct class should be replaced by the caller based on the context.
+ *
+ * @author Gary O'Neall
  */
 public class SpdxNoAssertion implements IndividualUriValue {
 

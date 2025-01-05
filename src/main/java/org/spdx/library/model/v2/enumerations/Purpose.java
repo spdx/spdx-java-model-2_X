@@ -22,9 +22,8 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 
 /**
  * Package Purpose is intrinsic to how the package is being used rather than the content of the package.
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public enum Purpose implements IndividualUriValue {
 	

@@ -36,7 +36,7 @@ import org.spdx.storage.IModelStore;
  * An External Reference allows a Package to reference an external source of
  * additional information, metadata, enumerations, asset identifiers, or downloadable content believed to
  * be relevant to the Package.
- * 
+ *
  * @author Gary O'Neall
  */
 public class ExternalRef extends ModelObjectV2 implements Comparable<ExternalRef> {

@@ -22,9 +22,8 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 
 /**
  * Relationship types
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public enum RelationshipType implements IndividualUriValue {
 

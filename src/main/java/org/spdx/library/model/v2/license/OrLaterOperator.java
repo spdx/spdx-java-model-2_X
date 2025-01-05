@@ -34,8 +34,8 @@ import org.spdx.storage.IModelStore.IdType;
 
 /**
  * A license that has an or later operator (e.g. GPL-2.0+)
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class OrLaterOperator extends AnyLicenseInfo {
 	

@@ -35,7 +35,6 @@ import org.spdx.storage.IModelStore;
  * simple, atomic, licensing information.
  * 
  * @author Gary O'Neall
- *
  */
 public abstract class SimpleLicensingInfo extends AnyLicenseInfo {
 	

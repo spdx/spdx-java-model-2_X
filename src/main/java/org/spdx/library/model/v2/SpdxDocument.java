@@ -42,10 +42,11 @@ import org.spdx.storage.IModelStore;
 import org.spdx.storage.PropertyDescriptor;
 
 /**
- * An SpdxDocument is a summary of the contents, provenance, ownership and licensing 
- * analysis of a specific software package. 
+ * An SpdxDocument is a summary of the contents, provenance, ownership and
+ * licensing analysis of a specific software package.
+ *
  * This is, effectively, the top level of SPDX information.
- * 
+ *
  * @author Gary O'Neall
  */
 public class SpdxDocument extends SpdxElement {

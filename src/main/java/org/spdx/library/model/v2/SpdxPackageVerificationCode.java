@@ -33,7 +33,7 @@ import org.spdx.storage.IModelStore;
 
 /**
  * Verification Code for packages
- * 
+ *
  * @author Gary O'Neall
  */
 public class SpdxPackageVerificationCode extends ModelObjectV2 {

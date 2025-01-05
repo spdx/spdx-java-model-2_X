@@ -22,9 +22,8 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 
 /**
  * Annotation types for the Annotation Class
- * 
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public enum AnnotationType implements IndividualUriValue {
 	

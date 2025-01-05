@@ -34,12 +34,11 @@ import org.spdx.library.model.v2.SpdxConstantsCompatV2;
 import org.spdx.storage.IModelStore;
 
 /**
- * 
  * Represents an SPDX license exception as defined in the License Expression Language
+ *
  * Used with the "with" unary expression.
  * 
  * @author Gary O'Neall
- * 
  */
 public abstract class LicenseException extends ModelObjectV2 {
 	

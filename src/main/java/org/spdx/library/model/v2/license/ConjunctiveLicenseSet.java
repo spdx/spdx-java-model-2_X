@@ -31,8 +31,8 @@ import org.spdx.storage.IModelStore;
 
 /**
  * A set of licenses where all of the licenses apply
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class ConjunctiveLicenseSet extends LicenseSet {
 	

@@ -45,8 +45,8 @@ import org.spdx.storage.PropertyDescriptor;
 /**
  * A Package represents a collection of software files that are
  * delivered as a single functional component.
- * @author Gary O'Neall
  *
+ * @author Gary O'Neall
  */
 public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 	Collection<SpdxElement> files;
