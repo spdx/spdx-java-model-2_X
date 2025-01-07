@@ -108,16 +108,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.spdx.library.model.v2">org.spdx.library.model.v2</a></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Model compatible with version 2 of the SPDX spec (2.0, 2.1, 2.2, and 2.3)</div>
+</td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.spdx.library.model.v2.license">org.spdx.library.model.v2.license</a></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Model for the SPDX version 2 license related objects</div>
+</td>
 </tr>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.spdx.library.model.v2.pointer">org.spdx.library.model.v2.pointer</a></th>
 <td class="colLast">
-<div class="block">RDF model classes which implement the proposed W3C Pointer classes.</div>
+<div class="block">RDF model classes which implement the proposed W3C Pointer classes
+
+ From the W3C documentation, pointers are entities that permit identifying 
+ a portion or segment of a piece of content - making use of the 
+ Resource Description Framework (RDF).</div>
 </td>
 </tr>
 </tbody>
@@ -179,8 +187,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../GenericModelObject.html" title="class in org.spdx.library.model.v2">GenericModelObject</a></span></code></th>
 <td class="colLast">
-<div class="block">Primarily used for testing, this model object does not implement any unique getters and setters nor
- does it implement any verification.</div>
+<div class="block">Generic model object - primarily used for testing.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -222,8 +229,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../SpdxDocument.html" title="class in org.spdx.library.model.v2">SpdxDocument</a></span></code></th>
 <td class="colLast">
-<div class="block">An SpdxDocument is a summary of the contents, provenance, ownership and licensing 
- analysis of a specific software package.</div>
+<div class="block">An SpdxDocument is a summary of the contents, provenance, ownership and
+ licensing analysis of a specific software package.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -281,7 +288,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../SpdxSnippet.html" title="class in org.spdx.library.model.v2">SpdxSnippet</a></span></code></th>
 <td class="colLast">
-<div class="block">Snippets can optionally be used when a file is known to have some content that has been included from another original source.</div>
+<div class="block">Snippets can optionally be used when a file is known to have some content
+ that has been included from another original source.</div>
 </td>
 </tr>
 </tbody>
@@ -417,6 +425,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../license/LicenseException.html" title="class in org.spdx.library.model.v2.license">LicenseException</a></span></code></th>
 <td class="colLast">
 <div class="block">Represents an SPDX license exception as defined in the License Expression Language
+
  Used with the "with" unary expression.</div>
 </td>
 </tr>
@@ -506,7 +515,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../pointer/CompoundPointer.html" title="class in org.spdx.library.model.v2.pointer">CompoundPointer</a></span></code></th>
 <td class="colLast">
-<div class="block">A pointing method made up of a pair of pointers that identify a well defined section within a document delimited by a begin and an end.</div>
+<div class="block">A pointing method made up of a pair of pointers that identify a well defined
+ section within a document delimited by a begin and an end.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -520,14 +530,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../pointer/SinglePointer.html" title="class in org.spdx.library.model.v2.pointer">SinglePointer</a></span></code></th>
 <td class="colLast">
-<div class="block">A pointing method made up of a unique pointer.</div>
+<div class="block">A pointing method made up of a unique pointer
+
+ This is an abstract single pointer that provides the necessary framework, 
+ but it does not provide any kind of pointer, so more specific subclasses must be used.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../pointer/StartEndPointer.html" title="class in org.spdx.library.model.v2.pointer">StartEndPointer</a></span></code></th>
 <td class="colLast">
-<div class="block">A compound pointer pointing out parts of a document by means of a range delimited by a pair of single pointers that define the start point and the end point.</div>
+<div class="block">A compound pointer pointing out parts of a document by means of a range
+ delimited by a pair of single pointers that define the start point and the end point.</div>
 </td>
 </tr>
 </tbody>

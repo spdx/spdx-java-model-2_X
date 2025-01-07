@@ -168,7 +168,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i9" class="rowColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/pointer/CompoundPointer.html" title="class in org.spdx.library.model.v2.pointer">CompoundPointer</a></td>
 <th class="colLast" scope="row">
-<div class="block">A pointing method made up of a pair of pointers that identify a well defined section within a document delimited by a begin and an end.</div>
+<div class="block">A pointing method made up of a pair of pointers that identify a well defined
+ section within a document delimited by a begin and an end.</div>
 </th>
 </tr>
 <tr id="i10" class="altColor">
@@ -185,7 +186,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/license/CrossRef.CrossRefBuilder.html" title="class in org.spdx.library.model.v2.license">CrossRef.CrossRefBuilder</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Builder class for creating instances of <a href="org/spdx/library/model/v2/license/CrossRef.html" title="class in org.spdx.library.model.v2.license"><code>CrossRef</code></a></div>
+</th>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/license/DisjunctiveLicenseSet.html" title="class in org.spdx.library.model.v2.license">DisjunctiveLicenseSet</a></td>
@@ -234,8 +237,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i20" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/GenericModelObject.html" title="class in org.spdx.library.model.v2">GenericModelObject</a></td>
 <th class="colLast" scope="row">
-<div class="block">Primarily used for testing, this model object does not implement any unique getters and setters nor
- does it implement any verification.</div>
+<div class="block">Generic model object - primarily used for testing.</div>
 </th>
 </tr>
 <tr id="i21" class="rowColor">
@@ -252,7 +254,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/license/InvalidLicenseStringException.html" title="class in org.spdx.library.model.v2.license">InvalidLicenseStringException</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Exception thrown when an invalid license string is encountered.</div>
+</th>
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/license/License.html" title="class in org.spdx.library.model.v2.license">License</a></td>
@@ -266,12 +270,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><a href="org/spdx/library/model/v2/license/LicenseException.html" title="class in org.spdx.library.model.v2.license">LicenseException</a></td>
 <th class="colLast" scope="row">
 <div class="block">Represents an SPDX license exception as defined in the License Expression Language
+
  Used with the "with" unary expression.</div>
 </th>
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/license/LicenseParserException.html" title="class in org.spdx.library.model.v2.license">LicenseParserException</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Exception thrown when an error occurs while parsing a license string</div>
+</th>
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/license/LicenseSet.html" title="class in org.spdx.library.model.v2.license">LicenseSet</a></td>
@@ -329,6 +336,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><a href="org/spdx/library/model/v2/ReferenceType.html" title="class in org.spdx.library.model.v2">ReferenceType</a></td>
 <th class="colLast" scope="row">
 <div class="block">Type of external reference
+
  Note that there are very few required fields for this class in that
  the external reference type does not need to be provided in the SPDX
  document for the document to be valid.</div>
@@ -362,7 +370,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i40" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/pointer/SinglePointer.html" title="class in org.spdx.library.model.v2.pointer">SinglePointer</a></td>
 <th class="colLast" scope="row">
-<div class="block">A pointing method made up of a unique pointer.</div>
+<div class="block">A pointing method made up of a unique pointer
+
+ This is an abstract single pointer that provides the necessary framework, 
+ but it does not provide any kind of pointer, so more specific subclasses must be used.</div>
 </th>
 </tr>
 <tr id="i41" class="rowColor">
@@ -386,8 +397,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i44" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/SpdxDocument.html" title="class in org.spdx.library.model.v2">SpdxDocument</a></td>
 <th class="colLast" scope="row">
-<div class="block">An SpdxDocument is a summary of the contents, provenance, ownership and licensing 
- analysis of a specific software package.</div>
+<div class="block">An SpdxDocument is a summary of the contents, provenance, ownership and
+ licensing analysis of a specific software package.</div>
 </th>
 </tr>
 <tr id="i45" class="rowColor">
@@ -398,7 +409,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i46" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/enumerations/SpdxEnumFactoryCompatV2.html" title="class in org.spdx.library.model.v2.enumerations">SpdxEnumFactoryCompatV2</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">SPDX enum factory</div>
+</th>
 </tr>
 <tr id="i47" class="rowColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/SpdxFile.html" title="class in org.spdx.library.model.v2">SpdxFile</a></td>
@@ -425,11 +438,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i51" class="rowColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/license/SpdxListedLicense.Builder.html" title="class in org.spdx.library.model.v2.license">SpdxListedLicense.Builder</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Builder class for creating instances of <a href="org/spdx/library/model/v2/license/SpdxListedLicense.html" title="class in org.spdx.library.model.v2.license"><code>SpdxListedLicense</code></a></div>
+</th>
 </tr>
 <tr id="i52" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/license/SpdxListedLicenseException.html" title="class in org.spdx.library.model.v2.license">SpdxListedLicenseException</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Exception thrown when an error occurs related to SPDX listed licenses</div>
+</th>
 </tr>
 <tr id="i53" class="rowColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/SpdxModelFactoryCompatV2.html" title="class in org.spdx.library.model.v2">SpdxModelFactoryCompatV2</a></td>
@@ -446,7 +463,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i55" class="rowColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/SpdxNoAssertion.html" title="class in org.spdx.library.model.v2">SpdxNoAssertion</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Represents either a NoAssertionLicense OR a NoAssertionElement.</div>
+</th>
 </tr>
 <tr id="i56" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/SpdxNoAssertionElement.html" title="class in org.spdx.library.model.v2">SpdxNoAssertionElement</a></td>
@@ -463,8 +482,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i58" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/SpdxNone.html" title="class in org.spdx.library.model.v2">SpdxNone</a></td>
 <th class="colLast" scope="row">
-<div class="block">Represents either a NoneLicense OR a NoneElement - the correct class should
- be replaced by the caller based on the context</div>
+<div class="block">Represents either a NoneLicense OR a NoneElement
+ 
+ The correct class should be replaced by the caller based on the context.</div>
 </th>
 </tr>
 <tr id="i59" class="rowColor">
@@ -499,7 +519,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i64" class="altColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/SpdxSnippet.html" title="class in org.spdx.library.model.v2">SpdxSnippet</a></td>
 <th class="colLast" scope="row">
-<div class="block">Snippets can optionally be used when a file is known to have some content that has been included from another original source.</div>
+<div class="block">Snippets can optionally be used when a file is known to have some content
+ that has been included from another original source.</div>
 </th>
 </tr>
 <tr id="i65" class="rowColor">
@@ -515,7 +536,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i67" class="rowColor">
 <td class="colFirst"><a href="org/spdx/library/model/v2/pointer/StartEndPointer.html" title="class in org.spdx.library.model.v2.pointer">StartEndPointer</a></td>
 <th class="colLast" scope="row">
-<div class="block">A compound pointer pointing out parts of a document by means of a range delimited by a pair of single pointers that define the start point and the end point.</div>
+<div class="block">A compound pointer pointing out parts of a document by means of a range
+ delimited by a pair of single pointers that define the start point and the end point.</div>
 </th>
 </tr>
 <tr id="i68" class="altColor">

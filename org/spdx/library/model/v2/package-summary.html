@@ -97,12 +97,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h1 title="Package" class="title">Package&nbsp;org.spdx.library.model.v2</h1>
 </div>
 <div class="contentContainer">
-<section>
+<section><a id="package.description">
+<!--   -->
+</a>
+<div class="block">Model compatible with version 2 of the SPDX spec (2.0, 2.1, 2.2, and 2.3)</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>Gary O'Neall
- 
- Model compatible with version 2 of the SPDX spec (2.0, 2.1, 2.2, and 2.3)</dd>
+<dd>Gary O'Neall</dd>
 </dl>
 </section>
 <ul class="blockList">
@@ -149,8 +150,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="GenericModelObject.html" title="class in org.spdx.library.model.v2">GenericModelObject</a></th>
 <td class="colLast">
-<div class="block">Primarily used for testing, this model object does not implement any unique getters and setters nor
- does it implement any verification.</div>
+<div class="block">Generic model object - primarily used for testing.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -178,6 +178,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colFirst" scope="row"><a href="ReferenceType.html" title="class in org.spdx.library.model.v2">ReferenceType</a></th>
 <td class="colLast">
 <div class="block">Type of external reference
+
  Note that there are very few required fields for this class in that
  the external reference type does not need to be provided in the SPDX
  document for the document to be valid.</div>
@@ -216,8 +217,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="SpdxDocument.html" title="class in org.spdx.library.model.v2">SpdxDocument</a></th>
 <td class="colLast">
-<div class="block">An SpdxDocument is a summary of the contents, provenance, ownership and licensing 
- analysis of a specific software package.</div>
+<div class="block">An SpdxDocument is a summary of the contents, provenance, ownership and
+ licensing analysis of a specific software package.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -258,7 +259,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="SpdxNoAssertion.html" title="class in org.spdx.library.model.v2">SpdxNoAssertion</a></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Represents either a NoAssertionLicense OR a NoAssertionElement.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="SpdxNoAssertionElement.html" title="class in org.spdx.library.model.v2">SpdxNoAssertionElement</a></th>
@@ -269,8 +272,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="SpdxNone.html" title="class in org.spdx.library.model.v2">SpdxNone</a></th>
 <td class="colLast">
-<div class="block">Represents either a NoneLicense OR a NoneElement - the correct class should
- be replaced by the caller based on the context</div>
+<div class="block">Represents either a NoneLicense OR a NoneElement
+ 
+ The correct class should be replaced by the caller based on the context.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -299,7 +303,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="SpdxSnippet.html" title="class in org.spdx.library.model.v2">SpdxSnippet</a></th>
 <td class="colLast">
-<div class="block">Snippets can optionally be used when a file is known to have some content that has been included from another original source.</div>
+<div class="block">Snippets can optionally be used when a file is known to have some content
+ that has been included from another original source.</div>
 </td>
 </tr>
 <tr class="altColor">
