@@ -68,7 +68,7 @@ implements Comparable<AbstractExtractedLicenseInfo> {
 	
 	/**
 	 * @return the text
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public abstract String getExtractedText() throws InvalidSPDXAnalysisException;
 	

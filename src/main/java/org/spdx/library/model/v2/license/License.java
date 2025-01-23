@@ -76,7 +76,7 @@ public abstract class License extends SimpleLicensingInfo {
 
 	/**
 	 * @return the text of the license
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public String getLicenseText() throws InvalidSPDXAnalysisException {
 		Optional<String> o = getStringPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_TEXT);
@@ -97,7 +97,7 @@ public abstract class License extends SimpleLicensingInfo {
 	
 	/**
 	 * @return the standardLicenseHeader
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public String getStandardLicenseHeader() throws InvalidSPDXAnalysisException {
 		Optional<String> standardLicenseHeader =  getStringPropertyValue(SpdxConstantsCompatV2.PROP_STD_LICENSE_NOTICE);
@@ -110,7 +110,7 @@ public abstract class License extends SimpleLicensingInfo {
 	
 	/**
 	 * @return standard license header template
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public String getStandardLicenseHeaderTemplate() throws InvalidSPDXAnalysisException {
 		Optional<String> standardLicenseHeaderTemplate = getStringPropertyValue(SpdxConstantsCompatV2.PROP_STD_LICENSE_HEADER_TEMPLATE);
@@ -138,7 +138,7 @@ public abstract class License extends SimpleLicensingInfo {
 	}
 	/**
 	 * @return the template
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public String getStandardLicenseTemplate() throws InvalidSPDXAnalysisException {
 		Optional<String> o = getStringPropertyValue(SpdxConstantsCompatV2.PROP_STD_LICENSE_TEMPLATE);			
@@ -234,7 +234,7 @@ public abstract class License extends SimpleLicensingInfo {
 	
 	/**
 	 * @return true if FSF describes the license as free / libre, false if FSF describes the license as not free / libre or if FSF does not reference the license
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public boolean isFsfLibre() throws InvalidSPDXAnalysisException {
@@ -247,7 +247,7 @@ public abstract class License extends SimpleLicensingInfo {
 	
 	/**
 	 * @return true if FSF specified this license as not free/libre, false if it has been specified by the FSF as free / libre or if it has not been specified
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public boolean isNotFsfLibre() throws InvalidSPDXAnalysisException {
 		Optional<Boolean> fsfLibre = getBooleanPropertyValue(SpdxConstantsCompatV2.PROP_STD_LICENSE_FSF_LIBRE);
@@ -256,7 +256,7 @@ public abstract class License extends SimpleLicensingInfo {
 	
 	/**
 	 * @return true if FSF describes the license as free / libre, false if FSF describes the license as not free / libre, null if FSF does not reference the license
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public Boolean getFsfLibre() throws InvalidSPDXAnalysisException {
 		Optional<Boolean> libre = getBooleanPropertyValue(SpdxConstantsCompatV2.PROP_STD_LICENSE_FSF_LIBRE);
@@ -270,7 +270,7 @@ public abstract class License extends SimpleLicensingInfo {
 	
 	/**
 	 * @return true if the license is listed as an approved license on the OSI website
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public boolean isOsiApproved() throws InvalidSPDXAnalysisException {
 		Optional<Boolean> osiApproved = getBooleanPropertyValue(SpdxConstantsCompatV2.PROP_STD_LICENSE_OSI_APPROVED);
@@ -279,7 +279,7 @@ public abstract class License extends SimpleLicensingInfo {
 	
 	/**
 	 * @return true if this license is marked as being deprecated
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public boolean isDeprecated() throws InvalidSPDXAnalysisException {
 		Optional<Boolean> deprecated = getBooleanPropertyValue(SpdxConstantsCompatV2.PROP_LIC_ID_DEPRECATED);

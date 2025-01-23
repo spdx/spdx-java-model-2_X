@@ -95,7 +95,7 @@ public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
 	
 	/**
 	 * @return the text
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public String getExtractedText() throws InvalidSPDXAnalysisException {
 		Optional<String> o = getStringPropertyValue(SpdxConstantsCompatV2.PROP_EXTRACTED_TEXT);

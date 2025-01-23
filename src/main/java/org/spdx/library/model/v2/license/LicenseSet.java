@@ -88,7 +88,7 @@ public abstract class LicenseSet extends AnyLicenseInfo {
 	
 	/**
 	 * @return Members of the license set
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public Collection<AnyLicenseInfo> getMembers() throws InvalidSPDXAnalysisException {
 		return members;

@@ -183,7 +183,7 @@ public abstract class LicenseException extends ModelObjectV2 {
 	
 	/**
 	 * @return the name
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public String getName() throws InvalidSPDXAnalysisException {
 		Optional<String> o = getStringPropertyValue(SpdxConstantsCompatV2.PROP_STD_LICENSE_NAME);
@@ -204,7 +204,7 @@ public abstract class LicenseException extends ModelObjectV2 {
 	
 	/**
 	 * @return the urls which reference the same license information
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public Collection<String> getSeeAlso() throws InvalidSPDXAnalysisException {
 		return getStringCollection(SpdxConstantsCompatV2.RDFS_PROP_SEE_ALSO);
@@ -223,7 +223,7 @@ public abstract class LicenseException extends ModelObjectV2 {
 	
 	/**
 	 * @return true if this license is marked as being deprecated
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public boolean isDeprecated() throws InvalidSPDXAnalysisException {
 		Optional<Boolean> deprecated = getBooleanPropertyValue(SpdxConstantsCompatV2.PROP_LIC_ID_DEPRECATED);
@@ -240,7 +240,7 @@ public abstract class LicenseException extends ModelObjectV2 {
 	
 	/**
 	 * @return the deprecatedVersion
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public String getDeprecatedVersion() throws InvalidSPDXAnalysisException {
 		Optional<String> o = getStringPropertyValue(SpdxConstantsCompatV2.PROP_LIC_DEPRECATED_VERSION);
