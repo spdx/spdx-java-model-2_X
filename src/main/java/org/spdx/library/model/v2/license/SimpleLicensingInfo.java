@@ -77,7 +77,7 @@ public abstract class SimpleLicensingInfo extends AnyLicenseInfo {
 
 	/**
 	 * @return the name
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public String getName() throws InvalidSPDXAnalysisException {
 		Optional<String> o = getStringPropertyValue(SpdxConstantsCompatV2.PROP_STD_LICENSE_NAME);
@@ -98,7 +98,7 @@ public abstract class SimpleLicensingInfo extends AnyLicenseInfo {
 	
 	/**
 	 * @return the comments
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public String getComment() throws InvalidSPDXAnalysisException {
 		Optional<String> o = getStringPropertyValue(SpdxConstantsCompatV2.RDFS_PROP_COMMENT);
@@ -119,7 +119,7 @@ public abstract class SimpleLicensingInfo extends AnyLicenseInfo {
 	
 	/**
 	 * @return the urls which reference the same license information
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public Collection<String> getSeeAlso() throws InvalidSPDXAnalysisException {
 		return getStringCollection(SpdxConstantsCompatV2.RDFS_PROP_SEE_ALSO);

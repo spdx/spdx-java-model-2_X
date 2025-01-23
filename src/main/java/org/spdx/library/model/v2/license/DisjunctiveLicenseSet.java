@@ -142,7 +142,7 @@ public class DisjunctiveLicenseSet extends LicenseSet {
 	 * the members of these "sub-disjunctive license sets" could be direct members and have the same
 	 * meaning.
 	 * @return all members "flattening out" disjunctive license sets which are members of this set
-	 * @throws SpdxInvalidTypeException 
+	 * @throws InvalidSPDXAnalysisException 
 	 */
 	protected List<AnyLicenseInfo> getFlattenedMembers() throws InvalidSPDXAnalysisException {
 		HashSet<AnyLicenseInfo> retval = new HashSet<>();	// Use a set since any duplicated elements would be still considered equal
