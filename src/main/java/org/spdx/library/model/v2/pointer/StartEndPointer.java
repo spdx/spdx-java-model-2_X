@@ -104,7 +104,7 @@ public class StartEndPointer extends CompoundPointer implements Comparable<Start
 			}
 			SinglePointer startPointer = getStartPointer();
 			if (Objects.nonNull(startPointer) && !startPointer.getClass().isAssignableFrom(endPointer.getClass())) {
-				throw new SpdxInvalidTypeException("Incompatable type for endPointer: "+endPointer.getClass().toString() + 
+				throw new SpdxInvalidTypeException("Incompatible type for endPointer: "+endPointer.getClass().toString() +
 						".  Must be assignable to "+startPointer.getClass().toString()+".");
 			}
 			//TODO: We could add a check to make sure the endpointer is greater than the startpointer
@@ -117,7 +117,7 @@ public class StartEndPointer extends CompoundPointer implements Comparable<Start
 		if (strict) {
 			SinglePointer endPointer = getEndPointer();
 			if (Objects.nonNull(endPointer) && !endPointer.getClass().isAssignableFrom(startPointer.getClass())) {
-				throw new SpdxInvalidTypeException("Incompatable type for startPointer: "+startPointer.getClass().toString() + 
+				throw new SpdxInvalidTypeException("Incompatible type for startPointer: "+startPointer.getClass().toString() +
 						".  Must be assignable to "+endPointer.getClass().toString()+".");
 			}
 			//TODO: We could add a check to make sure the startPointer is less than the endPointer

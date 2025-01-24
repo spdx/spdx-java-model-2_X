@@ -85,7 +85,7 @@ import org.spdx.storage.PropertyDescriptor;
  * 
  * Property values are restricted to the following types:
  *   - String - Java Strings
- *   - Booolean - Java Boolean or primitive boolean types
+ *   - Boolean - Java Boolean or primitive boolean types
  *   - ModelObjectV2 - A concrete subclass of this type
  *   - {@literal Collection<T>} - A Collection of type T where T is one of the supported non-collection types
  *     
@@ -155,7 +155,7 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 //		} else {
 //			this.documentUri = documentUri;
 //		}
-		//TODO: See if there is a way to do this check as an independant library
+		//TODO: See if there is a way to do this check as an independent library
 	}
 
 	/**

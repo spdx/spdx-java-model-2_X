@@ -193,8 +193,8 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 		for (StartEndPointer range:allRanges) {
 			if (range.getStartPointer() instanceof ByteOffsetPointer) {
 				if (!(range.getEndPointer() instanceof ByteOffsetPointer)) {
-					logger.error("Incompatable start and end pointer types - must both be offset or line types");
-					throw new InvalidSPDXAnalysisException("Incompatable start and end snippet specification - mixing byte and line ranges");
+					logger.error("Incompatible start and end pointer types - must both be offset or line types");
+					throw new InvalidSPDXAnalysisException("Incompatible start and end snippet specification - mixing byte and line ranges");
 				}
 				return range;
 			}
@@ -240,8 +240,8 @@ public class SpdxSnippet extends SpdxItem implements Comparable<SpdxSnippet> {
 		for (StartEndPointer range:allRanges) {
 			if (range.getStartPointer() instanceof LineCharPointer) {
 				if (!(range.getEndPointer() instanceof LineCharPointer)) {
-					logger.error("Incompatable start and end pointer types - must both be offset or line types");
-					throw new InvalidSPDXAnalysisException("Incompatable start and end snippet specification - mixing byte and line ranges");
+					logger.error("Incompatible start and end pointer types - must both be offset or line types");
+					throw new InvalidSPDXAnalysisException("Incompatible start and end snippet specification - mixing byte and line ranges");
 				}
 				return Optional.of(range);
 			}

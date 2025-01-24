@@ -53,9 +53,9 @@ public class SpdxVerificationHelperTest extends TestCase {
 	/**
 	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#verifyNonStdLicenseid(java.lang.String)}.
 	 */
-	public void testVerifyNonStdLicenseid() {
-		assertTrue(Objects.isNull(SpdxVerificationHelper.verifyNonStdLicenseid(SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+"something")));
-		assertFalse(Objects.isNull(SpdxVerificationHelper.verifyNonStdLicenseid("InvalidID")));
+	public void testVerifyNonStdLicenseId() {
+		assertTrue(Objects.isNull(SpdxVerificationHelper.verifyNonStdLicenseId(SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+"something")));
+		assertFalse(Objects.isNull(SpdxVerificationHelper.verifyNonStdLicenseId("InvalidID")));
 	}
 
 	/**

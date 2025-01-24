@@ -253,11 +253,11 @@ public class RelationshipTest extends TestCase {
         assertEquals(2, document.getDocumentDescribes().size());
         assertTrue(document.getDocumentDescribes().contains(fileA));
         assertTrue(document.getDocumentDescribes().contains(fileB));
-        Collection<Relationship> docrels = document.getRelationships();
-        assertEquals(2, docrels.size());
+        Collection<Relationship> docRels = document.getRelationships();
+        assertEquals(2, docRels.size());
         boolean foundFileA = false;
         boolean foundFileB = false;
-        for (Relationship rel:docrels) {
+        for (Relationship rel:docRels) {
         	assertEquals(RelationshipType.DESCRIBES, rel.getRelationshipType());
         	SpdxElement elem = rel.getRelatedSpdxElement().get();
         	if (fileA.equals(elem)) {

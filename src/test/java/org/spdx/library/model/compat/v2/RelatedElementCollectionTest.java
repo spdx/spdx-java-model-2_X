@@ -115,11 +115,11 @@ public class RelatedElementCollectionTest extends TestCase {
 	public void testToImmutableList() throws InvalidSPDXAnalysisException {
 		RelatedElementCollection describesCollection = new RelatedElementCollection(element, RelationshipType.DESCRIBES, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection descendantCollection = new RelatedElementCollection(element, RelationshipType.DESCENDANT_OF, Version.CURRENT_SPDX_VERSION);
-		RelatedElementCollection ammendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
+		RelatedElementCollection amendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection allCollection = new RelatedElementCollection(element, null, Version.CURRENT_SPDX_VERSION);
 		assertListsSame(relatedDescribesOfElements, describesCollection.toImmutableList());
 		assertListsSame(relatedDescendentOfElements, descendantCollection.toImmutableList());
-		assertListsSame(relatedAmendsElements, ammendsCollection.toImmutableList());
+		assertListsSame(relatedAmendsElements, amendsCollection.toImmutableList());
 		assertListsSame(allRelatedElements, allCollection.toImmutableList());
 	}
 
@@ -136,11 +136,11 @@ public class RelatedElementCollectionTest extends TestCase {
 	public void testSize() throws InvalidSPDXAnalysisException {
 		RelatedElementCollection describesCollection = new RelatedElementCollection(element, RelationshipType.DESCRIBES, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection descendantCollection = new RelatedElementCollection(element, RelationshipType.DESCENDANT_OF, Version.CURRENT_SPDX_VERSION);
-		RelatedElementCollection ammendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
+		RelatedElementCollection amendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection allCollection = new RelatedElementCollection(element, null, Version.CURRENT_SPDX_VERSION);
 		assertEquals(relatedDescribesOfElements.size(), describesCollection.size());
 		assertEquals(relatedDescendentOfElements.size(), descendantCollection.size());
-		assertEquals(relatedAmendsElements.size(), ammendsCollection.size());
+		assertEquals(relatedAmendsElements.size(), amendsCollection.size());
 		assertEquals(allRelatedElements.size(), allCollection.size());
 	}
 
@@ -178,7 +178,7 @@ public class RelatedElementCollectionTest extends TestCase {
 	public void testIterator() throws InvalidSPDXAnalysisException {
 		RelatedElementCollection describesCollection = new RelatedElementCollection(element, RelationshipType.DESCRIBES, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection descendantCollection = new RelatedElementCollection(element, RelationshipType.DESCENDANT_OF, Version.CURRENT_SPDX_VERSION);
-		RelatedElementCollection ammendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
+		RelatedElementCollection amendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection allCollection = new RelatedElementCollection(element, null, Version.CURRENT_SPDX_VERSION);
 		Iterator<SpdxElement> iter = describesCollection.iterator();
 		while (iter.hasNext()) {
@@ -188,7 +188,7 @@ public class RelatedElementCollectionTest extends TestCase {
 		while (iter.hasNext()) {
 			assertTrue(relatedDescendentOfElements.contains(iter.next()));
 		}
-		iter = ammendsCollection.iterator();
+		iter = amendsCollection.iterator();
 		while (iter.hasNext()) {
 			assertTrue(relatedAmendsElements.contains(iter.next()));
 		}
@@ -204,11 +204,11 @@ public class RelatedElementCollectionTest extends TestCase {
 	public void testToArray() throws InvalidSPDXAnalysisException {
 		RelatedElementCollection describesCollection = new RelatedElementCollection(element, RelationshipType.DESCRIBES, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection descendantCollection = new RelatedElementCollection(element, RelationshipType.DESCENDANT_OF, Version.CURRENT_SPDX_VERSION);
-		RelatedElementCollection ammendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
+		RelatedElementCollection amendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection allCollection = new RelatedElementCollection(element, null, Version.CURRENT_SPDX_VERSION);
 		assertTrue(ArraysSameDifferentOrder(relatedDescribesOfElements.toArray(), describesCollection.toArray()));
 		assertTrue(ArraysSameDifferentOrder(relatedDescendentOfElements.toArray(), descendantCollection.toArray()));
-		assertTrue(ArraysSameDifferentOrder(relatedAmendsElements.toArray(), ammendsCollection.toArray()));
+		assertTrue(ArraysSameDifferentOrder(relatedAmendsElements.toArray(), amendsCollection.toArray()));
 		assertTrue(ArraysSameDifferentOrder(allRelatedElements.toArray(), allCollection.toArray()));
 	}
 	
@@ -272,11 +272,11 @@ public class RelatedElementCollectionTest extends TestCase {
 	public void testContainsAll() throws InvalidSPDXAnalysisException {
 		RelatedElementCollection describesCollection = new RelatedElementCollection(element, RelationshipType.DESCRIBES, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection descendantCollection = new RelatedElementCollection(element, RelationshipType.DESCENDANT_OF, Version.CURRENT_SPDX_VERSION);
-		RelatedElementCollection ammendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
+		RelatedElementCollection amendsCollection = new RelatedElementCollection(element, RelationshipType.AMENDS, Version.CURRENT_SPDX_VERSION);
 		RelatedElementCollection allCollection = new RelatedElementCollection(element, null, Version.CURRENT_SPDX_VERSION);
 		assertTrue(describesCollection.containsAll(relatedDescribesOfElements));
 		assertTrue(descendantCollection.containsAll(relatedDescendentOfElements));
-		assertTrue(ammendsCollection.containsAll(relatedAmendsElements));
+		assertTrue(amendsCollection.containsAll(relatedAmendsElements));
 		assertTrue(allCollection.containsAll(allRelatedElements));
 	}
 
@@ -290,15 +290,15 @@ public class RelatedElementCollectionTest extends TestCase {
 		relatedElement1.setName("related1");
 		SpdxElement relatedElement2 = new GenericSpdxElement();
 		relatedElement2.setName("related2");
-		List<SpdxElement> addedDescibes = new ArrayList<>(Arrays.asList(new SpdxElement[] {relatedElement1, relatedElement2}));
+		List<SpdxElement> addedDescribes = new ArrayList<>(Arrays.asList(new SpdxElement[] {relatedElement1, relatedElement2}));
 		List<SpdxElement> expected = new ArrayList<>(relatedDescribesOfElements);
-		expected.addAll(addedDescibes);
-		describeGe.addAll(addedDescibes);
+		expected.addAll(addedDescribes);
+		describeGe.addAll(addedDescribes);
 		assertListsSame(expected, describeGe.toImmutableList());
-		assertEquals(allRelatedElements.size()+addedDescibes.size(), element.getRelationships().size());
+		assertEquals(allRelatedElements.size()+addedDescribes.size(), element.getRelationships().size());
 		describeGe.addAll(relatedDescribesOfElements);
 		assertListsSame(expected, describeGe.toImmutableList());
-		assertEquals(allRelatedElements.size()+addedDescibes.size(), element.getRelationships().size());
+		assertEquals(allRelatedElements.size()+addedDescribes.size(), element.getRelationships().size());
 	}
 
 	/**
@@ -310,16 +310,16 @@ public class RelatedElementCollectionTest extends TestCase {
 		relatedElement1.setName("related1");
 		SpdxElement relatedElement2 = new GenericSpdxElement();
 		relatedElement2.setName("related2");
-		List<SpdxElement> addedDescibes = new ArrayList<>(Arrays.asList(new SpdxElement[] {relatedElement1, relatedElement2}));
+		List<SpdxElement> addedDescribes = new ArrayList<>(Arrays.asList(new SpdxElement[] {relatedElement1, relatedElement2}));
 		List<SpdxElement> expected = new ArrayList<>(relatedDescribesOfElements);
-		expected.addAll(addedDescibes);
-		describeGe.addAll(addedDescibes);
+		expected.addAll(addedDescribes);
+		describeGe.addAll(addedDescribes);
 		assertListsSame(expected, describeGe.toImmutableList());
-		assertEquals(allRelatedElements.size()+addedDescibes.size(), element.getRelationships().size());
+		assertEquals(allRelatedElements.size()+addedDescribes.size(), element.getRelationships().size());
 		
 		describeGe.removeAll(relatedDescribesOfElements);
-		assertListsSame(addedDescibes, describeGe.toImmutableList());
-		assertEquals(allRelatedElements.size()+addedDescibes.size()-relatedDescribesOfElements.size(), element.getRelationships().size());
+		assertListsSame(addedDescribes, describeGe.toImmutableList());
+		assertEquals(allRelatedElements.size()+addedDescribes.size()-relatedDescribesOfElements.size(), element.getRelationships().size());
 	}
 
 	/**
@@ -331,16 +331,16 @@ public class RelatedElementCollectionTest extends TestCase {
 		relatedElement1.setName("related1");
 		SpdxElement relatedElement2 = new GenericSpdxElement();
 		relatedElement2.setName("related2");
-		List<SpdxElement> addedDescibes = new ArrayList<>(Arrays.asList(new SpdxElement[] {relatedElement1, relatedElement2}));
+		List<SpdxElement> addedDescribes = new ArrayList<>(Arrays.asList(new SpdxElement[] {relatedElement1, relatedElement2}));
 		List<SpdxElement> expected = new ArrayList<>(relatedDescribesOfElements);
-		expected.addAll(addedDescibes);
-		describeGe.addAll(addedDescibes);
+		expected.addAll(addedDescribes);
+		describeGe.addAll(addedDescribes);
 		assertListsSame(expected, describeGe.toImmutableList());
-		assertEquals(allRelatedElements.size()+addedDescibes.size(), element.getRelationships().size());
+		assertEquals(allRelatedElements.size()+addedDescribes.size(), element.getRelationships().size());
 		
-		describeGe.retainAll(addedDescibes);
-		assertListsSame(addedDescibes, describeGe.toImmutableList());
-		assertEquals(allRelatedElements.size()+addedDescibes.size()-relatedDescribesOfElements.size(), element.getRelationships().size());
+		describeGe.retainAll(addedDescribes);
+		assertListsSame(addedDescribes, describeGe.toImmutableList());
+		assertEquals(allRelatedElements.size()+addedDescribes.size()-relatedDescribesOfElements.size(), element.getRelationships().size());
 
 	}
 

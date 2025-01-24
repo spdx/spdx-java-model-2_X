@@ -87,7 +87,7 @@ public abstract class SinglePointer extends ModelObjectV2 implements Comparable<
 			return null;
 		}
 		if (!(retval.get() instanceof SpdxElement)) {
-			throw new SpdxInvalidTypeException("Invalid type for reference.  Expect SdpxElement, found "+retval.get().getClass().toString());
+			throw new SpdxInvalidTypeException("Invalid type for reference.  Expect SpdxElement, found "+retval.get().getClass().toString());
 		}
 		return (SpdxElement)retval.get();
 	}

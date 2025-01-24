@@ -110,11 +110,11 @@ public class ExternalRefTest extends TestCase {
 		noReferenceType.setReferenceLocator(REFERENCE_LOCATORS[0]);
 		noReferenceType.setComment(COMMENTS[0]);
 		assertEquals(1, noReferenceType.verify().size());
-		ExternalRef noRferenceLocator = new ExternalRef(store, docUri, store.getNextId(IdType.Anonymous),copyManager, true);
-		noRferenceLocator.setReferenceCategory(REFERENCE_CATEGORIES[0]);
-		noRferenceLocator.setReferenceType(new ReferenceType(SpdxConstantsCompatV2.SPDX_LISTED_REFERENCE_TYPES_PREFIX + REFERENCE_TYPE_NAMES[0]));
-		noRferenceLocator.setComment(COMMENTS[0]);
-		assertEquals(1, noRferenceLocator.verify().size());
+		ExternalRef noReferenceLocator = new ExternalRef(store, docUri, store.getNextId(IdType.Anonymous),copyManager, true);
+		noReferenceLocator.setReferenceCategory(REFERENCE_CATEGORIES[0]);
+		noReferenceLocator.setReferenceType(new ReferenceType(SpdxConstantsCompatV2.SPDX_LISTED_REFERENCE_TYPES_PREFIX + REFERENCE_TYPE_NAMES[0]));
+		noReferenceLocator.setComment(COMMENTS[0]);
+		assertEquals(1, noReferenceLocator.verify().size());
 		ExternalRef noComment =new ExternalRef(store, docUri, store.getNextId(IdType.Anonymous),copyManager, true);
 		noComment.setReferenceCategory(REFERENCE_CATEGORIES[0]);
 		noComment.setReferenceType(new ReferenceType(SpdxConstantsCompatV2.SPDX_LISTED_REFERENCE_TYPES_PREFIX + REFERENCE_TYPE_NAMES[0]));

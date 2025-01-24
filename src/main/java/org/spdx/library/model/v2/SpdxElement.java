@@ -207,7 +207,7 @@ public abstract class SpdxElement extends ModelObjectV2 {
 	}
 	
 	/**
-	 * clear and reset the relationships to the paramater relationship
+	 * clear and reset the relationships to the parameter relationship
 	 * @param relationships
 	 * @return this to chain sets
 	 * @throws InvalidSPDXAnalysisException 

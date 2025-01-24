@@ -111,7 +111,7 @@ public class SpdxDocument extends SpdxElement {
 	
 
 	/**
-	 * clear and reset document describes to the paramater collection
+	 * clear and reset document describes to the parameter collection
 	 * @param documentDescribes collection of items described by this SPDX document
 	 * @return this to chain setters
 	 */
@@ -288,7 +288,7 @@ public class SpdxDocument extends SpdxElement {
 		} catch (InvalidSPDXAnalysisException e) {
 			retval.add("Error getting creator information: "+e.getMessage());
 		}
-		// Extracted licensine infos
+		// Extracted license infos
 		try {
 			for (ExtractedLicenseInfo licInfo:getExtractedLicenseInfos()) {
 				retval.addAll(licInfo.verify(verifiedIds, specVersion));

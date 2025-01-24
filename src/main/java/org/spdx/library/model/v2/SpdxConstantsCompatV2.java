@@ -68,11 +68,11 @@ public class SpdxConstantsCompatV2 {
 	public static final String CLASS_POINTER_START_END_POINTER = "StartEndPointer";
 	public static final String CLASS_POINTER_BYTE_OFFSET_POINTER = "ByteOffsetPointer";
 	public static final String CLASS_POINTER_LINE_CHAR_POINTER = "LineCharPointer";
-	public static final String CLASS_POINTER_COMPOUNT_POINTER = "CompoundPointer";
+	public static final String CLASS_POINTER_COMPOUND_POINTER = "CompoundPointer";
 	public static final String CLASS_SINGLE_POINTER = "SinglePointer";
 	public static final String[] POINTER_CLASSES = new String[] {
 			CLASS_POINTER_START_END_POINTER, CLASS_POINTER_BYTE_OFFSET_POINTER, 
-			CLASS_POINTER_LINE_CHAR_POINTER, CLASS_POINTER_COMPOUNT_POINTER, CLASS_SINGLE_POINTER
+			CLASS_POINTER_LINE_CHAR_POINTER, CLASS_POINTER_COMPOUND_POINTER, CLASS_SINGLE_POINTER
 			};
 	
 	// Pointer Properties - with in the RDF_POINTER_NAMESPACE
@@ -138,7 +138,7 @@ public class SpdxConstantsCompatV2 {
 			CLASS_DOAP_PROJECT,
 			// RDF Pointer Namespace
 			CLASS_POINTER_START_END_POINTER, CLASS_POINTER_BYTE_OFFSET_POINTER, 
-			CLASS_POINTER_COMPOUNT_POINTER, CLASS_POINTER_LINE_CHAR_POINTER, CLASS_SINGLE_POINTER};
+			CLASS_POINTER_COMPOUND_POINTER, CLASS_POINTER_LINE_CHAR_POINTER, CLASS_SINGLE_POINTER};
 	
 	// classes that use the listed license URI for their namespace
 	public static final String[] LISTED_LICENSE_URI_CLASSES = {CLASS_SPDX_LISTED_LICENSE, CLASS_SPDX_LISTED_LICENSE_EXCEPTION};

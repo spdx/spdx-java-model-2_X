@@ -243,7 +243,7 @@ public class ExternalRef extends ModelObjectV2 implements Comparable<ExternalRef
 	}
 
 	/**
-	 * @return the referenceType.  If the refrenceType is not in the modelStore, the constant ReferenceType.MISSING is returned
+	 * @return the referenceType.  If the referenceType is not in the modelStore, the constant ReferenceType.MISSING is returned
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	public ReferenceType getReferenceType() throws InvalidSPDXAnalysisException {
