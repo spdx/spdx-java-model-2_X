@@ -71,7 +71,7 @@ public class SpdxDocumentTest extends TestCase {
 	private static final String DATE1 = "2010-01-29T18:30:22Z";
 	private static final String DATE2 = "2015-01-29T18:30:22Z";
 	private static final String[] CREATORS1 = new String[] {"Tool: SPDX tool", "Person: the person"};
-	private static final String[] CREATORS2 = new String[] {"Tool: Teesst"};
+	private static final String[] CREATORS2 = new String[] {"Tool: Test"};
 	private static final String CREATOR_COMMENT1 = "Creator comment1";
 	private static final String CREATOR_COMMENT2 = "Creator comment2";
 	private static final String LICENSE_LISTV1 = "1.18";
@@ -181,7 +181,7 @@ public class SpdxDocumentTest extends TestCase {
 				.setOriginator("Person: originator1")
 				.setPackageFileName("packagename1")
 				.setPackageVerificationCode(gmo.createPackageVerificationCode("0000e1c67a2d28fced849ee1bb76e7391b93eb12",
-						Arrays.asList(new String[] {"excludedfile1", "excluedfiles2"})))
+						Arrays.asList(new String[] {"excludedfile1", "excluedfile2"})))
 				.setSourceInfo("sourceinfo1")
 				.setSummary("summary1")
 				.setSupplier("Person: supplier1")

@@ -113,7 +113,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 		getFiles().addAll(spdxPackageBuilder.files);
 		setHomepage(spdxPackageBuilder.homepage);
 		setOriginator(spdxPackageBuilder.originator);
-		setPackageFileName(spdxPackageBuilder.pacakgeFileName);
+		setPackageFileName(spdxPackageBuilder.packageFileName);
 		setPackageVerificationCode(spdxPackageBuilder.packageVerificationCode);
 		setSourceInfo(spdxPackageBuilder.sourceInfo);
 		setSummary(spdxPackageBuilder.summary);
@@ -854,7 +854,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 		Collection<SpdxFile> files = new ArrayList<SpdxFile>(); // required if isFilesAnalyzed is true
 		String homepage = null;
 		String originator = null;
-		String pacakgeFileName = null;
+		String packageFileName = null;
 		SpdxPackageVerificationCode packageVerificationCode = null; // required if isFilesAnalyzed is true
 		String sourceInfo = null;
 		String summary = null;
@@ -1059,7 +1059,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 		 * @return this to continue the build
 		 */
 		public SpdxPackageBuilder setOriginator(String originator) {
-			Objects.requireNonNull(originator, "Orinator can not be null");
+			Objects.requireNonNull(originator, "Originator can not be null");
 			this.originator = originator;
 			return this;
 		}
@@ -1070,7 +1070,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 		 */
 		public SpdxPackageBuilder setPackageFileName(String packageFileName) {
 			Objects.requireNonNull(packageFileName, "Package file name can not be null");
-			this.pacakgeFileName = packageFileName;
+			this.packageFileName = packageFileName;
 			return this;
 		}
 		

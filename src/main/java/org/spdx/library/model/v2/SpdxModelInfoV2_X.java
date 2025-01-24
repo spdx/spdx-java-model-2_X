@@ -158,8 +158,8 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 		} else if (SpdxElement.class.isAssignableFrom(typeClass)) {
 			//TODO: Do we want to check for external references if (modelStore.getExternalReferenceMap(objectUri) != null && ??)
 			if (modelStore.isAnon(objectUri)) {
-				logger.error("SPDX elements must not be anonomous types - missing ID for "+objectUri);
-				throw new InvalidSPDXAnalysisException("SPDX elements must not be anonomous types - missing ID for "+objectUri);
+				logger.error("SPDX elements must not be anonymous types - missing ID for "+objectUri);
+				throw new InvalidSPDXAnalysisException("SPDX elements must not be anonymous types - missing ID for "+objectUri);
 			}
 			// Note that the EXTERNAL_SPDX_ELEMENT_URI_PATTERN also matches the full URI for the object
 			Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_SPDX_ELEMENT_URI_PATTERN.matcher(objectUri);
@@ -170,8 +170,8 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 			return SpdxModelFactoryCompatV2.getModelObjectV2(modelStore, matcher.group(1), matcher.group(2), type, copyManager, create);
 		} else if (ExtractedLicenseInfo.class.isAssignableFrom(typeClass)) {
 			if (IdType.Anonymous.equals(modelStore.getIdType(objectUri))) {
-				logger.error("Extracted licenses must not be anonomous types - missing ID for "+objectUri);
-				throw new InvalidSPDXAnalysisException("Extracted licenses must not be anonomous types - missing ID for "+objectUri);
+				logger.error("Extracted licenses must not be anonymous types - missing ID for "+objectUri);
+				throw new InvalidSPDXAnalysisException("Extracted licenses must not be anonymous types - missing ID for "+objectUri);
 			}
 			Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN.matcher(objectUri);
 			if (!matcher.matches()) {

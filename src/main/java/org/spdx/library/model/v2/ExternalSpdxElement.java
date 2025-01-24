@@ -275,7 +275,7 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	
 	@Override
 	public boolean addRelationship(Relationship relationship) throws InvalidSPDXAnalysisException {
-		throw new InvalidSPDXAnalysisException("Can not add relationshps to an ExternalSpdxElement.  "
+		throw new InvalidSPDXAnalysisException("Can not add relationships to an ExternalSpdxElement.  "
 				+ "These changes must be done to the local SPDX element in the document which defines the SPDX element.");
 	}
 	
@@ -335,7 +335,7 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	}
 	
 	/**
-	 * clear and reset the relationships to the paramater relationship
+	 * clear and reset the relationships to the parameter relationship
 	 * @param relationships
 	 * @return this to chain sets
 	 * @throws InvalidSPDXAnalysisException 

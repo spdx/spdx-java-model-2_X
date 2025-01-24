@@ -89,7 +89,7 @@ public class CompatibleModelStoreWrapper implements IModelStore {
 	private IModelStore baseStore;
 	
 	public CompatibleModelStoreWrapper(IModelStore baseStore) {
-		Objects.requireNonNull(baseStore, "A base store must be provided for the CompatibileModelStoreWrapper");
+		Objects.requireNonNull(baseStore, "A base store must be provided for the CompatibleModelStoreWrapper");
 		this.baseStore = baseStore;
 	}
 	

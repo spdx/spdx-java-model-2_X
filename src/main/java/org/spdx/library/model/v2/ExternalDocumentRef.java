@@ -205,7 +205,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 			}
 			return docUri;
 		} else if (docNamespace.get() instanceof String) {
-			logger.warn("Spdx Document Namespace is of type literal string.  Reccomended type is IndividualValue");
+			logger.warn("Spdx Document Namespace is of type literal string.  Recommended type is IndividualValue");
 			return (String)docNamespace.get();
 		} else {
 			logger.error("SPDX document namespace is not of type IndividualValue or String.  Type="+docNamespace.get().getClass().toString());
@@ -221,7 +221,7 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 	public ExternalDocumentRef setSpdxDocumentNamespace(String documentNamespace) throws InvalidSPDXAnalysisException {
 		if (Objects.isNull(documentNamespace)) {
 			if (strict) {
-				throw new InvalidSPDXAnalysisException("Null value for a required docment namespace");
+				throw new InvalidSPDXAnalysisException("Null value for a required document namespace");
 			} else {
 				setPropertyValue(SpdxConstantsCompatV2.PROP_EXTERNAL_SPDX_DOCUMENT, null);
 			}
@@ -332,14 +332,14 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 		try {
 			myDocumentNamespace = getSpdxDocumentNamespace();
 		} catch (InvalidSPDXAnalysisException e) {
-			logger.warn("Error getting document namepsace",e);
+			logger.warn("Error getting document namespace",e);
 			myDocumentNamespace = "";
 		}
 		String compareDocumentNamespace;
 		try {
 			compareDocumentNamespace = o.getSpdxDocumentNamespace();
 		} catch (InvalidSPDXAnalysisException e) {
-			logger.warn("Error getting compare document namepsace",e);
+			logger.warn("Error getting compare document namespace",e);
 			compareDocumentNamespace = "";
 		}
 		int retval = myDocumentNamespace.compareTo(compareDocumentNamespace);
@@ -353,21 +353,21 @@ public class ExternalDocumentRef extends ModelObjectV2 implements Comparable<Ext
 			logger.warn("Error getting checksum",e);
 			myChecksum = Optional.empty();
 		}
-		Optional<Checksum> comparechecksum;
+		Optional<Checksum> compareChecksum;
 		try {
-			comparechecksum = o.getChecksum();
+			compareChecksum = o.getChecksum();
 		} catch (InvalidSPDXAnalysisException e) {
 			logger.warn("Error getting compare checksum",e);
-			comparechecksum = Optional.empty();
+			compareChecksum = Optional.empty();
 		}
-		if (!comparechecksum.isPresent()) {
+		if (!compareChecksum.isPresent()) {
 			if (myChecksum.isPresent()) {
 				return 1;
 			}
 		} else if (!myChecksum.isPresent()) {
 			return -1;
 		} else {
-			retval = myChecksum.get().compareTo(comparechecksum.get());
+			retval = myChecksum.get().compareTo(compareChecksum.get());
 		}
 		return retval;
 	}

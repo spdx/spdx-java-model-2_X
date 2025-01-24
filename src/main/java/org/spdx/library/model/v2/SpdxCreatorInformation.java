@@ -83,7 +83,7 @@ public class SpdxCreatorInformation extends ModelObjectV2 {
 	
 	/**
 	 * @param licenseListVersion An optional field for creators of the SPDX file to provide the version of the SPDX License List used when the SPDX file was created.
-	 * @return this for building more optons
+	 * @return this for building more options
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxCreatorInformation setLicenseListVersion(String licenseListVersion) throws InvalidSPDXAnalysisException {
@@ -101,7 +101,7 @@ public class SpdxCreatorInformation extends ModelObjectV2 {
 	
 	/**
 	 * @param comment
-	 * @return this for building more optons
+	 * @return this for building more options
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxCreatorInformation setComment(String comment) throws InvalidSPDXAnalysisException {
@@ -125,7 +125,7 @@ public class SpdxCreatorInformation extends ModelObjectV2 {
 	
 	/**
 	 * @param created When the SPDX file was originally created. The date is to be specified according to combined date and time in UTC format as specified in ISO 8601 standard.
-	 * @return this for building more optons
+	 * @return this for building more options
 	 * @throws InvalidSPDXAnalysisException
 	 */
 	public SpdxCreatorInformation setCreated(String created) throws InvalidSPDXAnalysisException {
@@ -174,16 +174,16 @@ public class SpdxCreatorInformation extends ModelObjectV2 {
 		}
 		sb.append("; Created on ");
 		sb.append(created);
-		Optional<String> licenseListVerion;
+		Optional<String> licenseListVersion;
 		try {
-			licenseListVerion = getLicenseListVersion();
+			licenseListVersion = getLicenseListVersion();
 		} catch (InvalidSPDXAnalysisException e) {
-			logger.warn("Error getting licenseListVerion",e);
-			licenseListVerion = Optional.empty();
+			logger.warn("Error getting licenseListVersion",e);
+			licenseListVersion = Optional.empty();
 		}
-		if (licenseListVerion.isPresent()) {
+		if (licenseListVersion.isPresent()) {
 			sb.append("; License List Version=");
-			sb.append(licenseListVerion.get());
+			sb.append(licenseListVersion.get());
 		}
 		Optional<String> comment;
 		try {
@@ -233,7 +233,7 @@ public class SpdxCreatorInformation extends ModelObjectV2 {
 		} catch (InvalidSPDXAnalysisException e) {
 			retval.add("Error getting creation date: "+e.getMessage());
 		}
-		// ListList Verions
+		// ListList Versions
 		try {
 			Optional<String> licenseListVersion = this.getLicenseListVersion();
 			if (licenseListVersion.isPresent()) {

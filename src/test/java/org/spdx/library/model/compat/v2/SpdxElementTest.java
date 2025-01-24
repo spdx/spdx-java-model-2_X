@@ -168,7 +168,7 @@ public class SpdxElementTest extends TestCase {
 	/**
 	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.SpdxElement#setComment(java.lang.String)}.
 	 */
-	public void testSetcomment() throws InvalidSPDXAnalysisException {
+	public void testSetComment() throws InvalidSPDXAnalysisException {
 		String id = "elementId";
 		SpdxElement element1 = new GenericSpdxElement(gmo.getModelStore(), gmo.getDocumentUri(), id, gmo.getCopyManager(), true);
 		element1.setName(ELEMENT_NAME1);

@@ -48,7 +48,7 @@ public class LicenseExceptionTest extends TestCase {
 	static final String EXCEPTION_ID2 = "id2";
 	static final String EXCEPTION_NAME2 = "name2";
 	static final String EXCEPTION_TEXT2 = "exception text two";
-	static final String EXCEPTION_TEMPLATE2 = "exception text <<beginOptional>>two<<endOptional>> again <<beginOptiona>>extra<<endOptional>>";
+	static final String EXCEPTION_TEMPLATE2 = "exception text <<beginOptional>>two<<endOptional>> again <<beginOptional>>extra<<endOptional>>";
 	static final List<String> EXCEPTION_SEEALSO2 =  Arrays.asList(new String[] {"http://url3"});
 	static final String EXCEPTION_COMMENT2 = "comment2";
 	static final String EXCEPTION_EXAMPLE2 = "example2";

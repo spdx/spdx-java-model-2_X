@@ -123,7 +123,7 @@ public abstract class CompoundPointer extends ModelObjectV2 {
 	
 	@Override
 	public String getType() {
-		return SpdxConstantsCompatV2.CLASS_POINTER_COMPOUNT_POINTER;
+		return SpdxConstantsCompatV2.CLASS_POINTER_COMPOUND_POINTER;
 	}
 
 }

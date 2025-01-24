@@ -38,7 +38,7 @@ public class IndividualUriValueTest extends TestCase {
 		super.tearDown();
 	}
 	
-	// Test if a simple URI value is equal to the ExternalExtracedLicenseInfo with the same URI value
+	// Test if a simple URI value is equal to the ExternalExtractedLicenseInfo with the same URI value
 	@SuppressWarnings("unlikely-arg-type")
 	public void testEqualUriValueExternalExtractedLicenseInfo() throws InvalidSPDXAnalysisException {
 		String id = SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+"ID";

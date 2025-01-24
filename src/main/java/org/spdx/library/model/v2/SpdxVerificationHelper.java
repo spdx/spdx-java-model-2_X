@@ -89,7 +89,7 @@ public class SpdxVerificationHelper {
 	static final Pattern LICENSE_ID_PATTERN = Pattern.compile(".*" + SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+"([0-9a-zA-Z\\.\\-\\_]+)\\+?$");
 	static final Pattern EXTERNAL_DOC_REF_PATTERN = Pattern.compile(".*" + SpdxConstantsCompatV2.EXTERNAL_DOC_REF_PRENUM+"([0-9a-zA-Z\\.\\-\\+]+)$");; 
 	
-	public static String verifyNonStdLicenseid(String licenseUri) {
+	public static String verifyNonStdLicenseId(String licenseUri) {
 		if (LICENSE_ID_PATTERN.matcher(licenseUri).matches()) {
 			return null;
 		} else {

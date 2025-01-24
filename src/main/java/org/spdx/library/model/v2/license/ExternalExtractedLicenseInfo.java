@@ -60,7 +60,7 @@ import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
  */
 public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo implements IndividualUriValue {
 	
-	// Note: the ID and document URI for the external extracted license info is requred
+	// Note: the ID and document URI for the external extracted license info is required
 	
 	/**
 	 * @param documentUri Document URI for the EXTERNAL document

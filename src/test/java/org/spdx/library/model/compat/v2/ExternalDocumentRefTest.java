@@ -118,7 +118,7 @@ public class ExternalDocumentRefTest extends TestCase {
 		assertEquals(CHECKSUM2, edf2.getChecksum().get());
 	}
 
-	public void testsetSpdxDocumentNamespace() throws InvalidSPDXAnalysisException {
+	public void testSetSpdxDocumentNamespace() throws InvalidSPDXAnalysisException {
 		ExternalDocumentRef edf = gmo.createExternalDocumentRef(DOCUMENT_ID1, DOCUMENT_URI1, CHECKSUM1);
 		assertEquals(DOCUMENT_URI1, edf.getSpdxDocumentNamespace());
 		edf.setSpdxDocumentNamespace(DOCUMENT_URI2);

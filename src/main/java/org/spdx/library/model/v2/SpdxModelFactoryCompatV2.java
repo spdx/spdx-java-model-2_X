@@ -94,7 +94,7 @@ public class SpdxModelFactoryCompatV2 {
 		typeToClassV2.put(SpdxConstantsCompatV2.CLASS_POINTER_START_END_POINTER, org.spdx.library.model.v2.pointer.StartEndPointer.class);
 		typeToClassV2.put(SpdxConstantsCompatV2.CLASS_POINTER_BYTE_OFFSET_POINTER, org.spdx.library.model.v2.pointer.ByteOffsetPointer.class);
 		typeToClassV2.put(SpdxConstantsCompatV2.CLASS_POINTER_LINE_CHAR_POINTER, org.spdx.library.model.v2.pointer.LineCharPointer.class);
-		typeToClassV2.put(SpdxConstantsCompatV2.CLASS_POINTER_COMPOUNT_POINTER, org.spdx.library.model.v2.pointer.CompoundPointer.class);
+		typeToClassV2.put(SpdxConstantsCompatV2.CLASS_POINTER_COMPOUND_POINTER, org.spdx.library.model.v2.pointer.CompoundPointer.class);
 		typeToClassV2.put(SpdxConstantsCompatV2.CLASS_SINGLE_POINTER, org.spdx.library.model.v2.pointer.SinglePointer.class);
 		typeToClassV2.put(SpdxConstantsCompatV2.CLASS_CROSS_REF, org.spdx.library.model.v2.license.CrossRef.class);
 		typeToClassV2.put(SpdxConstantsCompatV2.ENUM_FILE_TYPE, org.spdx.library.model.v2.enumerations.FileType.class);

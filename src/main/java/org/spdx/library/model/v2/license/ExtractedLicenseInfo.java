@@ -124,7 +124,7 @@ public class ExtractedLicenseInfo extends AbstractExtractedLicenseInfo {
 		if (id == null || id.isEmpty()) {
 			retval.add("Missing required license ID");
 		} else {
-			String idError = SpdxVerificationHelper.verifyNonStdLicenseid(id);
+			String idError = SpdxVerificationHelper.verifyNonStdLicenseId(id);
 			if (idError != null && !idError.isEmpty()) {
 				retval.add(idError);
 			}
