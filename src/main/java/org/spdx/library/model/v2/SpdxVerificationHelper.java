@@ -142,6 +142,11 @@ public class SpdxVerificationHelper {
 		return verifyOriginatorOrSupplier(supplier);
 	}
 
+	@Deprecated
+	public static String verifyNonStdLicenseid(String licenseUri) {
+		return verifyNonStdLicenseId(licenseUri);
+	}
+
 	/**
 	 * Verifies a the originator or supplier
 	 * @param creator
