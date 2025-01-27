@@ -69,6 +69,8 @@ public class SpdxConstantsCompatV2 {
 	public static final String CLASS_POINTER_BYTE_OFFSET_POINTER = "ByteOffsetPointer";
 	public static final String CLASS_POINTER_LINE_CHAR_POINTER = "LineCharPointer";
 	public static final String CLASS_POINTER_COMPOUND_POINTER = "CompoundPointer";
+	@Deprecated
+	public static final String CLASS_POINTER_COMPOUNT_POINTER = CLASS_POINTER_COMPOUND_POINTER;
 	public static final String CLASS_SINGLE_POINTER = "SinglePointer";
 	public static final String[] POINTER_CLASSES = new String[] {
 			CLASS_POINTER_START_END_POINTER, CLASS_POINTER_BYTE_OFFSET_POINTER, 
