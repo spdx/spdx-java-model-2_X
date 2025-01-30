@@ -55,7 +55,7 @@ public abstract class LicenseException extends ModelObjectV2 {
 			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, SpdxConstantsCompatV2.LISTED_LICENSE_NAMESPACE_PREFIX, id, copyManager, create);
-		if (!(this instanceof IndividualUriValue)) {
+		if (!(this instanceof IndividualUriValue) && !(this instanceof ListedLicenseException)) {
 		    setPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_EXCEPTION_ID, id);    // Set a property with the exception ID per the spec
 		}
 	}
@@ -78,7 +78,7 @@ public abstract class LicenseException extends ModelObjectV2 {
 				DefaultModelStore.getDefaultCopyManager(), true);
 		setName(name);
 		setLicenseExceptionText(text);
-        if (!(this instanceof IndividualUriValue)) {
+        if (!(this instanceof IndividualUriValue) && !(this instanceof ListedLicenseException)) {
            setPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_EXCEPTION_ID, id);    // Set a property with the exception ID per the spec
         }
 	}
