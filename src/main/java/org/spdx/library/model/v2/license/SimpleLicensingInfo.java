@@ -45,7 +45,7 @@ public abstract class SimpleLicensingInfo extends AnyLicenseInfo {
 	 */
 	SimpleLicensingInfo(String id) throws InvalidSPDXAnalysisException {
 		super(id);
-        if (!(this instanceof IndividualUriValue)) {
+        if (!(this instanceof IndividualUriValue) && !(this instanceof SpdxListedLicense)) {
             setPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_ID, id);  // Needs to be set as a property per spec
         }
 	}
@@ -63,7 +63,7 @@ public abstract class SimpleLicensingInfo extends AnyLicenseInfo {
 			@Nullable IModelCopyManager copyManager, boolean create)
 			throws InvalidSPDXAnalysisException {
 		super(modelStore, documentUri, id, copyManager, create);
-		if (!(this instanceof IndividualUriValue)) {
+		if (!(this instanceof IndividualUriValue) && !(this instanceof SpdxListedLicense)) {
 		    setPropertyValue(SpdxConstantsCompatV2.PROP_LICENSE_ID, id);  // Needs to be set as a property per spec
 		}
 	}
