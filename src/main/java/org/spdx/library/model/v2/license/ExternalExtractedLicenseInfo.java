@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 
 import org.spdx.core.CoreModelObject;
 import org.spdx.core.DefaultModelStore;
-import org.spdx.core.DefaultStoreNotInitialized;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
@@ -67,7 +66,7 @@ public class ExternalExtractedLicenseInfo extends AbstractExtractedLicenseInfo i
 	 * @param id ID used in the EXTERNAL document
 	 * @throws InvalidSPDXAnalysisException on error generating object
 	 */
-	public ExternalExtractedLicenseInfo(String documentUri, String id) throws DefaultStoreNotInitialized, InvalidSPDXAnalysisException {
+	public ExternalExtractedLicenseInfo(String documentUri, String id) throws InvalidSPDXAnalysisException {
 		this(DefaultModelStore.getDefaultModelStore(), 
 				checkConvertDocumentUri(documentUri, id, DefaultModelStore.getDefaultModelStore()), 
 				checkConvertId(id), DefaultModelStore.getDefaultCopyManager());

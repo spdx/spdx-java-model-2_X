@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 
 import org.spdx.core.CoreModelObject;
 import org.spdx.core.DefaultModelStore;
-import org.spdx.core.DefaultStoreNotInitialized;
 import org.spdx.core.IModelCopyManager;
 import org.spdx.core.IndividualUriValue;
 import org.spdx.core.InvalidSPDXAnalysisException;
@@ -53,7 +52,7 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	
 	// Note: The documentUri and ID must be specified
 	
-	public ExternalSpdxElement(String documentUri, String id) throws DefaultStoreNotInitialized, InvalidSPDXAnalysisException {
+	public ExternalSpdxElement(String documentUri, String id) throws InvalidSPDXAnalysisException {
 		this(DefaultModelStore.getDefaultModelStore(), 
 				checkConvertDocumentUri(documentUri, id, DefaultModelStore.getDefaultModelStore()), 
 				checkConvertId(id), DefaultModelStore.getDefaultCopyManager());

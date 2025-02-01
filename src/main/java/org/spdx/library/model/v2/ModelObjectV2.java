@@ -29,15 +29,7 @@ import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spdx.core.CoreModelObject;
-import org.spdx.core.DefaultModelStore;
-import org.spdx.core.DefaultStoreNotInitialized;
-import org.spdx.core.IModelCopyManager;
-import org.spdx.core.IndividualUriValue;
-import org.spdx.core.InvalidSPDXAnalysisException;
-import org.spdx.core.ModelObjectHelper;
-import org.spdx.core.SpdxInvalidTypeException;
-import org.spdx.core.TypedValue;
+import org.spdx.core.*;
 import org.spdx.library.model.v2.enumerations.AnnotationType;
 import org.spdx.library.model.v2.enumerations.ChecksumAlgorithm;
 import org.spdx.library.model.v2.enumerations.ReferenceCategory;
@@ -171,9 +163,9 @@ public abstract class ModelObjectV2 extends CoreModelObject {
 	
 	/**
 	 * Updates the ID and document URI based on the object URI and/or what is available in the store
-	 * @throws DefaultStoreNotInitialized 
+	 * @throws org.spdx.core.DefaultStoreNotInitializedException
 	 */
-	private void updateIdAndDocumentUri() throws DefaultStoreNotInitialized {
+	private void updateIdAndDocumentUri() throws DefaultStoreNotInitializedException {
 		if (objectUri.contains("#")) {
 			int index = objectUri.lastIndexOf('#');
 			documentUri = objectUri.substring(0, index);
