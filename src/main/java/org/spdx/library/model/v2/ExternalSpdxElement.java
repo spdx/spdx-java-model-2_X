@@ -27,6 +27,8 @@ import java.util.regex.Matcher;
 
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spdx.core.CoreModelObject;
 import org.spdx.core.DefaultModelStore;
 import org.spdx.core.IModelCopyManager;
@@ -51,6 +53,10 @@ import org.spdx.storage.compatv2.CompatibleModelStoreWrapper;
 public class ExternalSpdxElement extends SpdxElement implements IndividualUriValue {
 	
 	// Note: The documentUri and ID must be specified
+
+	static final Logger logger = LoggerFactory.getLogger(ExternalSpdxElement.class);
+
+	private Collection<Relationship> relationships = new ArrayList<>();
 	
 	public ExternalSpdxElement(String documentUri, String id) throws InvalidSPDXAnalysisException {
 		this(DefaultModelStore.getDefaultModelStore(), 
@@ -274,8 +280,8 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	
 	@Override
 	public boolean addRelationship(Relationship relationship) throws InvalidSPDXAnalysisException {
-		throw new InvalidSPDXAnalysisException("Can not add relationships to an ExternalSpdxElement.  "
-				+ "These changes must be done to the local SPDX element in the document which defines the SPDX element.");
+		logger.warn("Adding a relationship to an external SPDX element will not be preserved during serialization");
+		return this.relationships.add(relationship);
 	}
 	
 	@Override
@@ -330,7 +336,7 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	 */
 	@Override
 	public Collection<Relationship> getRelationships() throws InvalidSPDXAnalysisException {
-		return new ArrayList<Relationship>();
+		return relationships;
 	}
 	
 	/**
@@ -341,8 +347,9 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	 */
 	@Override
 	public SpdxElement setRelationships(Collection<Relationship> relationships) throws InvalidSPDXAnalysisException {
-		throw new InvalidSPDXAnalysisException("Can not set relationships on an ExternalSpdxElement.  "
-				+ "These changes must be done to the local SPDX element in the document which defines the SPDX element.");
+		logger.warn("Setting relationships on an external SPDX element will not be preserved during serialization");
+		this.relationships = relationships;
+		return this;
 	}
 	
 	/**
@@ -353,8 +360,8 @@ public class ExternalSpdxElement extends SpdxElement implements IndividualUriVal
 	 */
 	@Override
 	public boolean removeRelationship(Relationship relationship) throws InvalidSPDXAnalysisException {
-		throw new InvalidSPDXAnalysisException("Can not remove relationships on an ExternalSpdxElement.  "
-				+ "These changes must be done to the local SPDX element in the document which defines the SPDX element.");
+		logger.warn("Removing a relationship on an external SPDX element will not be preserved during serialization");
+		return this.relationships.remove(relationship);
 	}
 	
 	/**
