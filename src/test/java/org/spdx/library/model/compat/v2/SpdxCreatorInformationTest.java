@@ -57,6 +57,14 @@ public class SpdxCreatorInformationTest extends TestCase {
 		assertEquals(3, ci.verify().size());
 	}
 
+	public void testVerifyDateWithDecimal() throws InvalidSPDXAnalysisException {
+		SpdxCreatorInformation ci = new SpdxCreatorInformation();
+		ci.setStrict(false);
+		ci.setCreated("2024-02-08T16:01:17.629Z");
+		ci.getCreators().add("Person: me");
+		assertEquals(1, ci.verify().size());
+	}
+
 	public void testGetSetCreators() throws InvalidSPDXAnalysisException {
 		List<String> creators = new ArrayList<>(Arrays.asList(new String[] {"Person: me"}));
 		DateFormat format = new SimpleDateFormat(SpdxConstantsCompatV2.SPDX_DATE_FORMAT);
