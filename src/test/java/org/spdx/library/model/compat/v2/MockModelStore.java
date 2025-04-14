@@ -218,8 +218,8 @@ public class MockModelStore implements IModelStore {
 	}
 
 	@Override
-	public Optional<String> getCaseSensisitiveId(String nameSpace,
-			String caseInsensisitiveId) {
+	public Optional<String> getCaseSensitiveId(String nameSpace,
+			String caseInsensitiveId) {
 		return Optional.empty();
 	}
 
