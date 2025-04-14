@@ -537,9 +537,9 @@ public class CompatibleModelStoreWrapper implements IModelStore {
 	}
 
 	@Override
-	public Optional<String> getCaseSensisitiveId(String documentUri,
-			String caseInsensisitiveId) {
-		return baseStore.getCaseSensisitiveId(documentUri, caseInsensisitiveId);
+	public Optional<String> getCaseSensitiveId(String documentUri,
+			String caseInsensitiveId) {
+		return baseStore.getCaseSensitiveId(documentUri, caseInsensitiveId);
 	}
 
 	@Override
