@@ -88,7 +88,8 @@ public class SpdxVerificationHelper {
 	static final Pattern SPDX_ELEMENT_ID_PATTERN = Pattern.compile(".*" + SpdxConstantsCompatV2.SPDX_ELEMENT_REF_PRENUM+"([0-9a-zA-Z\\.\\-\\+]+)$");
 	static final Pattern LICENSE_ID_PATTERN = Pattern.compile(".*" + SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+"([0-9a-zA-Z\\.\\-\\_]+)\\+?$");
 	static final Pattern EXTERNAL_DOC_REF_PATTERN = Pattern.compile(".*" + SpdxConstantsCompatV2.EXTERNAL_DOC_REF_PRENUM+"([0-9a-zA-Z\\.\\-\\+]+)$");; 
-	
+	static final Pattern CREATED_DATE_PATTERN = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$");
+
 	public static String verifyNonStdLicenseId(String licenseUri) {
 		if (LICENSE_ID_PATTERN.matcher(licenseUri).matches()) {
 			return null;
@@ -149,8 +150,8 @@ public class SpdxVerificationHelper {
 
 	/**
 	 * Verifies a the originator or supplier
-	 * @param creator
-	 * @return
+	 * @param originatorOrSupplier a supplier or originator string
+	 * @return error message or null if verified
 	 */
 	private static String verifyOriginatorOrSupplier(String originatorOrSupplier) {
 		boolean ok = false;
@@ -178,6 +179,9 @@ public class SpdxVerificationHelper {
 	 * @return error message or null if no error
 	 */
 	public static String verifyDate(String creationDate) {
+		if (!CREATED_DATE_PATTERN.matcher(creationDate).matches()) {
+			return (String.format("Invalid date format %s.  Does not match the pattern %s.", creationDate, CREATED_DATE_PATTERN));
+		}
 		try {
 			Instant.parse(creationDate);
 		} catch (DateTimeParseException e) {
