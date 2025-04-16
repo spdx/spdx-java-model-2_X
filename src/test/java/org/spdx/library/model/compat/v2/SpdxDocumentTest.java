@@ -387,9 +387,39 @@ public class SpdxDocumentTest extends TestCase {
 		assertEquals(2, result.size());
 	}
 
-	/**
-	 * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.SpdxDocument#getDocumentDescribes()}.
-	 */
+	public void testVerifyBadDocNamespace() throws InvalidSPDXAnalysisException {
+		SpdxDocument doc = new SpdxDocument(DefaultModelStore.getDefaultModelStore(), "://bad/uri", gmo.getCopyManager(), true);
+		doc.setStrict(false);
+		List<Annotation> annotations = Arrays.asList(new Annotation[] {
+				ANNOTATION1, ANNOTATION2
+		});
+		List<ExtractedLicenseInfo> extractedLicenseInfos = Arrays.asList(new ExtractedLicenseInfo[] {
+				LICENSE1, LICENSE2
+		});
+		List<SpdxItem> items = Arrays.asList(new SpdxItem[] {
+				FILE1, FILE2, PACKAGE1, PACKAGE2
+		});
+		List<Relationship> relationships = Arrays.asList(new Relationship[] {
+				RELATIONSHIP1, RELATIONSHIP2
+		});
+		doc.setAnnotations(annotations);
+		doc.setComment(DOC_COMMENT1);
+		doc.setCreationInfo(CREATIONINFO1);
+		doc.setDataLicense(CCO_DATALICENSE);
+		doc.setExtractedLicenseInfos(extractedLicenseInfos);
+		doc.setName(DOC_NAME1);
+		doc.setRelationships(relationships);
+		doc.setDocumentDescribes(items);
+		doc.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
+		List<String> result = doc.verify();
+		assertEquals(1, result.size());
+		assertTrue(result.get(0).contains("namespace"));
+	}
+
+
+		/**
+         * Test method for {@link org.spdx.library.model.compat.v2.compat.v2.SpdxDocument#getDocumentDescribes()}.
+         */
 	public void testGetDocumentDescribes() throws InvalidSPDXAnalysisException {
 		SpdxDocument doc = new SpdxDocument(DefaultModelStore.getDefaultModelStore(), DefaultModelStore.getDefaultDocumentUri(), gmo.getCopyManager(), true);
 		doc.setStrict(false);

@@ -330,6 +330,12 @@ public class SpdxDocument extends SpdxElement {
 		} catch (InvalidSPDXAnalysisException e) {
 			retval.add("Error getting document describes: "+e.getMessage());
 		}
+		// document namespace
+		try {
+			java.net.URI uri = new java.net.URI(getDocumentUri());
+		} catch (java.net.URISyntaxException e) {
+			retval.add(String.format("Document namespace %s is not a valid URI", getDocumentUri()));
+		}
 		//TODO: Figure out what to do with checking any "dangling items" not linked to the describes by
 		return retval;
 	}
