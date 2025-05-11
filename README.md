@@ -1,6 +1,6 @@
 # spdx-java-model-2_X
 
- [![javadoc](https://javadoc.io/badge2/org.spdx/spdx-java-model-2_X/javadoc.svg)](https://javadoc.io/doc/org.spdx/spdx-java-model-2_X)
+[![javadoc](https://javadoc.io/badge2/org.spdx/spdx-java-model-2_X/javadoc.svg)](https://javadoc.io/doc/org.spdx/spdx-java-model-2_X)
 
 This repository is a component of the Java library which implements the Java object model for SPDX and provides useful helper functions.
 
@@ -15,4 +15,4 @@ Please refer to the [Spdx-Java-Library](https://github.com/spdx/spdx-java-Librar
 
 ## Development Status
 
-Still under development and may be unstable.
+Reasonably stable.
