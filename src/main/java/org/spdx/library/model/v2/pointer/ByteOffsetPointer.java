@@ -105,7 +105,7 @@ public class ByteOffsetPointer extends SinglePointer {
 			if (offset == -1) {
 				retval.add("Missing byte offset offset value");
 			} else if (offset < 0) {
-				retval.add("Offset must not be negative for a byte pointer: "+Integer.toString(offset));
+				retval.add("Offset must not be negative for a byte pointer: "+offset);
 			}
 		} catch (InvalidSPDXAnalysisException e) {
 			retval.add("Error getting offset: "+e.getMessage());
@@ -152,7 +152,7 @@ public class ByteOffsetPointer extends SinglePointer {
 		int offset;
 		try {
 			offset = getOffset();
-			return "byte offset " +Integer.toString(offset);
+			return "byte offset " +offset;
 		} catch (InvalidSPDXAnalysisException e) {
 			logger.warn("Error getting offset",e);
 			return "Unknown byte offset";
