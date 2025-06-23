@@ -99,7 +99,7 @@ public class LineCharPointer extends SinglePointer {
 			if (lineNumber == -1) {
 				retval.add("Missing line number value");
 			} else if (lineNumber < 0) {
-				retval.add("Line number must not be negative for a line offset pointer: "+Integer.toString(lineNumber));
+				retval.add("Line number must not be negative for a line offset pointer: "+lineNumber);
 			}
 		} catch (InvalidSPDXAnalysisException e) {
 			retval.add("Error getting line number: "+e.getMessage());
@@ -145,7 +145,7 @@ public class LineCharPointer extends SinglePointer {
 		try {
 			lineNumber = getLineNumber();
 			if (lineNumber != -1) {
-				return "line number " + Integer.toString(lineNumber);
+				return "line number " + lineNumber;
 			} else {
 				return "Unknown line number";
 			}
