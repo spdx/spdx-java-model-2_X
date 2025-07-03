@@ -22,6 +22,7 @@ import org.spdx.core.InvalidSPDXAnalysisException;
 import org.spdx.core.SpdxIdNotFoundException;
 import org.spdx.core.TypedValue;
 import org.spdx.library.model.v2.license.AnyLicenseInfo;
+import org.spdx.library.model.v2.license.InvalidLicenseExpression;
 import org.spdx.library.model.v2.license.SpdxListedLicense;
 import org.spdx.storage.IModelStore;
 import org.spdx.storage.IModelStore.IdType;
@@ -104,6 +105,7 @@ public class SpdxModelFactoryCompatV2 {
 		typeToClassV2.put(SpdxConstantsCompatV2.ENUM_REFERENCE_RELATIONSHIP_TYPE, org.spdx.library.model.v2.enumerations.RelationshipType.class);
 		typeToClassV2.put(SpdxConstantsCompatV2.CLASS_EXTERNAL_EXTRACTED_LICENSE, org.spdx.library.model.v2.license.ExternalExtractedLicenseInfo.class);	
 		typeToClassV2.put(SpdxConstantsCompatV2.ENUM_PURPOSE, org.spdx.library.model.v2.enumerations.Purpose.class);
+		typeToClassV2.put(InvalidLicenseExpression.INVALID_LICENSE_EXPRESSION_TYPE, org.spdx.library.model.v2.license.InvalidLicenseExpression.class);
 		SPDX_TYPE_TO_CLASS_V2 = Collections.unmodifiableMap(typeToClassV2);
 		Map<Class<?>, String> classToType = new HashMap<>();
 		for (Entry<String, Class<?>> entry:typeToClassV2.entrySet()) {
@@ -299,5 +301,4 @@ public class SpdxModelFactoryCompatV2 {
 		String type = classUri.substring(indexOfPound+1);
 		return typeToClass(type);
 	}
-
 }
