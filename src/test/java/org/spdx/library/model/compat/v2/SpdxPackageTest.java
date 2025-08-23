@@ -70,6 +70,7 @@ public class SpdxPackageTest extends TestCase {
 	static final String DESCRIPTION2 = "Description 2";
 	static final String DOWNLOAD_LOCATION1 = "git+git://git.myproject.org/MyProject";
 	static final String DOWNLOAD_LOCATION2 = "hg+https://hg.myproject.org/MyProject#src/somefile.c";
+	static final String DOWNLOAD_LOCATION3 = "git+git://git.myproject.org/MyProject_test";
 	static final String HOMEPAGE1 = "http://home.page.one/one";
 	static final String HOMEPAGE2 = "http://home.page.two/two2";
 	static final String ORIGINATOR1 = "Organization: Originator1";
@@ -607,6 +608,9 @@ public class SpdxPackageTest extends TestCase {
 		pkg.setDownloadLocation(DOWNLOAD_LOCATION_S3);
 		assertEquals(DOWNLOAD_LOCATION_S3, pkg.getDownloadLocation().get());
 		assertEquals(DOWNLOAD_LOCATION_S3, pkg2.getDownloadLocation().get());
+		assertTrue(pkg.verify().isEmpty());
+		pkg.setDownloadLocation(DOWNLOAD_LOCATION3);
+		assertEquals(DOWNLOAD_LOCATION3, pkg.getDownloadLocation().get());
 		assertTrue(pkg.verify().isEmpty());
 	}
 
