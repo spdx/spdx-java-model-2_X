@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"org.spdx.library.model.v2"},{"l":"org.spdx.library.model.v2.enumerations"},{"l":"org.spdx.library.model.v2.license"},{"l":"org.spdx.library.model.v2.pointer"},{"l":"org.spdx.library.referencetype"},{"l":"org.spdx.storage.compatv2"}]
