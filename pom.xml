@@ -33,13 +33,6 @@
     <developerConnection>scm:git:git@github.com:spdx/spdx-java-model-2_X.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
-  <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <name>spdx-java-model-2_X</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>8</maven.compiler.source>
@@ -113,7 +106,7 @@
   	<dependency>
   		<groupId>org.spdx</groupId>
   		<artifactId>spdx-java-core</artifactId>
-  		<version>1.0.0</version>
+  		<version>1.0.1</version>
   	</dependency>
     <dependency>
     	<groupId>com.google.code.gson</groupId>
@@ -160,6 +153,15 @@
       </testResource>
     </testResources>
 	<plugins>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>0.7.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
