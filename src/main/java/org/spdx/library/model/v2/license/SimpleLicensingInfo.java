@@ -40,7 +40,7 @@ public abstract class SimpleLicensingInfo extends AnyLicenseInfo {
 	
 	/**
 	 * Open or create a model object with the default store and default document URI
-	 * @param objectUri ID for this object - must be unique within the SPDX document
+	 * @param id ID for this object - must be unique within the SPDX document
 	 * @throws InvalidSPDXAnalysisException 
 	 */
 	SimpleLicensingInfo(String id) throws InvalidSPDXAnalysisException {
@@ -54,7 +54,7 @@ public abstract class SimpleLicensingInfo extends AnyLicenseInfo {
 	 * Create a new SimpleLicensingInfo object
 	 * @param modelStore container which includes the license
 	 * @param documentUri URI for the SPDX document containing the license
-	 * @param objectUri identifier for the license
+	 * @param id identifier for the license
 	 * @param copyManager if non-null, allows for copying of any properties set which use other model stores or document URI's
 	 * @param create if true, create the license if it does not exist
 	 * @throws InvalidSPDXAnalysisException 
