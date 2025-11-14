@@ -86,7 +86,7 @@ public class SpdxVerificationHelper {
 		SpdxConstantsCompatV2.CREATOR_PREFIX_ORGANIZATION, SpdxConstantsCompatV2.CREATOR_PREFIX_TOOL};
 	static final String[] VALID_ORIGINATOR_SUPPLIER_PREFIXES = new String[] {SpdxConstantsCompatV2.NOASSERTION_VALUE, "Person:", "Organization:"};
 	static final Pattern SPDX_ELEMENT_ID_PATTERN = Pattern.compile(".*" + SpdxConstantsCompatV2.SPDX_ELEMENT_REF_PRENUM+"([0-9a-zA-Z\\.\\-\\+]+)$");
-	static final Pattern LICENSE_ID_PATTERN = Pattern.compile(".*" + SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+"([0-9a-zA-Z\\.\\-\\_]+)$");
+	static final Pattern LICENSE_ID_PATTERN = Pattern.compile(".*" + SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+"([0-9a-zA-Z\\.\\-]+)$");
 	static final Pattern EXTERNAL_DOC_REF_PATTERN = Pattern.compile(".*" + SpdxConstantsCompatV2.EXTERNAL_DOC_REF_PRENUM+"([0-9a-zA-Z\\.\\-\\+]+)$");; 
 	static final Pattern CREATED_DATE_PATTERN = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$");
 
