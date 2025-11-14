@@ -51,15 +51,16 @@ public class SpdxVerificationHelperTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#verifyNonStdLicenseid(java.lang.String)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#verifyNonStdLicenseid(java.lang.String)}.
 	 */
 	public void testVerifyNonStdLicenseId() {
 		assertTrue(Objects.isNull(SpdxVerificationHelper.verifyNonStdLicenseId(SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+"something")));
 		assertFalse(Objects.isNull(SpdxVerificationHelper.verifyNonStdLicenseId("InvalidID")));
+		assertFalse(Objects.isNull(SpdxVerificationHelper.verifyNonStdLicenseId(SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM+"something+")));
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#verifyCreator(java.lang.String)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#verifyCreator(java.lang.String)}.
 	 */
 	public void testVerifyCreator() {
 		assertTrue(Objects.isNull(SpdxVerificationHelper.verifyCreator("Person:me")));
@@ -69,7 +70,7 @@ public class SpdxVerificationHelperTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#verifyOriginator(java.lang.String)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#verifyOriginator(java.lang.String)}.
 	 */
 	public void testVerifyOriginator() {
 		assertTrue(Objects.isNull(SpdxVerificationHelper.verifyOriginator("Person:me")));
@@ -79,7 +80,7 @@ public class SpdxVerificationHelperTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#verifySupplier(java.lang.String)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#verifySupplier(java.lang.String)}.
 	 */
 	public void testVerifySupplier() {
 		assertTrue(Objects.isNull(SpdxVerificationHelper.verifySupplier("Person:me")));
@@ -89,7 +90,7 @@ public class SpdxVerificationHelperTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#verifyDate(java.lang.String)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#verifyDate(java.lang.String)}.
 	 */
 	public void testVerifyDate() {
 		DateFormat format = new SimpleDateFormat(SpdxConstantsCompatV2.SPDX_DATE_FORMAT);
@@ -99,7 +100,7 @@ public class SpdxVerificationHelperTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#verifyAnnotator(java.lang.String)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#verifyAnnotator(java.lang.String)}.
 	 */
 	public void testVerifyAnnotator() {
 		assertTrue(Objects.isNull(SpdxVerificationHelper.verifyAnnotator("Person:me")));
@@ -109,7 +110,7 @@ public class SpdxVerificationHelperTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#isValidExternalDocRef(java.lang.String)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#isValidExternalDocRef(java.lang.String)}.
 	 */
 	public void testIsValidExternalDocRef() {
 		assertTrue(SpdxVerificationHelper.isValidExternalDocRef("DocumentRef-SPDXA"));
@@ -117,7 +118,7 @@ public class SpdxVerificationHelperTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#isValidUri(java.lang.String)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#isValidUri(java.lang.String)}.
 	 */
 	public void testIsValidUri() {
 		assertTrue(SpdxVerificationHelper.isValidUri("https://spdx.org/spdx-specification-21-web-version#h.h430e9ypa0j9"));
@@ -125,7 +126,7 @@ public class SpdxVerificationHelperTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#verifyChecksumString(java.lang.String, org.spdx.library.model.compat.v2.compat.v2.enumerations.ChecksumAlgorithm)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#verifyChecksumString(java.lang.String, org.spdx.library.model.v2.enumerations.ChecksumAlgorithm, java.lang.String)}.
 	 */
 	public void testVerifyChecksumString() {
 		assertTrue(Objects.isNull(SpdxVerificationHelper.verifyChecksumString("bc527343c7ffc103111f3a694b004e2f", ChecksumAlgorithm.MD5, Version.CURRENT_SPDX_VERSION)));
@@ -153,7 +154,7 @@ public class SpdxVerificationHelperTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link org.spdx.library.SpdxVerificationHelper#verifyDownloadLocation(java.lang.String)}.
+	 * Test method for {@link org.spdx.library.model.v2.SpdxVerificationHelper#verifyDownloadLocation(java.lang.String)}.
 	 */
 	public void testVerifyDownloadLocation() {
 		assertTrue(Objects.isNull(SpdxVerificationHelper.verifyDownloadLocation("NONE")));
