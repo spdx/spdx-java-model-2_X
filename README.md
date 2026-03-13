@@ -1,5 +1,6 @@
 # spdx-java-model-2_X
 
+[![Maven Central](https://img.shields.io/maven-central/v/org.spdx/spdx-java-model-2_X)](https://central.sonatype.com/artifact/org.spdx/spdx-java-model-2_X)
 [![javadoc](https://javadoc.io/badge2/org.spdx/spdx-java-model-2_X/javadoc.svg)](https://javadoc.io/doc/org.spdx/spdx-java-model-2_X)
 
 This repository is a component of the Java library which implements the Java object model for SPDX and provides useful helper functions.
