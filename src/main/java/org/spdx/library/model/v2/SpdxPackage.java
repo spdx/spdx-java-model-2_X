@@ -608,11 +608,7 @@ public class SpdxPackage extends SpdxItem implements Comparable<SpdxPackage> {
 		
 		// files depends on if the filesAnalyzed flag
 		try {
-			if (getFiles().size() == 0) {
-				if (filesAnalyzed) {
-					retval.add("Missing required package files for "+pkgName);
-				}
-			} else {
+			if (!getFiles().isEmpty()) {
 				if (!filesAnalyzed) {
 					retval.add("Warning: Found analyzed files for package "+pkgName+" when analyzedFiles is set to false.");
 				}
