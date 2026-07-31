@@ -173,10 +173,10 @@ public class SpdxModelInfoV2_X implements ISpdxModelInfo {
 				logger.error("Extracted licenses must not be anonymous types - missing ID for "+objectUri);
 				throw new InvalidSPDXAnalysisException("Extracted licenses must not be anonymous types - missing ID for "+objectUri);
 			}
-			Matcher matcher = SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN.matcher(objectUri);
+			Matcher matcher = SpdxConstantsCompatV2.EXTRACTED_LICENSE_URI_PATTERN.matcher(objectUri);
 			if (!matcher.matches()) {
 				throw new InvalidSPDXAnalysisException("ExtractedLicenseInfo object URI does not follow the SPDX V2.X required pattern" + 
-						SpdxConstantsCompatV2.EXTERNAL_EXTRACTED_LICENSE_URI_PATTERN);
+						SpdxConstantsCompatV2.EXTRACTED_LICENSE_URI_PATTERN);
 			}
 			return SpdxModelFactoryCompatV2.getModelObjectV2(modelStore, matcher.group(1), matcher.group(2), type, copyManager, create);
 		} else {

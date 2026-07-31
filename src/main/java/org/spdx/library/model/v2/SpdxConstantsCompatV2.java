@@ -346,7 +346,8 @@ public class SpdxConstantsCompatV2 {
 	public static Pattern LICENSE_ID_PATTERN_NUMERIC = 
 			Pattern.compile(NON_STD_LICENSE_ID_PRENUM+"(\\d+)$");	// Pattern for numeric only license IDs
 	public static Pattern LICENSE_ID_PATTERN = Pattern.compile(NON_STD_LICENSE_ID_PRENUM+"([0-9a-zA-Z\\.\\-\\_]+)\\+?$");
-	
+	public static Pattern EXTRACTED_LICENSE_URI_PATTERN = Pattern.compile("(.+)#("+NON_STD_LICENSE_ID_PRENUM+"[0-9a-zA-Z\\.\\-\\+]+)$");
+
 	// SPDX Element Reference format
 	public static String SPDX_ELEMENT_REF_PRENUM = "SPDXRef-";
 	public static Pattern SPDX_ELEMENT_REF_PATTERN = Pattern.compile(SPDX_ELEMENT_REF_PRENUM+"([0-9a-zA-Z\\.\\-\\+]+)$");
