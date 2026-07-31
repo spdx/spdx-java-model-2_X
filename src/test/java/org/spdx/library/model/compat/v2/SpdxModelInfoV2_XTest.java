@@ -25,11 +25,10 @@ import org.spdx.library.model.v2.SpdxNone;
 import org.spdx.library.model.v2.SpdxNoneElement;
 import org.spdx.library.model.v2.SpdxPackage;
 import org.spdx.library.model.v2.Version;
-import org.spdx.library.model.v2.license.AnyLicenseInfo;
-import org.spdx.library.model.v2.license.ExternalExtractedLicenseInfo;
-import org.spdx.library.model.v2.license.SpdxNoAssertionLicense;
-import org.spdx.library.model.v2.license.SpdxNoneLicense;
+import org.spdx.library.model.v2.license.*;
 import org.spdx.storage.IModelStore;
+
+import java.util.Collections;
 
 /**
  * @author gary
@@ -110,6 +109,30 @@ public class SpdxModelInfoV2_XTest {
 		assertTrue(result instanceof SpdxPackage);
 		assertEquals(objectUri, result.getObjectUri());
 		assertEquals("http://prefix#", result.getIdPrefix());
+
+		// Test Listed License
+		SpdxListedLicense stdl = new SpdxListedLicense("Apache 2.0", "Apache-2.0", "text",
+				Collections.EMPTY_LIST, "notes", "standardLicenseHeader", "template", true, true, "licenseHtml", false, null);
+		result = modelInfo.createModelObject(modelStore, stdl.getObjectUri(), SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE, copyManager, Version.TWO_POINT_THREE_VERSION,
+				false, "http://spdx.org/licenses");
+		assertTrue(result instanceof SpdxListedLicense);
+		assertEquals("Apache-2.0", result.getId());
+		// Test Extracted License
+
+		objectUri = prefix + "#" + SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM + "test";
+		result = modelInfo.createModelObject(modelStore, objectUri, SpdxConstantsCompatV2.CLASS_SPDX_EXTRACTED_LICENSING_INFO, copyManager, Version.TWO_POINT_THREE_VERSION,
+				true, prefix);
+		assertTrue(result instanceof ExtractedLicenseInfo);
+		assertEquals(SpdxConstantsCompatV2.NON_STD_LICENSE_ID_PRENUM + "test", result.getId());
+
+		// Test License Exception
+		ListedLicenseException le = new ListedLicenseException("exceptionId",
+				"exception name", "EXCEPTION_TEXT1", Collections.EMPTY_LIST,
+				"EXCEPTION_COMMENT1");
+		result = modelInfo.createModelObject(modelStore, le.getObjectUri(), SpdxConstantsCompatV2.CLASS_SPDX_LISTED_LICENSE_EXCEPTION, copyManager, Version.TWO_POINT_THREE_VERSION,
+				false, "http://spdx.org/licenses");
+		assertTrue(result instanceof ListedLicenseException);
+		assertEquals("exceptionId", result.getId());
 	}
 
 }
