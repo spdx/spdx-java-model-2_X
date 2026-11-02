@@ -388,7 +388,31 @@ public class SpdxDocumentTest extends TestCase {
 	}
 
 	public void testVerifyBadDocNamespace() throws InvalidSPDXAnalysisException {
-		SpdxDocument doc = new SpdxDocument(DefaultModelStore.getDefaultModelStore(), "://bad/uri", gmo.getCopyManager(), true);
+		List<String> result = createValidDocument("://bad/uri").verify();
+		assertEquals(1, result.size());
+		assertTrue(result.get(0).contains("namespace"));
+	}
+
+	public void testVerifyRelativeDocNamespace() throws InvalidSPDXAnalysisException {
+		List<String> result = createValidDocument("not-a-uri").verify();
+		assertEquals(1, result.size());
+		assertTrue(result.get(0).contains("namespace"));
+		assertTrue(result.get(0).contains("absolute"));
+	}
+
+	public void testVerifyDocNamespaceWithFragment() throws InvalidSPDXAnalysisException {
+		List<String> result = createValidDocument("https://example.com/spdxdocs/test#fragment").verify();
+		assertEquals(1, result.size());
+		assertTrue(result.get(0).contains("namespace"));
+		assertTrue(result.get(0).contains("#"));
+	}
+
+	/**
+	 * @param documentUri namespace for the document
+	 * @return a document which only has verification errors related to the namespace
+	 */
+	private SpdxDocument createValidDocument(String documentUri) throws InvalidSPDXAnalysisException {
+		SpdxDocument doc = new SpdxDocument(DefaultModelStore.getDefaultModelStore(), documentUri, gmo.getCopyManager(), true);
 		doc.setStrict(false);
 		List<Annotation> annotations = Arrays.asList(new Annotation[] {
 				ANNOTATION1, ANNOTATION2
@@ -411,9 +435,7 @@ public class SpdxDocumentTest extends TestCase {
 		doc.setRelationships(relationships);
 		doc.setDocumentDescribes(items);
 		doc.setSpecVersion(Version.TWO_POINT_THREE_VERSION);
-		List<String> result = doc.verify();
-		assertEquals(1, result.size());
-		assertTrue(result.get(0).contains("namespace"));
+		return doc;
 	}
 
 
