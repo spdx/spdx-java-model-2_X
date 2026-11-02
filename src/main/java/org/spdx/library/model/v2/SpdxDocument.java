@@ -333,6 +333,12 @@ public class SpdxDocument extends SpdxElement {
 		// document namespace
 		try {
 			java.net.URI uri = new java.net.URI(getDocumentUri());
+			if (!uri.isAbsolute()) {
+				retval.add(String.format("Document namespace %s must be an absolute URI including a scheme (e.g. https:)", getDocumentUri()));
+			}
+			if (getDocumentUri().contains("#")) {
+				retval.add(String.format("Document namespace %s must not contain a '#' character", getDocumentUri()));
+			}
 		} catch (java.net.URISyntaxException e) {
 			retval.add(String.format("Document namespace %s is not a valid URI", getDocumentUri()));
 		}
